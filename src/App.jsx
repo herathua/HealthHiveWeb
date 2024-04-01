@@ -1,16 +1,11 @@
-
-import BodyContent from "./Components/BodyContent/StacksContent.jsx/BodyContent"
-import FooterContent from "./Components/FooterContent/FooterContent"
 import HeaderContent from "./Components/HeaderContent/HeaderContent"
-
+import FooterContent from "./Components/FooterContent/FooterContent"
 function App(){
     return(
         <>
         <div id ="wrapper">
             <HeaderContent/>
-            <BodyContent/>
             <FooterContent/>
-            
         </div>
         </>
     )

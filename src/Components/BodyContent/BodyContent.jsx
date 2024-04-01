@@ -3,6 +3,7 @@ import React from 'react'
 import './BodyContent.css'
 import Stack from 'react-bootstrap/Stack';
 import QRCode from 'react-qr-code';
+import SideBarContent from '../SideBarContent/SideBarContent';
 
 function BodyContent() 
 {
@@ -24,6 +25,7 @@ function BodyContent()
     size={290}
     />
     </div>
+    
     </>
   )
 }

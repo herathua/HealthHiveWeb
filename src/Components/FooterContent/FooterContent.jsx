@@ -1,22 +1,19 @@
-import React from 'react'
-import './FooterContent.css'
+import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+
 function FooterContent() {
   return (
-    <footer>
+    <footer className="bg-gray-800 text-white py-4">
       <Container>
         <Row>
-          <Col>
+          <Col className="text-center">
             {/* Your footer content */}
-            © 2024 Your Company Name
+            <p>&copy; {new Date().getFullYear()} Health hive Pvt (Ltd)</p>
           </Col>
         </Row>
       </Container>
     </footer>
-  )
+  );
 }
 
-export default FooterContent
-
-
-
+export default FooterContent;
