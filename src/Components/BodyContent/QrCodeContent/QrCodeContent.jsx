@@ -5,7 +5,7 @@ function QrCodeContent() {
     
     <div>
     <QRCode
-    value="https://www.npmjs.com/package/html-to-pdfmake"
+    value="sdfsfds"
     size={290}
     />
     </div>
