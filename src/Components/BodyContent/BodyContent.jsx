@@ -3,20 +3,17 @@ import React from 'react'
 import './BodyContent.css'
 import PationListComponent from '../PationListComponent/PationListComponent';
 import QrCodeContent from '../QrCodeContent/QrCodeContent';
-import SideBarContent from '../SideBarContent/SideBarContent';
 function BodyContent() {
   return (
     <>
-      <div>
-        <SideBarContent />
+      <div className="flex-1 p-10">
+        <div>
+          <PationListComponent />
+        </div>
+        <div>
+          <QrCodeContent />
+        </div>
       </div>
-      <div>
-        <PationListComponent />
-      </div>
-      <div>
-        <QrCodeContent />
-      </div>
-
     </>
   )
 }
