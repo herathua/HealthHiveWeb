@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import QrCodeContent from '../QrCodeContent/QrCodeContent'; // Corrected import statement
 import PationListComponent from '../PationListComponent/PationListComponent'; // Corrected import statement
+import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -57,27 +58,29 @@ export default function VerticalTabs() {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+        sx={{ borderRight: 1, borderColor: 'divider',}}
       >
-        <Tab label="Item One" {...a11yProps(0)} />
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
-        <Tab label="Item Four" {...a11yProps(3)} />
-        <Tab label="Item Five" {...a11yProps(4)} />
+        <Tab label="Home" {...a11yProps(0)} sx={{ fontSize: '20px', }} />
+        <Tab label="Upload" {...a11yProps(1)} sx={{ fontSize: '20px' }} />
+        <Tab label="Scane" {...a11yProps(2)} sx={{ fontSize: '20px' }} />
+        <Tab label="Help Center" {...a11yProps(3)} sx={{ fontSize: '20px' }} />
+        <Tab label="Log out" {...a11yProps(4)} sx={{ fontSize: '20px' }} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <p>Item One</p> 
-        <div><QrCodeContent/></div> {/* Including QRCodeContent component */}
+        <Typography variant="h6">Item One</Typography> 
+        <div><LabInfomationContent/></div> {/* Including QRCodeContent component */}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <Typography variant="h6">Item Two</Typography>
         <div><PationListComponent/></div>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <Typography variant="h6">Item Three</Typography>
+        <div><QrCodeContent/></div>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        <Typography variant="h6">Item Four</Typography>
+        <div><LabInfomationContent/></div>
       </TabPanel>
     </Box>
   );
