@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import QrCodeContent from '../QrCodeContent/QrCodeContent'; // Corrected import statement
 import PationListComponent from '../PationListComponent/PationListComponent'; // Corrected import statement
 import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
+import QrCodeContent2 from '../QrCodeContent/QrCodeContent2';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -77,6 +78,7 @@ export default function VerticalTabs() {
       <TabPanel value={value} index={2}>
         <Typography variant="h6">Item Three</Typography>
         <div><QrCodeContent/></div>
+        <div><QrCodeContent2/></div> Including QrCodeContent2 component
       </TabPanel>
       <TabPanel value={value} index={3}>
         <Typography variant="h6">Item Four</Typography>

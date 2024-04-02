@@ -2,6 +2,10 @@ import React from 'react';
 import Table from './Table';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 // TableData component to represent a single row of data
 function TableData({ patient }) {
@@ -13,10 +17,17 @@ function TableData({ patient }) {
       <TableCell>{patient.reportStatus}</TableCell>
       <TableCell>{patient.date}</TableCell>
       <TableCell>{patient.time}</TableCell>
-      <TableCell>        
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-2">
-          View
-        </button>
+      <TableCell>
+        <div>
+          <Tooltip describeChild title="Does not Uplode if it already exists.">
+            <Button>add</Button>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton>
+              <DeleteIcon className="text-red-500" />
+            </IconButton>
+          </Tooltip>
+        </div>
       </TableCell>
     </TableRow>
   );
@@ -25,7 +36,7 @@ function TableData({ patient }) {
 function PationListComponent() {
   // Example patient data, this would likely come from props or state in a real application
   const patients = [
-    { nic: '987654321v', name: 'Christian Bale', address: 'Kandy', reportStatus: 'Pending', date: '2021-09-09', time: '10.00' ,Action:'View' },
+    { nic: '987654321v', name: 'Christian Bale', address: 'Kandy', reportStatus: 'Pending', date: '2021-09-09', time: '10.00', Action: 'View' },{ nic: '987654321v', name: 'Christian Bale', address: 'Kandy', reportStatus: 'Pending', date: '2021-09-09', time: '10.00', Action: 'View' }
     // ... other patient objects
   ];
 
@@ -40,9 +51,10 @@ function PationListComponent() {
             <TableCell isHeader>Report</TableCell>
             <TableCell isHeader>Date</TableCell>
             <TableCell isHeader>Time</TableCell>
-            <TableCell isHeader>Action</TableCell>
+            <TableCell isHeader>Uplode/deleae</TableCell>
           </TableRow>
         </thead>
+        
         <tbody>
           {patients.map((patient, index) => (
             <TableData key={index} patient={patient} />
