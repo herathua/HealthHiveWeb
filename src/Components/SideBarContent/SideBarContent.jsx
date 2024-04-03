@@ -77,7 +77,7 @@ export default function VerticalTabs() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Typography variant="h6">Item Three</Typography>
-        <div><QrCodeContent/></div>
+        {/*<div><QrCodeContent/></div>*/}
         <div><QrCodeContent2/></div> 
       </TabPanel>
       <TabPanel value={value} index={3}>

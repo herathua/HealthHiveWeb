@@ -1,16 +1,8 @@
-// No need to import React with the new JSX Transform
-import { useState } from "react";
 import QRCode from "qrcode.react";
-import "./styles.css";
 
 function App() {
-  const [qrValue, setQrValue] = useState("jeftar");
-
-  const handleOnChange = (event) => {
-    const { value } = event.target;
-    setQrValue(value);
-  };
-
+  const qrValue = "Apple";
+  
   const downloadQRCode = () => {
     const canvas = document.getElementById("qr-gen");
     const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
@@ -23,21 +15,26 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>QR Code and Download - Jeftar</h1>
-      <input onChange={handleOnChange} placeholder="Write your value" />
-      <br />
-      <QRCode
-        id="qr-gen"
-        value={qrValue}
-        size={290}
-        level={"H"}
-        includeMargin={true}
-      />
-      <p>
-        Click for <button type="button" onClick={downloadQRCode}>Download QR Code</button>
-      </p>
+<div className="App flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+  <h1 className="text-2xl font-bold text-gray-800 mb-8">QR Code and Download</h1>
+
+  <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+    <QRCode
+      id="qr-gen"
+      value={qrValue}
+      size={290}
+      level={"H"}
+      includeMargin={true}
+    />
+    {/* Wrapping the button with a div to center it */}
+    <div className="flex justify-center mt-4">
+      <button type="button" onClick={downloadQRCode} className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out">
+        Download QR Code
+      </button>
     </div>
+  </div>
+</div>
+
   );
 }
 
