@@ -14,6 +14,7 @@ function TableData({ patient }) {
       <TableCell>{patient.nic}</TableCell>
       <TableCell>{patient.name}</TableCell>
       <TableCell>{patient.address}</TableCell>
+      <TableCell>{patient.discrption}</TableCell>
       <TableCell>{patient.reportStatus}</TableCell>
       <TableCell>{patient.date}</TableCell>
       <TableCell>{patient.time}</TableCell>
@@ -34,11 +35,15 @@ function TableData({ patient }) {
 }
 
 function PationListComponent() {
-  // Example patient data, this would likely come from props or state in a real application
   const patients = [
-    { nic: '987654321v', name: 'Christian Bale', address: 'Kandy', reportStatus: 'Pending', date: '2021-09-09', time: '10.00', Action: 'View' },{ nic: '987654321v', name: 'Christian Bale', address: 'Kandy', reportStatus: 'Pending', date: '2021-09-09', time: '10.00', Action: 'View' }
-    // ... other patient objects
+    { nic: '987654321v', name: 'Christian Bale', address: 'Kandy', discrption: 'full blood count',reportStatus: 'Pending',  date: '2021-09-09', time: '10.00', Action: 'View' },
+    { nic: '987654321v', name: 'Christian Bale', address: 'Kandy', discrption: 'full blood count',reportStatus: 'Pending', date: '2021-09-09', time: '10.00', Action: 'View' },{ nic: '987654321v', name: 'Christian Bale', address: 'Kandy', discrption: 'full blood count',reportStatus: 'Pending', date: '2021-09-09', time: '10.00', Action: 'View' }
   ];
+ const deletePatient = (index) => {
+    const newPatients = [...patients];
+    newPatients.splice(index, 1);
+    setPatients(newPatients);
+  };
 
   return (
     <div className="container mx-auto px-4 sm:px-8">
@@ -49,6 +54,7 @@ function PationListComponent() {
             <TableCell isHeader>Name</TableCell>
             <TableCell isHeader>Address</TableCell>
             <TableCell isHeader>Report</TableCell>
+            <TableCell isHeader>State</TableCell>
             <TableCell isHeader>Date</TableCell>
             <TableCell isHeader>Time</TableCell>
             <TableCell isHeader>Uplode/deleae</TableCell>
