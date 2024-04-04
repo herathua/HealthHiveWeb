@@ -9,7 +9,7 @@ function LabInfomationContent() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:33000/api/labs/2');
+                const response = await axios.get('http://localhost:33000/api/labs/5');
                 setData(response.data); // Set your data to state
             } catch (error) {
                 console.error("There was an error fetching the lab information: ", error);
