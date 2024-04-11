@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TextContent from './TextContent';
+import UpdateInformation from './UpdateInformation';
 
 const cachingKey = 'cachedLabData';
 const URL = 'http://localhost:33000/api/labs/3';
@@ -40,7 +41,7 @@ function LabInfomationContent() {
 
     // Render the UpdateInformation component if showUpdateForm is true
     if (showUpdateForm) {
-        return <div>dfcfsdcf</div>;
+        return <div><UpdateInformation/></div>;
     } else if (!data) {
         return <div></div>;
     }

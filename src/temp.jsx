@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import Table from './Table';
+import React, { useState } from 'react';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,9 +7,20 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
 // TableData component to represent a single row of data
-function TableData({ patient, onDelete }) {
-  const handleDelete = () => {
-    onDelete(patient.id);
+function TableData({ patient, onDelete, onFileUpload }) {
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleUpload = () => {
+    // Add your file upload logic here
+    if (file) {
+      onFileUpload(file);
+    } else {
+      alert('Please select a file to upload.');
+    }
   };
 
   return (
@@ -22,61 +32,22 @@ function TableData({ patient, onDelete }) {
       <TableCell>{patient.lab}</TableCell>
       <TableCell>
         <div>
-          <Tooltip describeChild title="Does not Upload if it already exists.">
-            <Button>add</Button>
+          <Tooltip describeChild title="Upload a file">
+            <input type="file" accept=".csv" onChange={handleFileChange} style={{ display: 'none' }} id={`file-input-${patient.id}`} />
+            <label htmlFor={`file-input-${patient.id}`}>
+              <Button component="span">Add</Button>
+            </label>
           </Tooltip>
           <Tooltip title="Delete">
-            <IconButton onClick={handleDelete}>
+            <IconButton onClick={() => onDelete(patient.id)}>
               <DeleteIcon className="text-red-500" />
             </IconButton>
           </Tooltip>
+          <Button onClick={handleUpload}>Upload</Button>
         </div>
       </TableCell>
     </TableRow>
   );
 }
 
-function PationListComponent() {
-  const [patients, setPatients] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:33000/api/labRequests', {
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then(data => setPatients(data))
-    .catch(error => console.error('Error fetching patients:', error));
-  }, []);
-
-  const deletePatient = (id) => {
-    const newPatients = patients.filter(patient => patient.id !== id);
-    setPatients(newPatients);
-  };
-
-  return (
-    <div className="container mx-auto px-4 sm:px-8">
-      <Table>
-        <thead>
-          <TableRow isHeader>
-            <TableCell isHeader>id</TableCell>
-            <TableCell isHeader>description</TableCell>
-            <TableCell isHeader>invoice</TableCell>
-            <TableCell isHeader>user</TableCell>
-            <TableCell isHeader>lab</TableCell>
-            <TableCell isHeader>Upload/delete</TableCell>
-          </TableRow>
-        </thead>
-        
-        <tbody>
-          {patients.map((patient) => (
-            <TableData key={patient.id} patient={patient} onDelete={deletePatient} />
-          ))}
-        </tbody>
-      </Table>
-    </div>
-  );
-}
-
-export default PationListComponent;
+export default TableData;

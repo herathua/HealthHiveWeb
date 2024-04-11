@@ -10,7 +10,10 @@ import Tooltip from '@mui/material/Tooltip';
 // TableData component to represent a single row of data
 function TableData({ patient, onDelete }) {
   const handleDelete = () => {
-    onDelete(patient.id);
+    const confirmDelete = window.confirm('Are you sure you want to delete this patient?');
+    if (confirmDelete) {
+      onDelete(patient.id);
+    }
   };
 
   return (
@@ -22,7 +25,7 @@ function TableData({ patient, onDelete }) {
       <TableCell>{patient.lab}</TableCell>
       <TableCell>
         <div>
-          <Tooltip describeChild title="Does not Upload if it already exists.">
+          <Tooltip title="Does not Upload if it already exists.">
             <Button>add</Button>
           </Tooltip>
           <Tooltip title="Delete">
@@ -36,7 +39,7 @@ function TableData({ patient, onDelete }) {
   );
 }
 
-function PationListComponent() {
+function PatientListComponent() {
   const [patients, setPatients] = useState([]);
 
   useEffect(() => {
@@ -51,8 +54,26 @@ function PationListComponent() {
   }, []);
 
   const deletePatient = (id) => {
-    const newPatients = patients.filter(patient => patient.id !== id);
-    setPatients(newPatients);
+    fetch(`http://localhost:33000/api/labRequests/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to delete patient');
+      }
+      // Return the deleted patient ID from the response
+      return id;
+    })
+    .then(deletedId => {
+      // Filter out the deleted patient from the state
+      const newPatients = patients.filter(patient => patient.id !== deletedId);
+      // Update the state with the new array
+      setPatients(newPatients);
+    })
+    .catch(error => console.error('Error deleting patient:', error));
   };
 
   return (
@@ -79,4 +100,4 @@ function PationListComponent() {
   );
 }
 
-export default PationListComponent;
+export default PatientListComponent;

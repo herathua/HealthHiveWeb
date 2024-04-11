@@ -4,7 +4,8 @@ import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
 import QrCodeContent from '../QrCodeContent/QrCodeContent';
 import LabLogin from '../LabLogin/LabLogin';
 import PationListComponent from '../PationListComponent/PationListComponent';
-//import PationListComponent from './PationListComponent/PationListComponent';
+import SettingsComponent from '../../SettingsComponent/SettingsComponent';
+
 
 
 function Component1() {
@@ -24,7 +25,7 @@ function Component4() {
 }
 
 function Component5() {
-  return <div><LabLogin/></div>;
+  return <div><SettingsComponent/></div>;
 }
 
 export { Component1, Component2, Component3, Component4,Component5 };
