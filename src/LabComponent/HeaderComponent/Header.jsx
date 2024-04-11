@@ -14,6 +14,3 @@ function Header({ toggleSidebar, isOpen }) {
 }
 
 export default Header;
-
-
-
