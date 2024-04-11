@@ -4,6 +4,7 @@ import LabInfomationContent from '.Components/LabInfomationContent/LabInfomation
 import QrCodeContent from '.Components/QrCodeContent/QrCodeContent';
 import LabLogin from './LabLogin';
 import PationListComponent from './PationListComponent';
+import Dashboard from '..Dashboard/Dashboard/Dashboard';
 
 function Component1() {
   return <div><LabInfomationContent/></div>;
@@ -14,7 +15,7 @@ function Component2() {
 }
 
 function Component3() {
-  return <div><LabLogin/></div>;
+  return <div><Dashboard/></div>;
 }
 
 function Component4() {

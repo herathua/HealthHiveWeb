@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import LabInfomationContent from './LabInfomationContent';
+import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
 
 // UpdateInformation component
 function UpdateInformation({ initialData = {}, onUpdate }) {
@@ -32,7 +32,7 @@ function UpdateInformation({ initialData = {}, onUpdate }) {
 
     // Render LabInfomationContent component if formSubmitted is true
     if (formSubmitted) {
-        return <LabInfomationContent />;
+        return <LabInfomationContent/>;
     }
     
     // Render the form

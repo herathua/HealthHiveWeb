@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TextContent from './TextContent';
 import UpdateInformation from './UpdateInformation';
+import logoUrl from '../../assets/lab logo.jpeg';
 
 const cachingKey = 'cachedLabData';
 const URL = 'http://localhost:33000/api/labs/3';
@@ -48,10 +49,16 @@ function LabInfomationContent() {
 
     return (
         <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-xl shadow-md flex flex-col bg-gray-200">
+            <div className="flex items-center justify-center mb-4">
+                <div className="bg-blue-200 rounded-full p-2"> {/* Added a background color to create a box around the logo */}
+                    <img src={logoUrl} alt="Lab Logo" className="w-16 h-16" /> {/* Display lab logo */}
+                </div>
+                <h2 className="text-xl font-bold text-gray-800 ml-4">{data.labName}</h2> {/* Display lab name */}
+            </div>
             <h2 className="text-xl font-bold text-center mb-4 text-gray-800">Laboratory Info</h2>
             <form>
-                <TextContent id="1" type="Laboratory Name" Data={data.labRegID}/>
-                <TextContent id="2" type="Registration No" Data={data.labName}/>
+                <TextContent id="1" type="Registration No" Data={data.labRegID}/>
+                <TextContent id="2" type="Laboratory Name" Data={data.labName}/>
                 <TextContent id="3" type="Email" Data={data.address}/>
                 <TextContent id="4" type="Telephone" Data={data.email}/>
                 <TextContent id="5" type="Address" Data={data.telephone}/>

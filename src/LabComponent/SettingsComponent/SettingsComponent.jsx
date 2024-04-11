@@ -20,12 +20,7 @@ function SettingsComponent() {
 
   return (
     <div className="container mx-auto px-4 sm:px-8">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-lg font-semibold mb-4">Delete Account</h2>
-        <Button variant="contained" color="error" onClick={handleDeleteAccount}>
-          Delete Account
-        </Button>
-      </div>
+      <h2 className="text-2xl font-semibold mb-4">Settings</h2> {/* Added "Settings" heading */}
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-lg font-semibold mb-4">Update Password</h2>
         <TextField
@@ -57,6 +52,12 @@ function SettingsComponent() {
         />
         <Button variant="contained" color="primary" onClick={handlePasswordUpdate}>
           Update Password
+        </Button>
+      </div>
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 className="text-lg font-semibold mb-4">Delete Account</h2>
+        <Button variant="contained" color="error" onClick={handleDeleteAccount}>
+          Delete Account
         </Button>
       </div>
     </div>

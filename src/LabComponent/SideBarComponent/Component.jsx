@@ -2,9 +2,10 @@
 import React from 'react';
 import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
 import QrCodeContent from '../QrCodeContent/QrCodeContent';
-import LabLogin from '../LabLogin/LabLogin';
+//import LabLogin from '../LabLogin/LabLogin';
 import PationListComponent from '../PationListComponent/PationListComponent';
-import SettingsComponent from '../../SettingsComponent/SettingsComponent';
+import SettingsComponent from '../SettingsComponent/SettingsComponent';
+//import Dashboard from '../../Components/LabInfomationContent/LabInfomationContent';
 
 
 
@@ -17,7 +18,7 @@ function Component2() {
 }
 
 function Component3() {
-  return <div><LabLogin/></div>;
+  return <div>kkkjkj</div>;
 }
 
 function Component4() {
