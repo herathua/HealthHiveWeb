@@ -3,8 +3,11 @@ import React from 'react';
 import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
 import QrCodeContent from '../QrCodeContent/QrCodeContent';
 //import LabLogin from '../LabLogin/LabLogin';
-import PationListComponent from '../PationListComponent/PationListComponent';
+//import PationListComponent from '../PationListComponent/PationListComponent';
 import SettingsComponent from '../SettingsComponent/SettingsComponent';
+import Dashboard from '../Dashboard/Dashboard';
+import PatientListComponent from '../PationListComponent/PationListComponent';
+//import PationListComponent from '../../Components/PationListComponent/PationListComponent';
 //import Dashboard from '../../Components/LabInfomationContent/LabInfomationContent';
 
 
@@ -18,11 +21,11 @@ function Component2() {
 }
 
 function Component3() {
-  return <div>kkkjkj</div>;
+  return <div><Dashboard/></div>;
 }
 
 function Component4() {
-  return <div><PationListComponent/></div>;
+  return <div><PatientListComponent/></div>;
 }
 
 function Component5() {
