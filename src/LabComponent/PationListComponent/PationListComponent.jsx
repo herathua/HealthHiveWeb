@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Table from './Table';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
@@ -6,25 +7,40 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'; // Import the upload icon
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import PatientDataContainer from '../../CustomerDetsails/PatientDataContainer';
+//import PatientDataContainer from '../../CustomerDetails/PatientDataContainer';
 
 function PatientListComponent() {
-  const dummyPatients = [
-    { id: 1, description: 'Blood Test', invoice: 'INV001', user: 'John Doe', lab: 'Lab A' },
-    { id: 2, description: 'X-Ray', invoice: 'INV002', user: 'Jane Smith', lab: 'Lab B' },
-    { id: 3, description: 'MRI', invoice: 'INV003', user: 'Alice Johnson', lab: 'Lab C' }
-  ];
-
-  const [patients, setPatients] = useState(dummyPatients);
+  const [patients, setPatients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await axios.get('http://localhost:33000/api/labRequests/lab/1');
+        const patientData = response.data;
+        for (const patient of patientData) {
+          const userResponse = await axios.get(`http://localhost:33000/api/users/${patient.user}`);
+          patient.userDetails = userResponse.data.fullName; // Store the user's full name in patient data
+        }
+        setPatients(patientData);
+      } catch (error) {
+        setError('Failed to load patient details');
+        setOpenSnackbar(true);
+        console.error('Failed to load patient details:', error);
+      }
+    };
+
+    fetchPatients();
+  }, []);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -39,10 +55,10 @@ function PatientListComponent() {
     setOpenDialog(false);
   };
 
-  const deletePatient = (id) => {
+  const deletePatient = async (id) => {
     try {
-      const updatedPatients = patients.filter(patient => patient.id !== id);
-      setPatients(updatedPatients);
+      await axios.delete(`http://localhost:33000/api/labRequests/${id}`);
+      setPatients(prevPatients => prevPatients.filter(patient => patient.id !== id));
     } catch (error) {
       setError('Error deleting patient');
       setOpenSnackbar(true);
@@ -82,7 +98,7 @@ function PatientListComponent() {
               <TableCell>{patient.invoice}</TableCell>
               <TableCell>
                 <Link component="button" onClick={() => handleOpenDialog(patient.id)}>
-                  {patient.user}
+                  {patient.userDetails || 'Loading...'}  
                 </Link>
               </TableCell>
               <TableCell>
