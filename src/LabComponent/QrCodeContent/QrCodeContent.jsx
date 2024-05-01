@@ -30,7 +30,7 @@ function App() {
     });
 
     pdf.addImage(imgData, 'PNG', 5, 5, 280, 280);  // Adjust image position and size as needed
-    pdf.save(`${labInfo.email}-QRCode.pdf`);  // Use lab email in the PDF filename
+    pdf.save(`${labInfo.id}-QRCode.pdf`);  // Use lab email in the PDF filename
   };
 
   return (
@@ -40,7 +40,7 @@ function App() {
       <div>
         <QRCode
           id="qr-gen"
-          value={labInfo.email}
+          value={labInfo.id}
           size={290}
           level={"H"}
           includeMargin={true}

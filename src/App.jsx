@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import Header from './LabComponent/HeaderComponent/Header';
-import Sidebar from './LabComponent/SideBarComponent/Sidebar';
-import { Component1, Component2, Component3, Component4, Component5 } from './LabComponent/SideBarComponent/Component';
-import Footer from './LabComponent/FooterComponent/Footer'; // Import Footer component
+import { Component3, Component4, Component5 } from './LabComponent/SideBarComponent/Component';
 import LabLogin from './LabComponent/LabLogin/LabLogin';
-// Import LabLogin component
+import Sidebar from './LabComponent/SideBarComponent/Sidebar';
+import Header from './LabComponent/HeaderComponent/Header'; // Import the Header component
+import Footer from './LabComponent/FooterComponent/Footer'; // Import the Footer component
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeComponent, setActiveComponent] = useState(1);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [isOpen, setIsOpen] = useState(false); // State to manage sidebar visibility
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
+  const [activeComponent, setActiveComponent] = useState(3); // Default to Component3
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -23,23 +22,35 @@ function App() {
     setIsLoggedIn(true);
   };
 
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case 3:
+        return <Component3 />;
+      case 4:
+        return <Component4 />;
+      case 5:
+        return <Component5 />;
+      default:
+        return <Component3 />; // Default content
+    }
+  };
+
   return (
-    <div className="flex flex-col h-screen">
-      <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
-      {!isLoggedIn && <LabLogin onLogin={handleLogin} />} {/* Render login component if not logged in */}
-      {isLoggedIn && (
-        <div className="flex flex-1">
-          <Sidebar isOpen={isOpen} handleComponentChange={handleComponentChange} />
-          <main className="flex-1 overflow-y-auto p-6">
-            {activeComponent === 1 && <Component1 />}
-            {activeComponent === 2 && <Component2 />}
-            {activeComponent === 3 && <Component3 />}
-            {activeComponent === 4 && <Component4 />}
-            {activeComponent === 5 && <Component5 />}
-          </main>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      {isLoggedIn ? ( // If logged in, render header, sidebar, and content
+        <>
+          <Header toggleSidebar={toggleSidebar} isOpen={isOpen} /> {/* Show header */}
+          <div className="flex flex-1">
+            <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} handleComponentChange={handleComponentChange} />
+            <main className="flex-1 p-4">
+              {renderComponent()}
+            </main>
+          </div>
+        </>
+      ) : (
+        <LabLogin onLogin={handleLogin} /> // If not logged in, show login component
       )}
-      <Footer /> {/* Include Footer component */}
+      <Footer /> {/* Always render the Footer */}
     </div>
   );
 }

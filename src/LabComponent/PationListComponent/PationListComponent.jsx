@@ -13,12 +13,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import PatientDataContainer from '../../CustomerDetsails/PatientDataContainer';
-//import PatientDataContainer from '../../CustomerDetails/PatientDataContainer';
+import FileComponent from './FileComponent'; // Assume this is the component for file uploads
 
 function PatientListComponent() {
   const [patients, setPatients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [openFileDialog, setOpenFileDialog] = useState(false); // New state for file upload dialog
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -55,21 +56,24 @@ function PatientListComponent() {
     setOpenDialog(false);
   };
 
+  const handleOpenFileDialog = (patientId) => {
+    setSelectedPatientId(patientId); // Store the selected patient ID
+    setOpenFileDialog(true); // Open the file upload dialog
+  };
+
+  const handleCloseFileDialog = () => {
+    setOpenFileDialog(false); // Close the file upload dialog
+  };
+
   const deletePatient = async (id) => {
     try {
       await axios.delete(`http://localhost:33000/api/labRequests/${id}`);
-      setPatients(prevPatients => prevPatients.filter(patient => patient.id !== id));
+      setPatients((prevPatients) => prevPatients.filter((patient) => patient.id !== id));
     } catch (error) {
       setError('Error deleting patient');
       setOpenSnackbar(true);
       console.error('Error deleting patient:', error);
     }
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    console.log('Uploading file:', file.name);
-    // Perform further actions here such as uploading to a server or local processing
   };
 
   return (
@@ -108,13 +112,8 @@ function PatientListComponent() {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Upload File">
-                  <IconButton color="primary" component="label">
+                  <IconButton color="primary" onClick={() => handleOpenFileDialog(patient.id)}>
                     <CloudUploadIcon />
-                    <input
-                      type="file"
-                      hidden
-                      onChange={handleFileUpload}
-                    />
                   </IconButton>
                 </Tooltip>
               </TableCell>
@@ -122,10 +121,26 @@ function PatientListComponent() {
           ))}
         </tbody>
       </Table>
+
+      {/* Dialog for customer details */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Customer Details</DialogTitle>
         <DialogContent>
           {selectedPatientId && <PatientDataContainer patientId={selectedPatientId} />}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for file upload */}
+      <Dialog open={openFileDialog} onClose={handleCloseFileDialog}>
+        <DialogTitle>Upload File</DialogTitle>
+        <DialogContent>
+          {selectedPatientId && (
+            <FileComponent
+              patientId={selectedPatientId}
+              labRequestUrl={`http://localhost:33000/api/labRequests/${selectedPatientId}`}
+              userUrl={`http://localhost:33000/api/users/${selectedPatientId}`}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
