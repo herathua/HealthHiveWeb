@@ -6,20 +6,23 @@ import TableCell from './TableCell';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import PatientDataContainer from '../../CustomerDetsails/PatientDataContainer';
-import FileComponent from './FileComponent'; // Assume this is the component for file uploads
+import FileComponent from './FileComponent';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
 
 function PatientListComponent() {
   const [patients, setPatients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
-  const [openFileDialog, setOpenFileDialog] = useState(false); // New state for file upload dialog
+  const [openFileDialog, setOpenFileDialog] = useState(false);
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -41,6 +44,9 @@ function PatientListComponent() {
     };
 
     fetchPatients();
+    const interval = setInterval(fetchPatients, 3000); // Set interval to refresh every 30 seconds
+
+    return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
   const handleCloseSnackbar = () => {
@@ -57,12 +63,12 @@ function PatientListComponent() {
   };
 
   const handleOpenFileDialog = (patientId) => {
-    setSelectedPatientId(patientId); // Store the selected patient ID
-    setOpenFileDialog(true); // Open the file upload dialog
+    setSelectedPatientId(patientId);
+    setOpenFileDialog(true);
   };
 
   const handleCloseFileDialog = () => {
-    setOpenFileDialog(false); // Close the file upload dialog
+    setOpenFileDialog(false);
   };
 
   const deletePatient = async (id) => {
@@ -102,7 +108,7 @@ function PatientListComponent() {
               <TableCell>{patient.invoice}</TableCell>
               <TableCell>
                 <Link component="button" onClick={() => handleOpenDialog(patient.id)}>
-                  {patient.userDetails || 'Loading...'}  
+                  {patient.userDetails || 'Loading...'}
                 </Link>
               </TableCell>
               <TableCell>
@@ -111,6 +117,7 @@ function PatientListComponent() {
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
+
                 <Tooltip title="Upload File">
                   <IconButton color="primary" onClick={() => handleOpenFileDialog(patient.id)}>
                     <CloudUploadIcon />
@@ -136,13 +143,13 @@ function PatientListComponent() {
         <DialogContent>
           {selectedPatientId && (
             <FileComponent
-              patientId={selectedPatientId}
-              labRequestUrl={`http://localhost:33000/api/labRequests/${selectedPatientId}`}
-              userUrl={`http://localhost:33000/api/users/${selectedPatientId}`}
+
+              labRequestID={`${selectedPatientId}`}
             />
           )}
         </DialogContent>
       </Dialog>
+      
     </div>
   );
 }
