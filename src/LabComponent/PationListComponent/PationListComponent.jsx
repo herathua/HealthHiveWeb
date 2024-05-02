@@ -13,10 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import PatientDataContainer from '../../CustomerDetsails/PatientDataContainer';
 import FileComponent from './FileComponent';
-import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
-import Stack from '@mui/material/Stack';
 
 function PatientListComponent() {
   const [patients, setPatients] = useState([]);
@@ -33,7 +30,7 @@ function PatientListComponent() {
         const patientData = response.data;
         for (const patient of patientData) {
           const userResponse = await axios.get(`http://localhost:33000/api/users/${patient.user}`);
-          patient.userDetails = userResponse.data.fullName; // Store the user's full name in patient data
+          patient.userDetails = userResponse.data.fullName;// Store the user's full name in patient data
         }
         setPatients(patientData);
       } catch (error) {
@@ -143,13 +140,11 @@ function PatientListComponent() {
         <DialogContent>
           {selectedPatientId && (
             <FileComponent
-
               labRequestID={`${selectedPatientId}`}
             />
           )}
         </DialogContent>
       </Dialog>
-      
     </div>
   );
 }

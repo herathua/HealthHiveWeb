@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Component3, Component4, Component5 } from './LabComponent/SideBarComponent/Component';
 import LabLogin from './LabComponent/LabLogin/LabLogin';
 import Sidebar from './LabComponent/SideBarComponent/Sidebar';
-import Header from './LabComponent/HeaderComponent/Header'; // Import the Header component
-import Footer from './LabComponent/FooterComponent/Footer'; // Import the Footer component
+import Header from './LabComponent/HeaderComponent/Header';
+import Footer from './LabComponent/FooterComponent/Footer';
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false); // State to manage sidebar visibility
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
-  const [activeComponent, setActiveComponent] = useState(3); // Default to Component3
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(3);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -31,27 +32,35 @@ function App() {
       case 5:
         return <Component5 />;
       default:
-        return <Component3 />; // Default content
+        return <Component3 />;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {isLoggedIn ? ( // If logged in, render header, sidebar, and content
-        <>
-          <Header toggleSidebar={toggleSidebar} isOpen={isOpen} /> {/* Show header */}
-          <div className="flex flex-1">
-            <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} handleComponentChange={handleComponentChange} />
-            <main className="flex-1 p-4">
-              {renderComponent()}
-            </main>
-          </div>
-        </>
-      ) : (
-        <LabLogin onLogin={handleLogin} /> // If not logged in, show login component
-      )}
-      <Footer /> {/* Always render the Footer */}
-    </div>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Routes>
+          <Route path="/login" element={<LabLogin onLogin={handleLogin} />} />
+          <Route path="/" element={
+            isLoggedIn ? (
+              <>
+                <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
+                <div className="flex flex-1">
+                  <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} handleComponentChange={handleComponentChange} />
+                  <main className="flex-1 p-4">
+                    {renderComponent()}
+                  </main>
+                </div>
+              </>
+            ) : (
+              // Redirect to login or handle the login logic differently as needed
+              <LabLogin onLogin={handleLogin} />
+            )
+          } />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
