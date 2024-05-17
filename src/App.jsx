@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Component3, Component4, Component5 } from './LabComponent/SideBarComponent/Component';
+import { Component2,Component3, Component4, Component5 } from './LabComponent/SideBarComponent/Component';
 import LabLogin from './LabComponent/LabLogin/LabLogin';
 import Sidebar from './LabComponent/SideBarComponent/Sidebar';
 import Header from './LabComponent/HeaderComponent/Header';
@@ -25,6 +25,8 @@ function App() {
 
   const renderComponent = () => {
     switch (activeComponent) {
+      case 2:
+        return <Component2 />;
       case 3:
         return <Component3 />;
       case 4:
@@ -41,16 +43,13 @@ function App() {
       <div className="flex flex-col min-h-screen">
         <Routes>
           <Route path="/login" element={<LabLogin onLogin={handleLogin} />} />
-          <Route path="/" element={
-            isLoggedIn ? (
-              <>
-                <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
+          <Route path="/" element={isLoggedIn ? (<><Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
                 <div className="flex flex-1">
                   <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} handleComponentChange={handleComponentChange} />
                   <main className="flex-1 p-4">
                     {renderComponent()}
                   </main>
-                </div>
+                </div><Footer />
               </>
             ) : (
               // Redirect to login or handle the login logic differently as needed
@@ -58,7 +57,7 @@ function App() {
             )
           } />
         </Routes>
-        <Footer />
+
       </div>
     </Router>
   );

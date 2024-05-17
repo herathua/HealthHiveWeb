@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchLabData, updateLabData } from '../../services/apiService';
 import TextContent from './TextContent';
 import UpdateInformation from './UpdateInformation';
 
-const cachingKey = 'cachedLabData';
-const URL = 'http://localhost:33000/api/labs/1';
-
-function LabInfomationContent() {
+function LabInformationContent() {
     const [data, setData] = useState(null);
-    const [showUpdateForm, setShowUpdateForm] = useState(false); // Define setShowUpdateForm state variable
+    const [showUpdateForm, setShowUpdateForm] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const cachedData = localStorage.getItem(cachingKey);
-                if (cachedData) {
-                    setData(JSON.parse(cachedData));
-                } else {
-                    const response = await axios.get(URL);
-                    setData(response.data);
-                    localStorage.setItem(cachingKey, JSON.stringify(response.data));
-                }
+                const data = await fetchLabData(3); // Assuming labId is 3
+                setData(data);
             } catch (error) {
                 console.error("There was an error fetching the lab information: ", error);
             }
@@ -31,15 +22,12 @@ function LabInfomationContent() {
 
     const handleUpdate = async () => {
         try {
-            localStorage.removeItem(cachingKey);
-            setData(null);
-            setShowUpdateForm(true); // Set setShowUpdateForm to true to render the UpdateInformation component
+            setShowUpdateForm(true);
         } catch (error) {
             console.error("There was an error updating the information: ", error);
         }
     };
 
-    // Render the UpdateInformation component if showUpdateForm is true
     if (showUpdateForm) {
         return <div><UpdateInformation/></div>;
     } else if (!data) {
@@ -48,7 +36,6 @@ function LabInfomationContent() {
 
     return (
         <div>
-            
             <h2 className="text-xl font-bold text-center mb-4 text-gray-800">Laboratory Info</h2>
             <form>
                 <TextContent id="1" type="Registration No" Data={data.labRegID}/>
@@ -68,4 +55,4 @@ function LabInfomationContent() {
     );
 }
 
-export default LabInfomationContent;
+export default LabInformationContent;

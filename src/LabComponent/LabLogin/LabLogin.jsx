@@ -3,46 +3,56 @@ import Logo from '../../assets/logo.png'; // Ensure the path is correct
 import LockIcon from '@mui/icons-material/Lock'; // Import the lock icon from Material-UI
 
 const LabLoginContainer = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false); // State for remember me checkbox
+  const [emailError, setEmailError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const validateEmail = (email) => {
+    //email validation
+    return /\S+@\S+\.\S+/.test(email);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username !== '' && password !== '') {
-      onLogin();
-    } else {
-      alert('Please enter username and password');
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email address.');
+      return;
     }
+    if (password === '') {
+      alert('Please enter a password');
+      return;
+    }
+    setEmailError(''); // Clear any existing errors
+    onLogin(); // Call the login handler
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Left Box with rounded corners on the right side */}
+    <div className="flex flex-col md:flex-row h-screen">
       <div className="flex-1 bg-blue-700 rounded-r-3xl flex flex-col justify-center items-center">
-        <img src={Logo} alt="Health Hive Logo" className="w-48 h-48" />
-        <h2 className="text-white text-xl font-semibold mt-4"style={{ fontSize: 'calc(2rem + 1vw)' }}>Health Hive</h2>
+        <img src={Logo} alt="Health Hive Logo" className="mx-auto h-24 w-24 md:h-48 md:w-48" />
+        <h2 className="text-white text-xl font-semibold mt-4" style={{ fontSize: 'calc(2rem + 1vw)' }}>Health Hive</h2>
+        <span className="text-white" style={{ padding: '10px' }}>Health passport system</span>
       </div>
-
-      {/* Right Box: LabLogin Component */}
-      <div className="flex-1 flex justify-center items-center bg-gray-100">
+      <div className="flex-1 flex justify-center items-center bg-gray-100" style={{ padding: '10px' }}>
         <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96">
           <div className="mb-4 flex flex-col items-center">
             <LockIcon style={{ fontSize: 40, color: '#3B82F6' }} />
             <h3 className="text-xl font-semibold my-2">Sign In</h3>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              Username
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              Email
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
+            {emailError && <p className="text-red-500 text-xs italic">{emailError}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">

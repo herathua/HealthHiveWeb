@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
+
 
 function SettingsComponent() {
   const [tempPassword, setTempPassword] = useState('');
@@ -11,13 +13,6 @@ function SettingsComponent() {
     password: '',
     confirmPassword: ''
   });
-
-  const handleDeleteAccount = () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete your account?');
-    if (confirmDelete) {
-      // Perform DELETE request to delete the account
-    }
-  };
 
   const validatePassword = () => {
     let isValid = true;
@@ -50,9 +45,14 @@ function SettingsComponent() {
     }
   };
 
+  const isPasswordUpdateDisabled = !tempPassword || !password || !confirmPassword || error.password || error.confirmPassword;
+
   return (
     <div className="container mx-auto px-4 sm:px-8">
       <h2 className="text-2xl font-semibold mb-4">Settings</h2>
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full flex flex-col">
+                    <LabInfomationContent className="flex-grow" />
+                </div>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-lg font-semibold mb-4">Update Password</h2>
         <TextField
@@ -85,16 +85,32 @@ function SettingsComponent() {
           error={!!error.confirmPassword}
           helperText={error.confirmPassword}
         />
-        <Button variant="contained" color="primary" onClick={handlePasswordUpdate}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handlePasswordUpdate}
+          disabled={isPasswordUpdateDisabled}
+        >
           Update Password
         </Button>
       </div>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-lg font-semibold mb-4">Delete Account</h2>
-        <Button variant="contained" color="error" onClick={handleDeleteAccount}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => {
+            const confirmDelete = window.confirm('Are you sure you want to delete your account?');
+            if (confirmDelete) {
+              // Perform DELETE request to delete the account
+              console.log('Account deletion initiated.');
+            }
+          }}
+        >
           Delete Account
         </Button>
       </div>
+
     </div>
   );
 }
