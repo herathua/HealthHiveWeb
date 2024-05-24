@@ -16,8 +16,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.15.14",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "^5.15.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@react-keycloak/web": "^3.4.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "cookie-parser": "^1.4.6",
@@ -25,7 +26,7 @@
     "downloader-pdf": "^1.0.3",
     "express": "^4.19.2",
     "jspdf": "^2.5.1",
-    "keycloak-js": "^24.0.2",
+    "keycloak-js": "^24.0.4",
     "qrcode": "^1.5.3",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
@@ -33,7 +34,7 @@
     "react-dom": "^18.2.0",
     "react-pro-sidebar": "^1.1.0",
     "react-qr-code": "^2.0.12",
-    "react-router-dom": "^6.22.3",
+    "react-router-dom": "^6.23.1",
     "styled-components": "^6.1.8"
   },
   "devDependencies": {

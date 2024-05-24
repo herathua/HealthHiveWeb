@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
-import Logo from '../../assets/logo.png'; // Ensure the path is correct
-import LockIcon from '@mui/icons-material/Lock'; // Import the lock icon from Material-UI
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Logo from '../../assets/logo.png';
+import LockIcon from '@mui/icons-material/Lock';
 
-const LabLoginContainer = ({ onLogin }) => {
+const LabLoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
-  const validateEmail = (email) => {
-    //email validation
-    return /\S+@\S+\.\S+/.test(email);
-  };
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address.');
-      return;
+
+    try {
+      //const response = await axios.post('/api/login', { email, password });
+      //console.log(response.data);
+      navigate('/lab'); // Example navigation
+
+    } catch (error) {
+      console.error('Login error:', error);
+      setEmailError('Invalid email or password');
     }
-    if (password === '') {
-      alert('Please enter a password');
-      return;
-    }
-    setEmailError(''); // Clear any existing errors
-    onLogin(); // Call the login handler
   };
 
   return (
@@ -87,7 +86,7 @@ const LabLoginContainer = ({ onLogin }) => {
             >
               Sign In
             </button>
-            <a href="#" className="text-sm text-blue-500 hover:text-blue-700 text-left">
+            <a href="/lab" className="text-sm text-blue-500 hover:text-blue-700 text-left">
               Forgot password?
             </a>
             <div className="flex justify-between text-sm">

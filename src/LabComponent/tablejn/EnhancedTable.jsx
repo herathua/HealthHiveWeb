@@ -24,33 +24,20 @@ import { visuallyHidden } from '@mui/utils';
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import logo from '../../assets/logo.png';
 import Avatar from '@mui/material/Avatar';
+import DataJN  from './datajn';
+import axios from 'axios';
+import AnotherComponent from './UplodeState';
 
-function createData(id, name, calories, fat, carbs, protein) {
+function createData(id, description, invoice, user, lab) {
   return {
     id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+    description,
+    invoice,
+    user,
+    lab,
+  
   };
 }
-
-const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -92,7 +79,7 @@ const headCells = [
     label: 'Name',
   },
   {
-    id: 'calories',
+    id: 'ID',
     numeric: true,
     disablePadding: false,
     label: 'ID',
@@ -103,12 +90,7 @@ const headCells = [
     disablePadding: false,
     label: 'DESCRIPTION',
   },
-  {
-    id: 'carbs',
-    numeric: true,
-    disablePadding: false,
-    label: 'INVOICE',
-  },
+
   {
     id: 'protein',
     numeric: true,
@@ -119,7 +101,7 @@ const headCells = [
     id: 'protein',
     numeric: true,
     disablePadding: false,
-    label: 'ACTIONS',
+    label: 'UPLODE',
   },
   
 ];
@@ -210,7 +192,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Uplode List
         </Typography>
       )}
 
@@ -236,12 +218,27 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable() {
+  const [rows, setRows] = React.useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+ 
+
+  React.useEffect(() => {
+    axios.get('http://localhost:33000/api/labRequests/lab/1')
+      .then(response => {
+        const fetchedRows = response.data.map(item =>
+          createData(item.id, item. invoice, item.invoice, item.user, item.lab)
+        );
+        setRows(fetchedRows);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -354,13 +351,12 @@ export default function EnhancedTable() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.invoice}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
-                    <TableCell align="right"><FileUploadRoundedIcon/></TableCell>
+                    <TableCell align="right">{row.id}</TableCell>
+                    <TableCell align="right">{row.description}</TableCell>
+                    <TableCell align="right"><AnotherComponent/></TableCell>
+                    <TableCell align="right"><DataJN/></TableCell>
                   </TableRow>
                 );
               })}
