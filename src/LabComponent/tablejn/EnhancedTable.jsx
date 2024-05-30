@@ -20,7 +20,9 @@ const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null); // New state for selected file content
 
   useEffect(() => {
     fetchLabRequests();
@@ -76,19 +78,46 @@ const LabRequestTable = () => {
       const fileInput = document.createElement('input');
       fileInput.setAttribute('type', 'file');
       fileInput.click();
-
+  
       fileInput.onchange = async () => {
         const file = fileInput.files[0];
-        const filePath = await uploadFile(file);
-        const labDataUploadId = await handleLabDataUpload(labRequestId, file.name);
-        await handleFileMetadata(file.name, file.type, filePath, new Date().toISOString(), labDataUploadId);
-        fetchLabRequests(); // Refresh lab requests after upload
+        setSelectedFile(file); // Set selected file content
+        setOpen1(true); // Open modal to display file content
+  
+        // Store the selected labRequestId in a state variable
+        setSelectedLabRequestId(labRequestId);
       };
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   };
-
+  
+  const handleFileSelect = async () => {
+    if (selectedFile && selectedLabRequestId) {
+      try {
+        const filePath = await uploadFile(selectedFile);
+        const labDataUploadId = await handleLabDataUpload(selectedLabRequestId, selectedFile.name);
+        await handleFileMetadata(selectedFile.name, selectedFile.type, filePath, new Date().toISOString(), labDataUploadId);
+        fetchLabRequests(); // Refresh lab requests after upload
+        setOpen1(false); // Close the modal
+      } catch (error) {
+        console.error('Error during file selection process:', error);
+      }
+    } else {
+      console.log("Select a correct file");
+    }
+  };
+  
+  // New state variable to store the selected lab request ID
+  const [selectedLabRequestId, setSelectedLabRequestId] = useState(null);
+  
+  // Existing handleClose1 function remains the same
+  const handleClose1 = () => {
+    setOpen1(false);
+    setSelectedFile(null);
+    setSelectedLabRequestId(null);
+  };
+  
   const uploadFile = async (file) => {
     try {
       const formData = new FormData();
@@ -161,38 +190,38 @@ const LabRequestTable = () => {
 
   return (
     <div>
-            <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
             alignItems: 'center', mb: 2,
-            padding: "13px", 
-            }}>
+        padding: "13px", 
+      }}>
             <Typography variant="h4" 
             component="h2" 
             fontWeight="bold"
             >
-              Lab Requests
-            </Typography>
-          </Box>
+          Lab Requests
+        </Typography>
+      </Box>
 
 
-          <TextField 
+      <TextField 
         
-  label="Search User Name" 
-  variant="outlined"
-  fullWidth 
-  margin="normal" 
-  value={searchTerm} 
-  onChange={handleSearchChange} 
+        label="Search User Name" 
+        variant="outlined"
+        fullWidth 
+        margin="normal" 
+        value={searchTerm} 
+        onChange={handleSearchChange} 
   sx={{ width: 400, mx: 'auto', display: 'block' }} 
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position="start">
-        <SearchIcon />
-      </InputAdornment>
-    ),
-  }}
-/>
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -219,7 +248,58 @@ const LabRequestTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      
+
+      <Modal open={open1} onClose={handleClose1}>
+  <Box
+    sx={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 600, // Increased width for better viewing
+      bgcolor: 'background.paper',
+      borderRadius: 3,
+      boxShadow: 3,
+      p: 4,
+    }}
+  >
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 2,
+        borderBottom: "solid 1px #666",
+      }}
+    >
+      <Typography variant="h6" component="h2" fontWeight="bold">
+        File Details
+      </Typography>
+      <IconButton onClick={handleClose1}>
+        <CloseIcon />
+      </IconButton>
+    </Box>
+    {selectedFile && (
+      <div>
+        <Typography variant="body1">File Name: {selectedFile.name}</Typography>
+        <Typography variant="body1">File Size: {(selectedFile.size / 1024).toFixed(2)} KB</Typography>
+        <Box sx={{ mt: 2, maxHeight: 400, overflow: 'auto' }}>
+          {selectedFile.type === 'application/pdf' ? (
+            <embed src={URL.createObjectURL(selectedFile)} type="application/pdf" width="100%" height="400px" />
+          ) : selectedFile.type.startsWith('image/') ? (
+            <img src={URL.createObjectURL(selectedFile)} alt={selectedFile.name} style={{ width: '100%' }} />
+          ) : (
+            <Typography variant="body1">Unsupported file type</Typography>
+          )}
+        </Box>
+      </div>
+    )}
+    <Box sx={{ mt: 2 }}>
+      <Button onClick={handleFileSelect} variant="contained" color="primary" sx={{ mr: 2 }}>Select</Button>
+      <Button onClick={handleClose1} variant="contained" color="secondary">Not Select</Button>
+    </Box>
+  </Box>
+</Modal>
       <Modal open={open} onClose={handleClose}>
         <Box 
           sx={{ 
