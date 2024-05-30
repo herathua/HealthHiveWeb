@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Modal, Button } from 'react-bootstrap';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     fetchLabRequests();
@@ -15,18 +24,18 @@ const LabRequestTable = () => {
 
   const fetchLabRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:33000/api/labRequests/lab/2');
+      const response = await axios.get('http://localhost:33000/api/labRequests/lab/4');
       const requests = response.data;
 
       const formattedRequests = await Promise.all(requests.map(async (request) => {
         const userName = await fetchUserName(request.user);
-        const status = await checkUploadStatus(request.id); // Check upload status
+        const status = await checkUploadStatus(request.id);
         return {
           id: request.id,
           description: request.description,
           userName: userName,
           userId: request.user,
-          status: status || 'Not Uploaded', // Default status if not found
+          status: status || 'Not Uploaded',
         };
       }));
 
@@ -50,7 +59,7 @@ const LabRequestTable = () => {
     try {
       const response = await axios.get(`http://localhost:33000/api/users/${userId}`);
       setSelectedUser(response.data);
-      setShowModal(true);
+      setOpen(true);
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
@@ -112,6 +121,7 @@ const LabRequestTable = () => {
         createdDate,
         labDataUpload: labDataUploadId,
       });
+      console.log('File metadata uploaded:', response.data);
     } catch (error) {
       console.error('Error handling file metadata:', error);
     }
@@ -130,61 +140,58 @@ const LabRequestTable = () => {
     }
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedUser(null);
+  };
+
   return (
     <div>
       <h2>Lab Requests</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>User Name</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Upload</th>
-          </tr>
-        </thead>
-        <tbody>
-          {labRequests.map((request) => (
-            <tr key={request.id}>
-              <td>{request.id}</td>
-              <td>
-                <button onClick={() => fetchUserDetails(request.userId)} style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}>
-                  {request.userName}
-                </button>
-              </td>
-              <td>{request.description}</td>
-              <td>{request.status}</td>
-              <td><button onClick={() => handleFileUpload(request.id)}>Upload</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>User Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Request ID</TableCell>
+              <TableCell>User Name</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Upload</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {labRequests.map((request) => (
+              <TableRow key={request.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell component="th" scope="row">{request.id}</TableCell>
+                <TableCell>
+                  <Button onClick={() => fetchUserDetails(request.userId)}>{request.userName}</Button>
+                </TableCell>
+                <TableCell>{request.description}</TableCell>
+                <TableCell>{request.status}</TableCell>
+                <TableCell><Button onClick={() => handleFileUpload(request.id)}>Upload</Button></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
           {selectedUser && (
             <div>
-              <p><strong>Full Name:</strong> {selectedUser.fullName}</p>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
-              <p><strong>Telephone Number:</strong> {selectedUser.telephoneNumber}</p>
-              <p><strong>Gender:</strong> {selectedUser.gender}</p>
-              <p><strong>Age:</strong> {selectedUser.age}</p>
-              <p><strong>Date of Birth:</strong> {selectedUser.dateOfBirth}</p>
-              <p><strong>Birth Certificate Number:</strong> {selectedUser.birthCertificateNumber}</p>
-              <p><strong>NIC:</strong> {selectedUser.nic}</p>
-              <p><strong>Emergency Contact Name:</strong> {selectedUser.emergencyContactName}</p>
-              <p><strong>Emergency Contact Number:</strong> {selectedUser.emergencyContactNumber}</p>
+              <h2>{selectedUser.fullName}</h2>
+              <p>Email: {selectedUser.email}</p>
+              <p>Telephone: {selectedUser.telephoneNumber}</p>
+              <p>Gender: {selectedUser.gender}</p>
+              <p>Age: {selectedUser.age}</p>
+              <p>Date of Birth: {selectedUser.dateOfBirth}</p>
+              <p>Birth Certificate Number: {selectedUser.birthCertificateNumber}</p>
+              <p>NIC: {selectedUser.nic}</p>
+              <p>Emergency Contact: {selectedUser.emergencyContactName}</p>
+              <p>Emergency Contact Number: {selectedUser.emergencyContactNumber}</p>
             </div>
           )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
+        </Box>
       </Modal>
     </div>
   );
