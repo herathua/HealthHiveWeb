@@ -7,12 +7,14 @@ import {
   ListItemText,
   Divider,
   IconButton,
+  Box,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 
@@ -40,11 +42,20 @@ function Sidebar({ isOpen, toggleSidebar, handleComponentChange, handleLogout })
             backgroundColor: '#F5F5F5',
             borderRadius: '16px', // Adds rounded corners
             padding: 2,
+            width: isOpen ? 250 : 60, // Adjust width based on open state
+            overflow: 'hidden',
           },
         }}
       >
-        <List sx={{ width: 250, backgroundColor: '#F5F5F5', borderRadius: '16px' }}> {/* Rounded list background */}
+        {isOpen && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <IconButton onClick={toggleSidebar}>
+              <ArrowBackIosIcon sx={{ color: '#1E88E5' }} />
+            </IconButton>
+          </Box>
+        )}
 
+        <List sx={{ width: '100%', backgroundColor: '#F5F5F5', borderRadius: '16px' }}>
           {/* Dashboard */}
           <ListItem
             button
