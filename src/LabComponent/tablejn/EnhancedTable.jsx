@@ -14,7 +14,10 @@ import { Typography, IconButton, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-
+import FileOpenIcon from '@mui/icons-material/FileOpen';
+import Tooltip from '@mui/material/Tooltip';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
@@ -32,7 +35,7 @@ const LabRequestTable = () => {
 
   const fetchLabRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:33000/api/labRequests/lab/4');
+      const response = await axios.get('http://localhost:33000/api/labRequests/lab/3');
       const requests = response.data;
 
       const formattedRequests = await Promise.all(requests.map(async (request) => {
@@ -241,8 +244,16 @@ const LabRequestTable = () => {
                   <Button onClick={() => fetchUserDetails(request.userId)}>{request.userName}</Button>
                 </TableCell>
                 <TableCell>{request.description}</TableCell>
-                <TableCell>{request.status}</TableCell>
-                <TableCell><Button onClick={() => handleFileUpload(request.id)}>Upload</Button></TableCell>
+                <TableCell>{request.status === 'Uploaded' ? (
+          <Tooltip title="File Uploaded">
+            <CheckCircleIcon color="success" />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Upload Pending">
+            <PendingActionsIcon color="info" />
+          </Tooltip>
+        )}</TableCell>
+                <TableCell><Tooltip title="Upload file"><Button onClick={() => handleFileUpload(request.id)}><FileOpenIcon/></Button></Tooltip></TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -256,7 +267,7 @@ const LabRequestTable = () => {
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      width: 600, // Increased width for better viewing
+      width: "80%",
       bgcolor: 'background.paper',
       borderRadius: 3,
       boxShadow: 3,
