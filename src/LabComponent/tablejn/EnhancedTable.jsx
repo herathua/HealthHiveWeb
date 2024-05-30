@@ -194,6 +194,7 @@ const LabRequestTable = () => {
   return (
     <div>
       <Box sx={{ 
+        marginTop: 2,
         display: 'flex', 
         justifyContent: 'space-between', 
             alignItems: 'center', mb: 2,

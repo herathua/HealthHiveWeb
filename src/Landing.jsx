@@ -47,7 +47,7 @@ const LandingPage = () => {
           padding: 5,
           borderRadius: 3,
           boxShadow: 3,
-          marginTop: 2,
+          marginTop: 3,
           marginBottom: 2,
         }}
       >
@@ -79,17 +79,14 @@ const LandingPage = () => {
             User Login
           </Button>
         </Box>
-      </Box>
-
-      {/* Footer Section */}
-      <Box
+        <Box
         sx={{
           width: '100%',
           textAlign: 'center',
           padding: 2,
-          borderTop: '1px solid #ccc',
-          bgcolor: 'rgba(224, 247, 250, 0.6)', // Semi-transparent white background
-          boxShadow: 3,
+          borderRadius: 3,
+          bgcolor: 'rgba(224, 247, 250, 0.9)', // Semi-transparent white background
+          marginTop: 6,
         }}
       >
         <Typography variant="body1" gutterBottom>
@@ -113,6 +110,9 @@ const LandingPage = () => {
           {/* Add more social media links as needed */}
         </Box>
       </Box>
+      </Box>
+
+      
     </Container>
   );
 };

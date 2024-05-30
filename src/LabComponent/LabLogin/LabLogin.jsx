@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../../assets/logo.png';
@@ -12,12 +12,28 @@ const LabLoginContainer = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      //const response = await axios.post('/api/login', { email, password });
-      //console.log(response.data);
+      // Example API call
+      // const response = await axios.post('/api/login', { email, password });
+      // console.log(response.data);
+
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
       navigate('/lab'); // Example navigation
 
     } catch (error) {
