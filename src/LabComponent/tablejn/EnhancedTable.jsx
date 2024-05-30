@@ -10,11 +10,17 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import { Typography, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchLabRequests();
@@ -145,9 +151,48 @@ const LabRequestTable = () => {
     setSelectedUser(null);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredRequests = labRequests.filter((request) =>
+    request.userName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
-      <h2>Lab Requests</h2>
+            <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', mb: 2,
+            padding: "13px", 
+            }}>
+            <Typography variant="h4" 
+            component="h2" 
+            fontWeight="bold"
+            >
+              Lab Requests
+            </Typography>
+          </Box>
+
+
+          <TextField 
+        
+  label="Search User Name" 
+  variant="outlined"
+  fullWidth 
+  margin="normal" 
+  value={searchTerm} 
+  onChange={handleSearchChange} 
+  sx={{ width: 400, mx: 'auto', display: 'block' }} 
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <SearchIcon />
+      </InputAdornment>
+    ),
+  }}
+/>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -160,7 +205,7 @@ const LabRequestTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {labRequests.map((request) => (
+            {filteredRequests.map((request) => (
               <TableRow key={request.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell component="th" scope="row">{request.id}</TableCell>
                 <TableCell>
@@ -176,19 +221,47 @@ const LabRequestTable = () => {
       </TableContainer>
       
       <Modal open={open} onClose={handleClose}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
+        <Box 
+          sx={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            width: 400, 
+            bgcolor: 'background.paper', 
+            borderRadius: 3, 
+            boxShadow: 3, 
+            p: 4 
+          }}
+        >
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', mb: 2, 
+            borderBottom: "solid 1px #666"
+            }}>
+            <Typography variant="h6" 
+            component="h2" 
+            fontWeight="bold"
+            >
+              Customer Details
+            </Typography>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
           {selectedUser && (
             <div>
-              <h2>{selectedUser.fullName}</h2>
-              <p>Email: {selectedUser.email}</p>
-              <p>Telephone: {selectedUser.telephoneNumber}</p>
-              <p>Gender: {selectedUser.gender}</p>
-              <p>Age: {selectedUser.age}</p>
-              <p>Date of Birth: {selectedUser.dateOfBirth}</p>
-              <p>Birth Certificate Number: {selectedUser.birthCertificateNumber}</p>
-              <p>NIC: {selectedUser.nic}</p>
-              <p>Emergency Contact: {selectedUser.emergencyContactName}</p>
-              <p>Emergency Contact Number: {selectedUser.emergencyContactNumber}</p>
+              <Typography variant="body1">Full Name: {selectedUser.fullName}</Typography>
+              <Typography variant="body1">Email: {selectedUser.email}</Typography>
+              <Typography variant="body1">Telephone: {selectedUser.telephoneNumber}</Typography>
+              <Typography variant="body1">Gender: {selectedUser.gender}</Typography>
+              <Typography variant="body1">Age: {selectedUser.age}</Typography>
+              <Typography variant="body1">Date of Birth: {selectedUser.dateOfBirth}</Typography>
+              <Typography variant="body1">Birth Certificate Number: {selectedUser.birthCertificateNumber}</Typography>
+              <Typography variant="body1">NIC: {selectedUser.nic}</Typography>
+              <Typography variant="body1">Emergency Contact: {selectedUser.emergencyContactName}</Typography>
+              <Typography variant="body1">Emergency Contact Number: {selectedUser.emergencyContactNumber}</Typography>
             </div>
           )}
         </Box>
