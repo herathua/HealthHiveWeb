@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import LinearProgress from '@mui/material/LinearProgress';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,6 +18,7 @@ import FileOpenIcon from '@mui/icons-material/FileOpen';
 import Tooltip from '@mui/material/Tooltip';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import { fetchLabRequestsByLabId, fetchUserName, fetchUserDataByUserId, UplodeFileToIPFS, handleLabDataUploadinAPI, handleFileMetadatainAPI, checkUploadStatusInAPI } from '.././../services/apiService';
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
@@ -26,6 +27,8 @@ const LabRequestTable = () => {
   const [open1, setOpen1] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFile, setSelectedFile] = useState(null); // New state for selected file content
+  const [prevRequests, setPrevRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchLabRequests();
@@ -35,41 +38,40 @@ const LabRequestTable = () => {
 
   const fetchLabRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:33000/api/labRequests/lab/3');
-      const requests = response.data;
-
-      const formattedRequests = await Promise.all(requests.map(async (request) => {
-        const userName = await fetchUserName(request.user);
-        const status = await checkUploadStatus(request.id);
-        return {
-          id: request.id,
-          description: request.description,
-          userName: userName,
-          userId: request.user,
-          status: status || 'Not Uploaded',
-        };
-      }));
-
-      setLabRequests(formattedRequests);
+      const requests = await fetchLabRequestsByLabId();
+      // Check if there are any changes in requests
+      if (!areRequestsEqual(prevRequests, requests)) {
+        setPrevRequests(requests); // Update previous requests
+        const formattedRequests = await Promise.all(requests.map(async (request) => {
+          const userName = await fetchUserName(request.user);
+          const status = await checkUploadStatus(request.id);
+          return {
+            id: request.id,
+            description: request.description,
+            userName: userName,
+            userId: request.user,
+            status: status || 'Not Uploaded',
+          };
+        }));
+        setLabRequests(formattedRequests);
+      }
     } catch (error) {
       console.error('Error fetching lab requests:', error);
     }
-  };
+  }
 
-  const fetchUserName = async (userId) => {
-    try {
-      const response = await axios.get(`http://localhost:33000/api/users/${userId}`);
-      return response.data.fullName;
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-      return 'Unknown User';
+  const areRequestsEqual = (prevRequests, newRequests) => {
+    if (prevRequests.length !== newRequests.length) return false;
+    for (let i = 0; i < prevRequests.length; i++) {
+      if (prevRequests[i].id !== newRequests[i].id) return false;
     }
-  };
+    return true;
+  }
 
   const fetchUserDetails = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:33000/api/users/${userId}`);
-      setSelectedUser(response.data);
+      const response = await fetchUserDataByUserId(userId);
+      setSelectedUser(response);
       setOpen(true);
     } catch (error) {
       console.error('Error fetching user details:', error);
@@ -81,12 +83,12 @@ const LabRequestTable = () => {
       const fileInput = document.createElement('input');
       fileInput.setAttribute('type', 'file');
       fileInput.click();
-  
+
       fileInput.onchange = async () => {
         const file = fileInput.files[0];
         setSelectedFile(file); // Set selected file content
         setOpen1(true); // Open modal to display file content
-  
+
         // Store the selected labRequestId in a state variable
         setSelectedLabRequestId(labRequestId);
       };
@@ -94,14 +96,16 @@ const LabRequestTable = () => {
       console.error('Error uploading file:', error);
     }
   };
-  
+
   const handleFileSelect = async () => {
     if (selectedFile && selectedLabRequestId) {
       try {
+        setLoading(true);
         const filePath = await uploadFile(selectedFile);
         const labDataUploadId = await handleLabDataUpload(selectedLabRequestId, selectedFile.name);
         await handleFileMetadata(selectedFile.name, selectedFile.type, filePath, new Date().toISOString(), labDataUploadId);
         fetchLabRequests(); // Refresh lab requests after upload
+        setLoading(false);
         setOpen1(false); // Close the modal
       } catch (error) {
         console.error('Error during file selection process:', error);
@@ -110,27 +114,23 @@ const LabRequestTable = () => {
       console.log("Select a correct file");
     }
   };
-  
+
   // New state variable to store the selected lab request ID
   const [selectedLabRequestId, setSelectedLabRequestId] = useState(null);
-  
+
   // Existing handleClose1 function remains the same
   const handleClose1 = () => {
     setOpen1(false);
     setSelectedFile(null);
     setSelectedLabRequestId(null);
   };
-  
+
   const uploadFile = async (file) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await axios.post('http://localhost:33000/api/ipfs/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
+      const response = await UplodeFileToIPFS(file);
+      return response;
     } catch (error) {
       console.error('Error uploading file:', error);
       return null;
@@ -139,11 +139,8 @@ const LabRequestTable = () => {
 
   const handleLabDataUpload = async (labRequestId, description) => {
     try {
-      const response = await axios.post('http://localhost:33000/api/labDataUploads', {
-        description,
-        labRequest: labRequestId,
-      });
-      return response.data;
+      const response = await handleLabDataUploadinAPI(labRequestId, description);
+      return response;
     } catch (error) {
       console.error('Error handling lab data upload:', error);
       return null;
@@ -152,14 +149,7 @@ const LabRequestTable = () => {
 
   const handleFileMetadata = async (fileName, fileType, filePath, createdDate, labDataUploadId) => {
     try {
-      const response = await axios.post('http://localhost:33000/api/files', {
-        name: fileName,
-        type: fileType,
-        filePath,
-        createdDate,
-        labDataUpload: labDataUploadId,
-      });
-      console.log('File metadata uploaded:', response.data);
+      const response = await handleFileMetadatainAPI(fileName, fileType, filePath, createdDate, labDataUploadId);
     } catch (error) {
       console.error('Error handling file metadata:', error);
     }
@@ -167,12 +157,8 @@ const LabRequestTable = () => {
 
   const checkUploadStatus = async (labRequestId) => {
     try {
-      const response = await axios.get(`http://localhost:33000/api/labDataUploads/lab/${labRequestId}`);
-      if (response.data) {
-        return 'Uploaded';
-      } else {
-        return 'Not Uploaded';
-      }
+      const response = await checkUploadStatusInAPI(labRequestId);
+      return response;
     } catch (error) {
       return null;
     }
@@ -192,32 +178,33 @@ const LabRequestTable = () => {
   );
 
   return (
+
     <div>
-      <Box sx={{ 
+      <Box sx={{
         marginTop: 2,
-        display: 'flex', 
-        justifyContent: 'space-between', 
-            alignItems: 'center', mb: 2,
-        padding: "13px", 
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center', mb: 2,
+        padding: "13px",
       }}>
-            <Typography variant="h4" 
-            component="h2" 
-            fontWeight="bold"
-            >
+        <Typography variant="h4"
+          component="h2"
+          fontWeight="bold"
+        >
           Lab Requests
         </Typography>
       </Box>
 
 
-      <TextField 
-        
-        label="Search User Name" 
+      <TextField
+
+        label="Search User Name"
         variant="outlined"
-        fullWidth 
-        margin="normal" 
-        value={searchTerm} 
-        onChange={handleSearchChange} 
-  sx={{ width: 400, mx: 'auto', display: 'block' }} 
+        fullWidth
+        margin="normal"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        sx={{ width: 400, mx: 'auto', display: 'block' }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -228,15 +215,17 @@ const LabRequestTable = () => {
       />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Request ID</TableCell>
-              <TableCell>User Name</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Upload</TableCell>
+          <TableHead className="bg-blue-100">
+            <TableRow className="text-left">
+              <TableCell className="font-semibold">Request ID</TableCell>
+              <TableCell className="font-semibold">User Name</TableCell>
+              <TableCell className="font-semibold">Description</TableCell>
+              <TableCell className="font-semibold">Status</TableCell>
+              <TableCell className="font-semibold">Upload</TableCell>
+
             </TableRow>
           </TableHead>
+
           <TableBody>
             {filteredRequests.map((request) => (
               <TableRow key={request.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -246,15 +235,15 @@ const LabRequestTable = () => {
                 </TableCell>
                 <TableCell>{request.description}</TableCell>
                 <TableCell>{request.status === 'Uploaded' ? (
-          <Tooltip title="File Uploaded">
-            <CheckCircleIcon color="success" />
-          </Tooltip>
-        ) : (
-          <Tooltip title="Upload Pending">
-            <PendingActionsIcon color="info" />
-          </Tooltip>
-        )}</TableCell>
-                <TableCell><Tooltip title="Upload file"><Button onClick={() => handleFileUpload(request.id)}><FileOpenIcon/></Button></Tooltip></TableCell>
+                  <Tooltip title="File Uploaded">
+                    <CheckCircleIcon color="success" />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Upload Pending">
+                    <PendingActionsIcon color="info" />
+                  </Tooltip>
+                )}</TableCell>
+                <TableCell><Tooltip title="Upload file"><Button onClick={() => handleFileUpload(request.id)}><FileOpenIcon /></Button></Tooltip></TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -262,79 +251,80 @@ const LabRequestTable = () => {
       </TableContainer>
 
       <Modal open={open1} onClose={handleClose1}>
-  <Box
-    sx={{
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: "80%",
-      bgcolor: 'background.paper',
-      borderRadius: 3,
-      boxShadow: 3,
-      p: 4,
-    }}
-  >
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 2,
-        borderBottom: "solid 1px #666",
-      }}
-    >
-      <Typography variant="h6" component="h2" fontWeight="bold">
-        File Details
-      </Typography>
-      <IconButton onClick={handleClose1}>
-        <CloseIcon />
-      </IconButton>
-    </Box>
-    {selectedFile && (
-      <div>
-        <Typography variant="body1">File Name: {selectedFile.name}</Typography>
-        <Typography variant="body1">File Size: {(selectedFile.size / 1024).toFixed(2)} KB</Typography>
-        <Box sx={{ mt: 2, maxHeight: 400, overflow: 'auto' }}>
-          {selectedFile.type === 'application/pdf' ? (
-            <embed src={URL.createObjectURL(selectedFile)} type="application/pdf" width="100%" height="400px" />
-          ) : selectedFile.type.startsWith('image/') ? (
-            <img src={URL.createObjectURL(selectedFile)} alt={selectedFile.name} style={{ width: '100%' }} />
+
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: "80%",
+            bgcolor: 'background.paper',
+            borderRadius: 3,
+            boxShadow: 3,
+            p: 4,
+          }}
+
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+
+            <Typography variant="h6" component="h2" fontWeight="bold">
+              File Details
+
+            </Typography>
+            <IconButton onClick={handleClose1}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {loading ? (
+            <LinearProgress />
           ) : (
-            <Typography variant="body1">Unsupported file type</Typography>
+            <Box sx={{ alignItems: 'center', marginBottom: 2, borderBottom: 'solid 2px #666' }}></Box>
           )}
+          {selectedFile && (
+            <div>
+              <Typography variant="body1">File Name: {selectedFile.name}</Typography>
+              <Typography variant="body1">File Size: {(selectedFile.size / 1024).toFixed(2)} KB</Typography>
+              <Box sx={{ mt: 2, maxHeight: 400, overflow: 'auto' }}>
+                {selectedFile.type === 'application/pdf' ? (
+                  <embed src={URL.createObjectURL(selectedFile)} type="application/pdf" width="100%" height="400px" />
+                ) : selectedFile.type.startsWith('image/') ? (
+                  <img src={URL.createObjectURL(selectedFile)} alt={selectedFile.name} style={{ width: '100%' }} />
+                ) : (
+                  <Typography variant="body1">Unsupported file type</Typography>
+                )}
+              </Box>
+            </div>
+          )}
+          <Box sx={{ mt: 2 }}>
+            <Button onClick={handleFileSelect} variant="contained" color="primary" sx={{ mr: 2 }}>Select</Button>
+            <Button onClick={handleClose1} variant="contained" color="secondary">Not Select</Button>
+          </Box>
         </Box>
-      </div>
-    )}
-    <Box sx={{ mt: 2 }}>
-      <Button onClick={handleFileSelect} variant="contained" color="primary" sx={{ mr: 2 }}>Select</Button>
-      <Button onClick={handleClose1} variant="contained" color="secondary">Not Select</Button>
-    </Box>
-  </Box>
-</Modal>
+      </Modal>
       <Modal open={open} onClose={handleClose}>
-        <Box 
-          sx={{ 
-            position: 'absolute', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)', 
-            width: 400, 
-            bgcolor: 'background.paper', 
-            borderRadius: 3, 
-            boxShadow: 3, 
-            p: 4 
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 3,
+            boxShadow: 3,
+            p: 4
           }}
         >
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', mb: 2, 
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center', mb: 2,
             borderBottom: "solid 1px #666"
-            }}>
-            <Typography variant="h6" 
-            component="h2" 
-            fontWeight="bold"
+          }}>
+            <Typography variant="h6"
+              component="h2"
+              fontWeight="bold"
             >
               Customer Details
             </Typography>

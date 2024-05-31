@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import LabInfomationContent from '../LabInfomationContent/LabInfomationContent';
+import LabData from '../../labinfo';
 
 
 function SettingsComponent() {
@@ -48,13 +49,14 @@ function SettingsComponent() {
   const isPasswordUpdateDisabled = !tempPassword || !password || !confirmPassword || error.password || error.confirmPassword;
 
   return (
-    <div className="container mx-auto px-4 sm:px-8">
-      <h2 className="text-2xl font-semibold mb-4">Settings</h2>
+<div className="container mx-auto px-4 sm:px-8 pt-3">
+
+      <h1 className="text-4xl font-bold mb-4">Settings</h1>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full flex flex-col">
-                    <LabInfomationContent className="flex-grow" />
+                    <LabData className="flex-grow" />
                 </div>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-lg font-semibold mb-4">Update Password</h2>
+        <h2 className="text-2xl font-semibold mb-4">Update Password</h2>
         <TextField
           label="Temporary Password"
           type="password"
@@ -95,7 +97,7 @@ function SettingsComponent() {
         </Button>
       </div>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-lg font-semibold mb-4">Delete Account</h2>
+        <h2 className="text-2xl font-semibold mb-4">Delete Account</h2>
         <Button
           variant="contained"
           color="error"

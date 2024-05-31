@@ -9,8 +9,6 @@ import {
   IconButton,
   Box,
 } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -83,21 +81,6 @@ function Sidebar({ isOpen, toggleSidebar, handleComponentChange, handleLogout })
               <TableChartIcon sx={{ color: '#1565C0', borderRadius: '50%' }} /> {/* Rounded icon */}
             </ListItemIcon>
             <ListItemText primary="Table" sx={{ color: '#1565C0' }} />
-          </ListItem>
-
-          {/* Notifications */}
-          <ListItem
-            button
-            onClick={() => handleComponentChange(4)}
-            sx={{
-              borderRadius: '12px', // Rounds the list item
-              '&:hover': { backgroundColor: '#BBDEFB' },
-            }}
-          >
-            <ListItemIcon>
-              <NotificationsIcon sx={{ color: '#1565C0', borderRadius: '50%' }} /> {/* Rounded icon */}
-            </ListItemIcon>
-            <ListItemText primary="Notifications" sx={{ color: '#1565C0' }} />
           </ListItem>
 
           {/* Settings */}
