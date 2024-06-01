@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { TextField, Button, Container, Typography } from '@mui/material';
+import { PutLabdata, fetchLabInfo } from './services/apiService';
 
 const LabData = () => {
   const [lab, setLab] = useState({
@@ -11,12 +11,13 @@ const LabData = () => {
     email: '',
     telephone: ''
   });
+  const [responseMessage, setResponseMessage] = useState('');
 
   useEffect(() => {
     // Fetch the lab data with GET request
-    axios.get('http://localhost:33000/api/labs/1')
+    fetchLabInfo()
       .then(response => {
-        setLab(response.data);
+        setLab(response);
       })
       .catch(error => {
         console.error('There was an error fetching the lab data!', error);
@@ -33,13 +34,15 @@ const LabData = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Update the lab data with PUT request
-    axios.put('http://localhost:33000/api/labs/1', lab)
+    console.log('Submitting lab data:', lab); // Debug log
+    PutLabdata(lab)
       .then(response => {
-        console.log('Lab data updated successfully:', response.data);
+        console.log('Lab data updated successfully:', response);
+        setResponseMessage('Lab data updated successfully!');
       })
       .catch(error => {
         console.error('There was an error updating the lab data!', error);
+        setResponseMessage('There was an error updating the lab data.');
       });
   };
 
@@ -97,14 +100,15 @@ const LabData = () => {
           fullWidth
           margin="normal"
         />
-        <Button type="submit" 
-        variant="contained" 
-        color="primary" 
-        
-        >
+        <Button type="submit" variant="contained" color="primary">
           Update Lab Data
         </Button>
       </form>
+      {responseMessage && (
+        <Typography variant="body1" color="secondary" mt={2}>
+          {responseMessage}
+        </Typography>
+      )}
     </Container>
   );
 };

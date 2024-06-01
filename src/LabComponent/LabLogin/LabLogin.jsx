@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Logo from '../../assets/logo.png';
 import LockIcon from '@mui/icons-material/Lock';
 

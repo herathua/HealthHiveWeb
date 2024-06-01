@@ -1,11 +1,10 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import QRCode from "qrcode.react";
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { jsPDF } from "jspdf";
 import 'tailwindcss/tailwind.css';
-
+import { fetchLabInfo } from '../../services/apiService';
 function App() {
   const [labInfo, setLabInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,8 +13,9 @@ function App() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:33000/api/labs/2');
-        setLabInfo(response.data);
+        const response = await fetchLabInfo();
+        console.log('API response:', response);
+        setLabInfo(response);
         setLoading(false);
       } catch (error) {
         setLoading(true);
@@ -42,15 +42,15 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <Box className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center">
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           mb: 2,
           padding: "13px"
         }}>
-          <Typography variant="h4" 
-            component="h2" 
+          <Typography variant="h4"
+            component="h2"
             fontWeight="bold"
           >
             Lab Report Sharing - QR Code
@@ -58,6 +58,7 @@ function App() {
         </Box>
         <Box className="flex flex-row justify-center items-center">
           <Box className="mr-4 text-left">
+
             <Typography variant="body1" className="mb-2">1. Open the lab report sharing app on your phone.</Typography>
             <Typography variant="body1" className="mb-2">2. Navigate to the "Scan" option in the app.</Typography>
             <Typography variant="body1" className="mb-2">3. Point your phone's camera at this QR code to identify the lab.</Typography>
@@ -68,20 +69,24 @@ function App() {
               <CircularProgress />
             ) : (
               <>
-                <QRCode
-                  id="qr-gen"
-                  value={labInfo.id}
-                  size={290}
-                  level={"H"}
-                  includeMargin={true}
-                />
-                <button
-                  type="button"
-                  onClick={downloadQRCodeAsPDF}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Download QR Code as PDF
-                </button>
+                {labInfo && (
+                  <>
+                    <QRCode
+                      id="qr-gen"
+                      value={String(labInfo.id)}  // Ensure the value is a string
+                      size={290}
+                      level={"H"}
+                      includeMargin={true}
+                    />
+                    <button
+                      type="button"
+                      onClick={downloadQRCodeAsPDF}
+                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                      Download QR Code as PDF
+                    </button>
+                  </>
+                )}
               </>
             )}
           </Box>
