@@ -1,34 +1,145 @@
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:33000/api';
+const KEYCLOAK_LOGOUT_URL = 'http://localhost:8080/realms/myrealm/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const labId = 1;
+
+let authToken = null; // Variable to store the authentication token
+let refreshToken = null; // Variable to store the refresh token
+
+export const GetToken = async (email, password) => {
+  try {
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa('myclient:L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL')
+    };
+
+    const data = new URLSearchParams({
+      'client_id': 'myclient',
+      'grant_type': 'password',
+      'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
+      'username': email,
+      'password': password
+    }).toString();
+
+    const response = await axios.post("http://localhost:8080/realms/myrealm/protocol/openid-connect/token", data, { headers });
+    authToken = response.data.access_token; // Save the token
+    refreshToken = response.data.refresh_token; // Save the refresh token
+    console.log('AuthToken:', authToken);
+    console.log('RefreshToken:', refreshToken);
+    console.log('User logged in:', response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error('Login error:', error);
+    return null;
+  }
+};
+
+// Function to log out the user
+export const logoutUser = async () => {
+  try {
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa('myclient:L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL')
+    };
+
+    const data = new URLSearchParams({
+      'client_id': 'myclient',
+      'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
+      'refresh_token': refreshToken
+    }).toString();
+
+    await axios.post(KEYCLOAK_LOGOUT_URL, data, { headers });
+
+    // Clear tokens from client-side storage
+    authToken = null;
+    refreshToken = null;
+    localStorage.removeItem(cachingKey);
+    console.log('User logged out successfully');
+
+  } catch (error) {
+    console.error('Logout error:', error);
+    throw error;
+  }
+};
+
+
 // Function to fetch lab data
 export const fetchLabData = async (labId) => {
-  const cachedData = localStorage.getItem(cachingKey);
-  if (cachedData) {
-    return JSON.parse(cachedData);
-  } else {
-    const response = await axios.get(`${BASE_URL}/labs/${labId}`);
-    const data = response.data;
-    localStorage.setItem(cachingKey, JSON.stringify(data));
-    return data;
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const cachedData = localStorage.getItem(cachingKey);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    } else {
+      const headers = {
+        'Authorization': 'Bearer ' + authToken // Set the token in headers
+      };
+      const response = await axios.get(`${BASE_URL}/labs/${labId}`, { headers });
+      const data = response.data;
+      localStorage.setItem(cachingKey, JSON.stringify(data));
+      return data;
+    }
+  } catch (error) {
+    console.error('Fetch lab data error:', error);
+    throw error; // Propagate error for handling elsewhere
   }
 };
 
 // Function to update lab data
-export const updateLabData = async (labId, newData, authToken) => {
+export const updateLabData = async (labId, newData) => {
   try {
-    // Make API call to update lab data
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
     localStorage.removeItem(cachingKey);
-    return newData; // Return updated data or handle response as needed
+    const response = await axios.put(`${BASE_URL}/labs/${labId}`, newData, { headers });
+    return response.data; // Return updated data or handle response as needed
   } catch (error) {
     throw new Error('Error updating lab information');
   }
 };
+
+export const GetLabByEmail = async (email) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    localStorage.removeItem(cachingKey);
+    const response = await axios.put(`${BASE_URL}/labs/${email}`, newData, { headers });
+    return response.data.id; // Return updated data or handle response as needed
+  } catch (error) {
+    throw new Error('Error updating lab information');
+  }
+};
+
 export const fetchLabInfo = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/labs/${labId}`);
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/labs/${labId}`, { headers });
     console.log('Lab data fetched successfully:', response.data);
     return response.data;
   } catch (error) {
@@ -39,7 +150,14 @@ export const fetchLabInfo = async () => {
 
 export const fetchLabRequestsByLabId = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/labRequests/lab/${labId}`);
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/labRequests/lab/${labId}`, { headers });
     return response.data;
   } catch (error) {
     console.error('Error fetching lab requests:', error);
@@ -49,7 +167,14 @@ export const fetchLabRequestsByLabId = async () => {
 
 export const fetchUserName = async (userId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/${userId}`);
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/users/${userId}`, { headers });
     return response.data.fullName;
   } catch (error) {
     console.error('Error fetching user details:', error);
@@ -59,7 +184,14 @@ export const fetchUserName = async (userId) => {
 
 export const fetchUserDataByUserId = async (userId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/${userId}`);
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/users/${userId}`, { headers });
     return response.data;
   } catch (error) {
     console.error('Error fetching user details:', error);
@@ -69,11 +201,16 @@ export const fetchUserDataByUserId = async (userId) => {
 
 export const UplodeFileToIPFS = async (file) => {
   try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     const response = await axios.post(`${BASE_URL}/ipfs/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer ' + authToken // Set the token in headers
       },
     });
     return response.data;
@@ -85,10 +222,17 @@ export const UplodeFileToIPFS = async (file) => {
 
 export const handleLabDataUploadinAPI = async (labRequestId, description) => {
   try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
     const response = await axios.post(`${BASE_URL}/labDataUploads`, {
       description,
       labRequest: labRequestId,
-    });
+    }, { headers });
     return response.data;
   } catch (error) {
     console.error('Error handling lab data upload:', error);
@@ -98,13 +242,20 @@ export const handleLabDataUploadinAPI = async (labRequestId, description) => {
 
 export const handleFileMetadatainAPI = async (fileName, fileType, filePath, createdDate, labDataUploadId) => {
   try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
     const response = await axios.post(`${BASE_URL}/files`, {
       name: fileName,
       type: fileType,
       filePath,
       createdDate,
       labDataUpload: labDataUploadId,
-    });
+    }, { headers });
     console.log('File metadata uploaded:', response.data);
   } catch (error) {
     console.error('Error handling file metadata:', error);
@@ -113,7 +264,14 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
 
 export const checkUploadStatusInAPI = async (labRequestId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/labDataUploads/lab/${labRequestId}`);
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/labDataUploads/lab/${labRequestId}`, { headers });
     return response.data;
   } catch (error) {
     return null;
@@ -121,22 +279,33 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
 };
 
 // Function to delete user account
-export const deleteUserAccount = async (userId, authToken) => {
+export const deleteUserAccount = async (userId) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/users/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
-    });
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`
+    };
+    const response = await axios.delete(`${BASE_URL}/users/${userId}`, { headers });
     return response.data; // Return response data if needed
   } catch (error) {
     throw error; // Throw error for handling in component
   }
 };
+
 export const PutLabdata = async (lab) => {
   try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
     console.log(`Sending PUT request to ${BASE_URL}/labs/${labId} with data:`, lab); // Debug log
-    const response = await axios.put(`${BASE_URL}/labs/${labId}`, lab);
+    const response = await axios.put(`${BASE_URL}/labs/${labId}`, lab, { headers });
     console.log('Lab data updated successfully:', response.data);
     return response.data;
   } catch (error) {
@@ -159,11 +328,16 @@ export const loginUser = async (email, password) => {
   }
 };
 
-
 export const deleteAccount = async () => {
   try {
-    const response = await axios.delete(`${BASE_URL}/users/${labId}`, {
-    });
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.delete(`${BASE_URL}/users/${labId}`,  lab, { headers });
     console.log('Account deleted successfully:', response.data);
     return response.data;
   } catch (error) {
@@ -173,12 +347,19 @@ export const deleteAccount = async () => {
 };
 export const updatePassword = async (password) => {
   try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
     // Fetching lab info asynchronously
     const data = await fetchLabInfo();
     const email = data.email;
 
     // Making the axios POST request
-    const response = await axios.put(`${BASE_URL}/users/login`, {
+    const response = await axios.put(`${BASE_URL}/users/login`, lab, { headers }, {
       email,
       password,
     });

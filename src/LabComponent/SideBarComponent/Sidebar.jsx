@@ -103,7 +103,7 @@ function Sidebar({ isOpen, toggleSidebar, handleComponentChange, handleLogout })
           {/* Logout */}
           <ListItem
             button
-            onClick={handleLogout}
+            onClick={() => handleComponentChange(4)}
             sx={{
               borderRadius: '12px',
               backgroundColor: '#FFCDD2',

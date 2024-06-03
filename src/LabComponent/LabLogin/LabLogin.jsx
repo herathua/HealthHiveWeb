@@ -1,13 +1,18 @@
+
+// LabLoginContainer component
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
 import LockIcon from '@mui/icons-material/Lock';
+import { GetToken } from '../../services/apiService'; // Import the GetToken function from the apiService file
 
 const LabLoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [token, setToken] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const navigate = useNavigate();
 
@@ -21,23 +26,27 @@ const LabLoginContainer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // Example API call
-      // const response = await axios.post('/api/login', { email, password });
-      // console.log(response.data);
+      const response = await GetToken(email, password);
+      if (response) {
+        const { access_token: token } = response; // Destructure the access_token from response
 
-      if (rememberMe) {
-        localStorage.setItem('rememberedEmail', email);
+        if (rememberMe) {
+          localStorage.setItem('rememberedEmail', email);
+        } else {
+          localStorage.removeItem('rememberedEmail');
+        }
+
+        setToken(token); // Save token to state
+
+        // Redirect to lab page or handle token as needed
+        navigate('/lab');
       } else {
-        localStorage.removeItem('rememberedEmail');
+        setLoginError('Invalid email or password');
       }
-
-      navigate('/lab'); // Example navigation
-
     } catch (error) {
       console.error('Login error:', error);
-      setEmailError('Invalid email or password');
+      setLoginError('Invalid email or password');
     }
   };
 
@@ -94,6 +103,7 @@ const LabLoginContainer = () => {
               </label>
             </div>
           </div>
+          {loginError && <p className="text-red-500 text-xs italic">{loginError}</p>}
           <div className="flex flex-col space-y-2">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
