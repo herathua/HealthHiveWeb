@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Container, IconButton, Link } from '@mui/material';
 import { Facebook, Twitter, LinkedIn } from '@mui/icons-material';
 import logo from '../src/assets/logo.png';
-import backgroundImage from '../src/assets/backgroundImage.jpeg'; // Add your background image path here
+import backgroundImage from '../src/assets/Backgroundimage.png';
 
 const LandingPage = () => {
   const navigate = useNavigate();

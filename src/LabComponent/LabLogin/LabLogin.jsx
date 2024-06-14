@@ -1,17 +1,16 @@
-
 // LabLoginContainer component
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
 import LockIcon from '@mui/icons-material/Lock';
-import { GetToken } from '../../services/apiService'; // Import the GetToken function from the apiService file
+import { GetToken ,GetLabIdByEmail} from '../../services/apiService'; // Import the GetToken function from the apiService file
+import Cookies from 'js-cookie';
 
 const LabLoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [emailError, setEmailError] = useState('');
-  const [token, setToken] = useState('');
   const [loginError, setLoginError] = useState('');
 
   const navigate = useNavigate();
@@ -37,9 +36,13 @@ const LabLoginContainer = () => {
           localStorage.removeItem('rememberedEmail');
         }
 
-        setToken(token); // Save token to state
+        // Store the token in cookies
+        Cookies.set('authToken', token, { expires: response.expires_in / 86400 }); // expires_in is in seconds
 
-        // Redirect to lab page or handle token as needed
+        // Call the GetLabIdByEmail function
+        await GetLabIdByEmail(email);
+
+        // Navigate to /lab after successful login
         navigate('/lab');
       } else {
         setLoginError('Invalid email or password');
@@ -48,8 +51,8 @@ const LabLoginContainer = () => {
       console.error('Login error:', error);
       setLoginError('Invalid email or password');
     }
+    
   };
-
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div className="flex-1 bg-blue-700 rounded-r-3xl flex flex-col justify-center items-center">
@@ -111,14 +114,10 @@ const LabLoginContainer = () => {
             >
               Sign In
             </button>
-            <a href="/lab" className="text-sm text-blue-500 hover:text-blue-700 text-left">
+            <a href="http://keycloak-hh:8080/realms/myrealm/login-actions/reset-credentials" className="text-sm text-blue-500 hover:text-blue-700 text-left">
               Forgot password?
             </a>
-            <div className="flex justify-between text-sm">
-              <a href="#" className="text-blue-500 hover:text-blue-700">
-                Don't have an account? Sign Up
-              </a>
-            </div>
+
           </div>
         </form>
       </div>

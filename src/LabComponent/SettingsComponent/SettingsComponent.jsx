@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { updatePassword, deleteAccount } from '.././../services/apiService';
+import { updatePassword } from '.././../services/apiService';
 import LabData from '../../labinfo';
 
 function SettingsComponent() {
@@ -24,7 +24,8 @@ function SettingsComponent() {
       confirmPassword: ''
     };
 
-    if (!password || password.length < 8 || !/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+    //if (!password || password.length < 8 || !/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+      if (!password || password.length < 5) {//changed the password length to 5
       errors.password = 'Password must be at least 8 characters long and include a number, a lowercase and an uppercase letter.';
       isValid = false;
     }
@@ -43,7 +44,7 @@ function SettingsComponent() {
       try {
         const response = await updatePassword(password);
         setResponseMessage('Password updated successfully!');
-        console.log('Password is valid and being updated:', response);
+        console.log('Password update initiated:', response);
       } catch (error) {
         setResponseMessage('There was an error updating the password.');
         console.error('Error updating password:', error);
@@ -51,21 +52,7 @@ function SettingsComponent() {
     }
   };
 
-  const handleAccountDeletion = async () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete your account?');
-    if (confirmDelete) {
-      try {
-        const response = await deleteAccount();
-        setResponseMessage('Account deleted successfully!');
-        console.log('Account deletion initiated:', response);
-      } catch (error) {
-        setResponseMessage('There was an error deleting the account.');
-        console.error('Error deleting account:', error);
-      }
-    }
-  };
-
-  const isPasswordUpdateDisabled = !tempPassword || !password || !confirmPassword || error.password || error.confirmPassword;
+  const isPasswordUpdateDisabled =  !password || !confirmPassword || error.password || error.confirmPassword;
 
   return (
     <div className="container mx-auto px-4 sm:px-8 pt-3">
@@ -75,16 +62,7 @@ function SettingsComponent() {
       </div>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-semibold mb-4">Update Password</h2>
-        <TextField
-          label="Temporary Password"
-          type="password"
-          value={tempPassword}
-          onChange={(e) => setTempPassword(e.target.value)}
-          fullWidth
-          margin="normal"
-          error={!!error.tempPassword}
-          helperText={error.tempPassword}
-        />
+
         <TextField
           label="New Password"
           type="password"
@@ -119,16 +97,7 @@ function SettingsComponent() {
           {responseMessage}
         </Typography>
       )}
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-2xl font-semibold mb-4">Delete Account</h2>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleAccountDeletion}
-        >
-          Delete Account
-        </Button>
-      </div>
+
     </div>
   );
 }

@@ -14,7 +14,7 @@ function App() {
       try {
         setLoading(true);
         const response = await fetchLabInfo();
-        console.log('API response:', response);
+        //console.log('API response:', response);
         setLabInfo(response);
         setLoading(false);
       } catch (error) {
