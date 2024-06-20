@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "downloader-pdf": "^1.0.3",
     "express": "^4.19.2",
+    "firebase": "^10.12.2",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
     "keycloak-js": "^24.0.4",

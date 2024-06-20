@@ -32,7 +32,7 @@ const LabRequestTable = () => {
 
   useEffect(() => {
     fetchLabRequests();
-    const interval = setInterval(fetchLabRequests, 30000); // Fetch every 30 seconds
+    const interval = setInterval(fetchLabRequests, 9000); // Fetch every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -45,6 +45,7 @@ const LabRequestTable = () => {
         const formattedRequests = await Promise.all(requests.map(async (request) => {
           const userName = await fetchUserName(request.user);
           const status = await checkUploadStatus(request.id);
+          //console.log(status);
           return {
             id: request.id,
             description: request.description,
@@ -130,6 +131,7 @@ const LabRequestTable = () => {
       const formData = new FormData();
       formData.append('file', file);
       const response = await UplodeFileToIPFS(file);
+      console.log('File uploaded successfully:', response);
       return response;
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -149,6 +151,7 @@ const LabRequestTable = () => {
 
   const handleFileMetadata = async (fileName, fileType, filePath, createdDate, labDataUploadId) => {
     try {
+      //console.log('File metadata:', fileName, fileType, filePath, createdDate, labDataUploadId);
       const response = await handleFileMetadatainAPI(fileName, fileType, filePath, createdDate, labDataUploadId);
     } catch (error) {
       console.error('Error handling file metadata:', error);
@@ -158,8 +161,10 @@ const LabRequestTable = () => {
   const checkUploadStatus = async (labRequestId) => {
     try {
       const response = await checkUploadStatusInAPI(labRequestId);
+      console.log('Upload status:', response);
       return response;
     } catch (error) {
+      console.error('Error checking upload status:', error);
       return null;
     }
   };
@@ -179,14 +184,8 @@ const LabRequestTable = () => {
 
   return (
 
-    <div>
-      <Box sx={{
-        marginTop: 2,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center', mb: 2,
-        padding: "13px",
-      }}>
+    <div class="p-16 ">
+      <Box>
         <Typography variant="h4"
           component="h2"
           fontWeight="bold"
@@ -195,7 +194,7 @@ const LabRequestTable = () => {
         </Typography>
       </Box>
 
-
+      <Box  borderRadius={8} p={2}  mx="auto" display="block" margin={2}>
       <TextField
 
         label="Search User Name"
@@ -212,7 +211,7 @@ const LabRequestTable = () => {
             </InputAdornment>
           ),
         }}
-      />
+      /></Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead className="bg-blue-100">

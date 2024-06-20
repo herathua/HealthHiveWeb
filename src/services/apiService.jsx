@@ -27,14 +27,14 @@ export const GetToken = async (email, password) => {
     };
 
     const data = new URLSearchParams({
-      'client_id': 'myclient',
+      'client_id': 'health-hive-client',
       'grant_type': 'password',
-      'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
+      //'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
       'username': email,
       'password': password
     }).toString();
 
-    const response = await axios.post("http://keycloak-hh:8080/realms/myrealm/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the token
     refreshToken = response.data.refresh_token; // Save the refresh token
     console.log('AuthToken:', authToken);
@@ -65,13 +65,12 @@ export const RefreshToken = async () => {
     };
 
     const data = new URLSearchParams({
-      'client_id': 'myclient',
+      'client_id': 'health-Hive-client',
       'grant_type': 'refresh_token',
-      'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
       'refresh_token': refreshToken
     }).toString();
 
-    const response = await axios.post("http://localhost:8080/realms/myrealm/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the new token
     refreshToken = response.data.refresh_token; // Save the new refresh token
     console.log('New AuthToken:', authToken);
@@ -85,7 +84,11 @@ export const RefreshToken = async () => {
 
   } catch (error) {
     console.error('Refresh token error:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+    throw error;}
   }
 };
 
@@ -117,7 +120,11 @@ export const logoutUser = async () => {
 
   } catch (error) {
     console.error('Logout error:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+    throw error;}
   }
 };
 
@@ -151,7 +158,11 @@ export const performAuthenticatedRequest = async (url, method, data) => {
 
   } catch (error) {
     console.error('Authenticated request error:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+    throw error;}
   }
 };
 
@@ -193,8 +204,12 @@ export const fetchLabData = async (labId) => {
     }
   } catch (error) {
     console.error('Fetch lab data error:', error);
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
     throw error; // Propagate error for handling elsewhere
-  }
+  }}
 };
 export const updateLabData = async (labId, newData) => {
   try {
@@ -252,8 +267,13 @@ export const fetchLabInfo = async () => {
     return response.data;
   } catch (error) {
     console.error("There was an error fetching the lab information: ", error);
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+
     throw error;
-  }
+  }}
 };
 
 export const fetchLabRequestsByLabId = async () => {
@@ -269,7 +289,11 @@ export const fetchLabRequestsByLabId = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching lab requests:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+    throw error;}
   }
 };
 
@@ -361,13 +385,19 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
       name: fileName,
       type: fileType,
       filePath,
+      fileHash:filePath,
       createdDate,
       labDataUpload: labDataUploadId,
     }, { headers });
     //console.log('File metadata uploaded:', response.data);
   } catch (error) {
     console.error('Error handling file metadata:', error);
-  }
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+      throw error;
+  }}
 };
 
 export const checkUploadStatusInAPI = async (labRequestId) => {
@@ -376,13 +406,25 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
       throw new Error('No auth token available');
     }
 
-    const headers = {
-      'Authorization': 'Bearer ' + authToken // Set the token in headers
-    };
-    const response = await axios.get(`${BASE_URL}/labDataUploads/lab/${labRequestId}`, { headers });
-    return response.data;
+    if (labRequestId != null) {
+      const headers = {
+        'Authorization': 'Bearer ' + authToken // Set the token in headers
+      };
+      const response = await axios.get(`${BASE_URL}/labDataUploads/lab-data-uploads/${labRequestId}`, { headers });
+      console.log('Upload status:', response.data);
+      console.log('Upload labRequestId :', labRequestId);
+      return response.data;
+    } else {
+      console.log('No labRequestId found');
+      return null;
+    }
   } catch (error) {
-    return null;
+    //console.error('Error logging in:', error);
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+      throw error;}
   }
 };
 
@@ -418,7 +460,12 @@ export const PutLabdata = async (lab) => {
     return response.data;
   } catch (error) {
     console.error('Error updating lab data:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+      throw error;
+}
   }
 };
 
@@ -432,7 +479,11 @@ export const loginUser = async (email, password) => {
     return response.data; // This should contain the token
   } catch (error) {
     console.error('Error logging in:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+      throw error;}
   }
 };
 
@@ -450,7 +501,12 @@ export const deleteAccount = async () => {
     return response.data;
   } catch (error) {
     console.error('Error deleting account:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+      throw error;
+}
   }
 };
 export const updatePassword = async (newPassword) => {
@@ -463,7 +519,7 @@ export const updatePassword = async (newPassword) => {
     };
 
     // Making the PUT request to update the password
-    const response = await axios.put(`http://keycloak-hh:8080/admin/realms/myrealm/users/${userId}/reset-password`, requestBody,{
+    const response = await axios.put(`http://keycloak-hh:8080/admin/realms/Health-Hive/users/${userId}/reset-password`, requestBody,{
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,
@@ -477,6 +533,11 @@ export const updatePassword = async (newPassword) => {
     return response.data; // Assuming the response is JSON
   } catch (error) {
     console.error('Error updating password:', error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      // Redirect to the login page
+      window.location.href = '/login';
+    } else {
+      throw error;
+}
   }
 };

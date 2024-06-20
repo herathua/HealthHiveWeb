@@ -1,6 +1,6 @@
 import React from 'react';
 import SettingsComponent from '../SettingsComponent/SettingsComponent';
-import Dashboard from '../Dashboard/Dashboard';
+import QrCodeContent from '../QrCodeContent/QrCodeContent';
 import PatientListComponent from '../PationListComponent/PationListComponent';
 import EnhancedTable from '../tablejn/EnhancedTable';
 function Component2() {
@@ -8,7 +8,7 @@ function Component2() {
 }
 
 function Component3() {
-  return <div><Dashboard/></div>;
+  return <div><QrCodeContent/></div>;
 }
 
 function Component4() {

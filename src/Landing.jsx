@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Container, IconButton, Link } from '@mui/material';
 import { Facebook, Twitter, LinkedIn } from '@mui/icons-material';
 import logo from '../src/assets/logo.png';
-import backgroundImage from '../src/assets/Backgroundimage.png';
-
 const LandingPage = () => {
   const navigate = useNavigate();
 
@@ -25,13 +23,11 @@ const LandingPage = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
-        minHeight: '100vh',
         textAlign: 'center',
-        bgcolor: '#e0f7fa', // Light blue background color
-        backgroundImage: `url(${backgroundImage})`,
+        bgcolor: 'rgba(29 ,78 ,216,1)', // Semi-transparent white background
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        padding: 0,
+        padding: 8,
         overflow: 'hidden',
       }}
     >
@@ -42,8 +38,7 @@ const LandingPage = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '70vh',
-          bgcolor: 'rgba(224, 247, 250, 0.6)', // Semi-transparent white background
+          bgcolor: 'rgba(224, 247, 250, 0.7)', // Semi-transparent white background
           padding: 5,
           borderRadius: 3,
           boxShadow: 3,
@@ -85,7 +80,7 @@ const LandingPage = () => {
           textAlign: 'center',
           padding: 2,
           borderRadius: 3,
-          bgcolor: 'rgba(224, 247, 250, 0.9)', // Semi-transparent white background
+          bgcolor: 'rgba(224, 247, 250, 0.6)', // Semi-transparent white background
           marginTop: 6,
         }}
       >

@@ -55,12 +55,12 @@ function SettingsComponent() {
   const isPasswordUpdateDisabled =  !password || !confirmPassword || error.password || error.confirmPassword;
 
   return (
-    <div className="container mx-auto px-4 sm:px-8 pt-3">
+    <div className="w-3/4 mx-auto px-4 sm:px-8 pt-3">
       <h1 className="text-4xl font-bold mb-4">Settings</h1>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full flex flex-col">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full flex flex-col border border-blue-500">
         <LabData className="flex-grow" />
       </div>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-blue-500">
         <h2 className="text-2xl font-semibold mb-4">Update Password</h2>
 
         <TextField
