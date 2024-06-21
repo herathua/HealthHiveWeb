@@ -1,21 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LabLogin from './LabComponent/LabLogin/LabLogin';
-import Lab from './LabComponent/Lab'; // Ensure this component is correctly defined and imported
 import LandingPage from './Landing';
-import PrivateRoute from './services/PrivateRoute';
+import LoginPage from './LoginPage'; // Assuming this is your login page component
+import AdminPage from './pages/admin/AdminPage'; // Import your AdminPage component here
+import LabPage from './pages/lab/LabPage'; // Import your LabPage component here
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LabLogin />} />
-          <Route path="/lab" element={<PrivateRoute element={Lab} />} /> {/* Protect /lab route */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin/*" element={<PrivateRoute element={<AdminPage />} />} />
+        <Route path="/lab/*" element={<PrivateRoute element={<LabPage />} />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </Router>
   );
 }

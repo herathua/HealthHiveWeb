@@ -1,11 +1,20 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { Navigate, Outlet } from 'react-router-dom';
+import { isAuthenticated, isAdmin, isLab } from '../auth';
 
-const PrivateRoute = ({ element: Component, ...rest }) => {
-  const authToken = Cookies.get('authToken'); // Retrieve the token from cookies
+const PrivateRoute = ({ component: Component, path, ...rest }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" />;
+  }
 
-  return authToken ? <Component {...rest} /> : <Navigate to="/login" />;
+  if (
+    (isAdmin() && path.startsWith('/admin')) ||
+    (isLab() && path.startsWith('/lab'))
+  ) {
+    return <Component {...rest} />;
+  } else {
+    return <Navigate to="/" />;
+  }
 };
 
 export default PrivateRoute;
