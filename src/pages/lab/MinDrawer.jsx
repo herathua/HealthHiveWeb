@@ -16,10 +16,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import PersonIcon from '@mui/icons-material/Person';
-import ScienceIcon from '@mui/icons-material/Science';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import SettingsIcon from '@mui/icons-material/Settings';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -143,9 +143,10 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'Lab', icon: <ScienceIcon />, path: '/lab/qrcode' },
-              { text: 'Settings', icon: <SettingsIcon />, path: '/lab/table' },
-              { text: 'Reports', icon: <BarChartIcon />, path: '/lab/settings' },
+              { text: 'Lab', icon: <QrCodeIcon />, path: '/lab/qrcode' },
+              { text: 'Reports', icon: <TableChartIcon />, path: '/lab/table' },
+              { text: 'Settings', icon: <SettingsIcon />, path: '/lab/settings' },
+              { text: 'Logout', icon: <LogoutIcon />, action: 'logout'  },
             ].map((item, index) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton

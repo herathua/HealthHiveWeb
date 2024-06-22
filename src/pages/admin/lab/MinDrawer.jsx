@@ -143,8 +143,8 @@ export default function MiniDrawer({children }) {
           <Divider />
           <List>
             {[
-              { text: 'create', icon: <ScienceIcon />, path: '/labcreation/create' },
-              { text: 'view', icon: <SettingsIcon />, path: '/labcreation/view' },
+              { text: 'create', icon: <ScienceIcon />, path: 'labcreation/create' },
+              { text: 'view', icon: <SettingsIcon />, path: 'labcreation/view' },
             ].map((item, index) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
