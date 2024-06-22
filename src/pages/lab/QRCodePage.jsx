@@ -45,60 +45,65 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <Box className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center border border-blue-500">
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-          <Typography variant="h4" component="h2" fontWeight="bold">
-            {labInfo ? labInfo.labName : "Loading..."}
-          </Typography>
-        </Box>
-        <Box className="flex flex-row justify-center items-center">
-          <Box className="mr-4 text-left">
-            <Typography variant="body1" className="mb-2">
-              1. Open the lab report sharing app on your phone.
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              2. Navigate to the "Scan" option in the app.
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              3. Point your phone's camera at this QR code to identify the lab.
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              4. Once the lab is identified, we can share the lab reports.
+
+    <div>
+      
+      <div className="w-3/4 mx-auto px-4 sm:px-8 pt-3 p-5">
+      <h1 className="text-4xl font-bold mb-4 ">Settings</h1>
+        <Box className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center border border-blue-500">
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <Typography variant="h4" component="h2" fontWeight="bold">
+              {labInfo ? labInfo.labName : "Loading..."}
             </Typography>
           </Box>
-          <Box className="flex flex-col items-center p-3">
-            {loading ? (
-              <CircularProgress />
-            ) : (
-              <>
-                {labInfo && (
-                  <>
-                    <QRCode
-                      id="qr-gen"
-                      value={String(labInfo.id)}  // Ensure the value is a string
-                      size={300}
-                      level={"H"}
-                      includeMargin={true}
-                    />
-                    <button
-                      type="button"
-                      onClick={downloadQRCodeAsPDF}
-                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                      Download QR Code as PDF
-                    </button>
-                  </>
-                )}
-              </>
-            )}
+          <Box className="flex flex-row justify-center items-center">
+            <Box className="mr-4 text-left">
+              <Typography variant="body1" className="mb-2">
+                1. Open the lab report sharing app on your phone.
+              </Typography>
+              <Typography variant="body1" className="mb-2">
+                2. Navigate to the "Scan" option in the app.
+              </Typography>
+              <Typography variant="body1" className="mb-2">
+                3. Point your phone's camera at this QR code to identify the lab.
+              </Typography>
+              <Typography variant="body1" className="mb-2">
+                4. Once the lab is identified, we can share the lab reports.
+              </Typography>
+            </Box>
+            <Box className="flex flex-col items-center p-3">
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  {labInfo && (
+                    <>
+                      <QRCode
+                        id="qr-gen"
+                        value={String(labInfo.id)}  // Ensure the value is a string
+                        size={300}
+                        level={"H"}
+                        includeMargin={true}
+                      />
+                      <button
+                        type="button"
+                        onClick={downloadQRCodeAsPDF}
+                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                      >
+                        Download QR Code as PDF
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </div>
     </div>
   );
 }

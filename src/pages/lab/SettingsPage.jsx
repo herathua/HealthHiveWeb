@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { updatePassword } from '.././../services/apiService';
+import { Button, TextField, Typography, Grid } from '@mui/material';
+import { updatePassword } from '../../services/apiService';
 import LabData from '../../labinfo';
 
 function SettingsComponent() {
@@ -24,9 +22,8 @@ function SettingsComponent() {
       confirmPassword: ''
     };
 
-    //if (!password || password.length < 8 || !/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
-      if (!password || password.length < 5) {//changed the password length to 5
-      errors.password = 'Password must be at least 8 characters long and include a number, a lowercase and an uppercase letter.';
+    if (!password || password.length < 5) { // Adjusted to 5 for your requirement
+      errors.password = 'Password must be at least 5 characters long.';
       isValid = false;
     }
 
@@ -52,7 +49,7 @@ function SettingsComponent() {
     }
   };
 
-  const isPasswordUpdateDisabled =  !password || !confirmPassword || error.password || error.confirmPassword;
+  const isPasswordUpdateDisabled = !password || !confirmPassword || error.password || error.confirmPassword;
 
   return (
     <div className="w-3/4 mx-auto px-4 sm:px-8 pt-3">
@@ -63,26 +60,33 @@ function SettingsComponent() {
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-blue-500">
         <h2 className="text-2xl font-semibold mb-4">Update Password</h2>
 
-        <TextField
-          label="New Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          margin="normal"
-          error={!!error.password}
-          helperText={error.password}
-        />
-        <TextField
-          label="Confirm New Password"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          fullWidth
-          margin="normal"
-          error={!!error.confirmPassword}
-          helperText={error.confirmPassword}
-        />
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="New Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+              error={!!error.password}
+              helperText={error.password}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Confirm New Password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+              error={!!error.confirmPassword}
+              helperText={error.confirmPassword}
+            />
+          </Grid>
+        </Grid>
+
         <Button
           variant="contained"
           color="primary"
@@ -97,7 +101,6 @@ function SettingsComponent() {
           {responseMessage}
         </Typography>
       )}
-
     </div>
   );
 }

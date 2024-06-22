@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const BASE_URL = 'http://localhost:33000/api';
-const KEYCLOAK_LOGOUT_URL = 'http://localhost:8080/realms/myrealm/protocol/openid-connect/logout';
+const KEYCLOAK_LOGOUT_URL = 'http://localhost:8080/realms/Health-Hive/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
 //let labId = getEmailFromToken(authToken); // Get lab ID from token
@@ -122,7 +122,7 @@ export const logoutUser = async () => {
     console.error('Logout error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
     throw error;}
   }

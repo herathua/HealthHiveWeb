@@ -20,7 +20,10 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { logoutUser } from '../../services/apiService';
+import logo from '../../assets/logo.png';
+import Footer from '../../LabComponent/FooterComponent/Footer';
 
 const drawerWidth = 240;
 
@@ -94,10 +97,37 @@ const lightTheme = createTheme({
   },
 });
 
+const MyAppBar = ({ open, handleDrawerOpen }) => {
+  return (
+    <AppBar position="fixed" open={open}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="start"
+          sx={{
+            marginRight: 5,
+            ...(open && { display: 'none' }),
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
+          <img src={logo} alt="Health Hive Logo" style={{ width: '50px', height: 'auto', marginRight: '8px' }} />
+          <Typography variant="h6" component="span" style={{ fontSize: '1.4rem', fontWeight: '600' }}>
+            Health Hive
+          </Typography>
+        </Link>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
 export default function MiniDrawer({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate(); // React Router's navigate function
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,33 +137,20 @@ export default function MiniDrawer({ children }) {
     setOpen(false);
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
+  const handleNavigation = (path, action) => {
+    if (action === 'logout') {
+      logoutUser();
+      console.log('User logged out');
+    } else {
+      navigate(path);
+    }
   };
 
   return (
     <ThemeProvider theme={lightTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="fixed" open={open}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              dddsdd
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <MyAppBar open={open} handleDrawerOpen={handleDrawerOpen} />
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>
@@ -143,11 +160,11 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'Lab', icon: <QrCodeIcon />, path: '/lab/qrcode' },
+              { text: 'QR code', icon: <QrCodeIcon />, path: '/lab/qrcode' },
               { text: 'Reports', icon: <TableChartIcon />, path: '/lab/table' },
               { text: 'Settings', icon: <SettingsIcon />, path: '/lab/settings' },
-              { text: 'Logout', icon: <LogoutIcon />, action: 'logout'  },
-            ].map((item, index) => (
+              { text: 'Logout', icon: <LogoutIcon />, action: 'logout' },
+            ].map((item) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
@@ -155,7 +172,7 @@ export default function MiniDrawer({ children }) {
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
                   }}
-                  onClick={() => handleNavigation(item.path)}
+                  onClick={() => handleNavigation(item.path, item.action)}
                 >
                   <ListItemIcon
                     sx={{
@@ -175,6 +192,7 @@ export default function MiniDrawer({ children }) {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           {children}
+          <Footer/>
         </Box>
       </Box>
     </ThemeProvider>
