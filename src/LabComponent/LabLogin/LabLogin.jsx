@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
 import LockIcon from '@mui/icons-material/Lock';
-import { GetToken ,GetLabIdByEmail} from '../../services/apiService'; // Import the GetToken function from the apiService file
+//import { GetToken ,GetLabIdByEmail} from '../../services/apiService'; // Import the GetToken function from the apiService file
 import Cookies from 'js-cookie';
+import {GetLabIdByEmail} from '../../services/apiService'; // Import the GetToken function from the apiService file
+import { GetToken,isAuthenticated, isAdmin, isLab } from '../../auth/Keycloak'; // Import the GetToken function from the apiService file
 
 const LabLoginContainer = () => {
   const [email, setEmail] = useState('');
@@ -43,7 +45,11 @@ const LabLoginContainer = () => {
         await GetLabIdByEmail(email);
 
         // Navigate to /lab after successful login
-        navigate('/lab');
+        //navigate('/lab');
+        isAuthenticated();
+        isAdmin();
+        isLab();
+        
       } else {
         setLoginError('Invalid email or password');
       }

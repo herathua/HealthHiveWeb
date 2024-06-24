@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const BASE_URL = 'http://localhost:33000/api';
-const KEYCLOAK_LOGOUT_URL = 'http://localhost:8080/realms/Health-Hive/protocol/openid-connect/logout';
+const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
 //let labId = getEmailFromToken(authToken); // Get lab ID from token
@@ -104,7 +104,7 @@ export const logoutUser = async () => {
     };
 
     const data = new URLSearchParams({
-      'client_id': 'myclient',
+      'client_id': 'health-hive-client',
       'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
       'refresh_token': refreshToken
     }).toString();
@@ -117,12 +117,13 @@ export const logoutUser = async () => {
     Cookies.remove('authToken');
     Cookies.remove('refreshToken');
     console.log('User logged out successfully');
+    window.location.href = '/login';
 
   } catch (error) {
     console.error('Logout error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
     throw error;}
   }

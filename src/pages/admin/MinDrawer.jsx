@@ -16,11 +16,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { useNavigate, Link } from 'react-router-dom';
+import { logoutUser } from '../../services/apiService';
+import logo from '../../assets/logo.png';
+import BiotechIcon from '@mui/icons-material/Biotech';
 import PersonIcon from '@mui/icons-material/Person';
-import ScienceIcon from '@mui/icons-material/Science';
-import SettingsIcon from '@mui/icons-material/Settings';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -94,10 +94,37 @@ const lightTheme = createTheme({
   },
 });
 
-export default function MiniDrawer({children }) {
+const MyAppBar = ({ open, handleDrawerOpen }) => {
+  return (
+    <AppBar position="fixed" open={open}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="start"
+          sx={{
+            marginRight: 5,
+            ...(open && { display: 'none' }),
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
+          <img src={logo} alt="Health Hive Logo" style={{ width: '50px', height: 'auto', marginRight: '8px' }} />
+          <Typography variant="h6" component="span" style={{ fontSize: '1.4rem', fontWeight: '600' }}>
+            Health Hive
+          </Typography>
+        </Link>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default function MiniDrawer({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate(); // React Router's navigate function
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,33 +134,20 @@ export default function MiniDrawer({children }) {
     setOpen(false);
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
+  const handleNavigation = (path, action) => {
+    if (action === 'logout') {
+      logoutUser();
+      console.log('User logged out');
+    } else {
+      navigate(path);
+    }
   };
 
   return (
     <ThemeProvider theme={lightTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="fixed" open={open}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              sdddsd
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <MyAppBar open={open} handleDrawerOpen={handleDrawerOpen} />
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>
@@ -143,8 +157,8 @@ export default function MiniDrawer({children }) {
           <Divider />
           <List>
             {[
-              { text: 'create', icon: <ScienceIcon />, path: 'usercreation/create' },
-              { text: 'view', icon: <SettingsIcon />, path: 'usercreation/view' },
+              { text: 'Laboratary', icon: <BiotechIcon />, path: '/admin/labcreation' },
+              { text: 'User', icon: <PersonIcon />, path: '/admin/usercreation' },
             ].map((item, index) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton

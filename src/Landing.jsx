@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Container, IconButton, Link } from '@mui/material';
 import { Facebook, Twitter, LinkedIn } from '@mui/icons-material';
@@ -7,7 +7,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleAdminClick = () => {
-    navigate('/admin');
+    navigate('/login');
   };
 
   const handleUserClick = () => {

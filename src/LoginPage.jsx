@@ -1,10 +1,11 @@
-// LabLoginContainer component
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../src/assets/logo.png';
 import LockIcon from '@mui/icons-material/Lock';
-import { GetToken ,GetLabIdByEmail} from './services/apiService'
+import {GetLabIdByEmail } from './services/apiService';
+import { GetToken } from './auth/Keycloak';
 import Cookies from 'js-cookie';
+import { jwtDecode } from "jwt-decode";
 
 const LabLoginContainer = () => {
   const [email, setEmail] = useState('');
@@ -23,6 +24,25 @@ const LabLoginContainer = () => {
     }
   }, []);
 
+  const decodeToken = (token) => {
+    try {
+      console.log('Token decoded:', jwtDecode(token));
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Token decoding error:', error);
+      return null;
+    }
+  };
+
+  const getRolesFromToken = (token) => {
+    const decodedToken = decodeToken(token);
+    if (decodedToken && decodedToken.realm_access && decodedToken.resource_access['health-hive-client'].roles[0]) {
+      console.log('Is lab:', decodedToken.resource_access['health-hive-client'].roles[0].includes('lab'));
+      return decodedToken.resource_access['health-hive-client'].roles[0];
+    }
+    return [];
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -40,10 +60,13 @@ const LabLoginContainer = () => {
         Cookies.set('authToken', token, { expires: response.expires_in / 86400 }); // expires_in is in seconds
 
         // Call the GetLabIdByEmail function
-        await GetLabIdByEmail(email);
+
 
         // Navigate to /lab after successful login
-        navigate('/lab');
+        //jwtDecode(token);
+        if (getRolesFromToken(token) === 'lab') { await GetLabIdByEmail(email); navigate('/lab'); }
+        else if (getRolesFromToken(token) === 'admin') navigate('/admin');
+        else console.log('Invalid email or password');
       } else {
         setLoginError('Invalid email or password');
       }
@@ -51,8 +74,8 @@ const LabLoginContainer = () => {
       console.error('Login error:', error);
       setLoginError('Invalid email or password');
     }
-    
   };
+
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div className="flex-1 bg-blue-700 rounded-r-3xl flex flex-col justify-center items-center">
@@ -117,7 +140,6 @@ const LabLoginContainer = () => {
             <a href="http://keycloak-hh:8080/realms/Health-Hive/login-actions/reset-credentials" className="text-sm text-blue-500 hover:text-blue-700 text-left">
               Forgot password?
             </a>
-
           </div>
         </form>
       </div>
