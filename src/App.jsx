@@ -1,65 +1,21 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Component3, Component4, Component5 } from './LabComponent/SideBarComponent/Component';
-import LabLogin from './LabComponent/LabLogin/LabLogin';
-import Sidebar from './LabComponent/SideBarComponent/Sidebar';
-import Header from './LabComponent/HeaderComponent/Header';
-import Footer from './LabComponent/FooterComponent/Footer';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './Landing';
+import LoginPage from './LoginPage'; // Assuming this is your login page component
+import AdminPage from './pages/admin/AdminPage'; // Import your AdminPage component here
+import LabPage from './pages/lab/LabPage'; // Import your LabPage component here
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeComponent, setActiveComponent] = useState(3);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleComponentChange = (componentNumber) => {
-    setActiveComponent(componentNumber);
-  };
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
-  const renderComponent = () => {
-    switch (activeComponent) {
-      case 3:
-        return <Component3 />;
-      case 4:
-        return <Component4 />;
-      case 5:
-        return <Component5 />;
-      default:
-        return <Component3 />;
-    }
-  };
-
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Routes>
-          <Route path="/login" element={<LabLogin onLogin={handleLogin} />} />
-          <Route path="/" element={
-            isLoggedIn ? (
-              <>
-                <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
-                <div className="flex flex-1">
-                  <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} handleComponentChange={handleComponentChange} />
-                  <main className="flex-1 p-4">
-                    {renderComponent()}
-                  </main>
-                </div>
-              </>
-            ) : (
-              // Redirect to login or handle the login logic differently as needed
-              <LabLogin onLogin={handleLogin} />
-            )
-          } />
-        </Routes>
-        <Footer />
-      </div>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin/*" element={<PrivateRoute element={<AdminPage />} />} />
+        <Route path="/lab/*" element={<PrivateRoute element={<LabPage />} />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </Router>
   );
 }
