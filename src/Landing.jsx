@@ -1,42 +1,115 @@
 import React from 'react';
-import './Landing.css'; // Ensure you import your CSS file
+import { useNavigate } from 'react-router-dom';
+import { Button, Typography, Box, Container, IconButton, Link } from '@mui/material';
+import { Facebook, Twitter, LinkedIn } from '@mui/icons-material';
+import logo from '../src/assets/logo.png';
+const LandingPage = () => {
+  const navigate = useNavigate();
 
-function LandingPage() {
+  const handleAdminClick = () => {
+    navigate('/login');
+  };
+
+  const handleUserClick = () => {
+    navigate('/login');
+  };
+
   return (
-    <div className="relative bg-blue-900 text-white min-h-screen flex flex-col items-center before:bg-svg before:bg-cover before:bg-center before:absolute before:inset-0 before:z-0">
-      <header className="text-center py-10 z-10">
-        <h1 className="text-4xl font-bold">Securely Store and Manage Your Health Data</h1>
-        <p className="text-xl mt-4">
+    <Container
+      maxWidth="false" // This prop should be either 'xs', 'sm', 'md', 'lg', 'xl', false
+      disableGutters
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        textAlign: 'center',
+        bgcolor: 'rgba(29 ,78 ,216,1)', // Semi-transparent white background
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        padding: 8,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Main Content Section */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'rgba(224, 247, 250, 0.7)', // Semi-transparent white background
+          padding: 5,
+          borderRadius: 3,
+          boxShadow: 3,
+          marginTop: 3,
+          marginBottom: 2,
+        }}
+      >
+        <img src={logo} alt="Health Hive" style={{ width: 150, marginBottom: 20 }} />
+        <Typography variant="h2" gutterBottom color="primary">
+          HealthHive
+        </Typography>
+        <Typography variant="h6" gutterBottom>
+          Securely Store and Manage Your Health Data
+        </Typography>
+        <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600 }}>
           Upload and access your health reports anytime, anywhere. Powered by blockchain technology for enhanced security.
-        </p>
-      </header>
-      <div className="bg-white text-black p-10 rounded-lg shadow-lg z-10">
-        <h2 className="text-2xl mb-6">Let's get started</h2>
-        <div className="space-y-4">
-          <button className="bg-red-500 text-white py-2 px-4 rounded-full w-full">Laboratory login</button>
-          <button className="border border-blue-500 text-blue-500 py-2 px-4 rounded-full w-full">Admin login</button>
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-full w-full">Download App</button>
-        </div>
-      </div>
-      <div className="mt-10 text-center z-10">
-        <h2 className="text-3xl font-bold mb-6">Revolutionize Your Health Data Management</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-xl font-semibold">Secure and Encrypted</h3>
-            <p>Your health data is securely stored and encrypted, ensuring privacy and protection against unauthorized access.</p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">User-Friendly Interface</h3>
-            <p>Our platform is designed with a simple and intuitive interface, making it easy for users of all technical levels to navigate and manage their health data.</p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">Powered by Blockchain</h3>
-            <p>Experience the unparalleled security and transparency of blockchain technology for managing and storing your health data.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 2, marginTop: 3 }}>
+          <Button
+            onClick={handleAdminClick}
+            variant="contained"
+            color="primary"
+            sx={{ padding: '10px 20px', fontSize: '16px' }}
+          >
+            Admin Login
+          </Button>
+          <Button
+            onClick={handleUserClick}
+            variant="contained"
+            color="success"
+            sx={{ padding: '10px 20px', fontSize: '16px' }}
+          >
+            User Login
+          </Button>
+        </Box>
+        <Box
+        sx={{
+          width: '100%',
+          textAlign: 'center',
+          padding: 2,
+          borderRadius: 3,
+          bgcolor: 'rgba(224, 247, 250, 0.6)', // Semi-transparent white background
+          marginTop: 6,
+        }}
+      >
+        <Typography variant="body1" gutterBottom>
+          Contact Information
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+        Email:<Link href="mailto:contact@healthhive.com"> contact@healthhive.com</Link> |{' '}
+          Phone:<Link href="tel:+1234567890"> (123) 456-7890</Link>
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginTop: 1 }}>
+          {/* Social Media Icons */}
+          <IconButton href="https://facebook.com" target="_blank" rel="noopener" color="inherit">
+            <Facebook />
+          </IconButton>
+          <IconButton href="https://twitter.com" target="_blank" rel="noopener" color="inherit">
+            <Twitter />
+          </IconButton>
+          <IconButton href="https://linkedin.com" target="_blank" rel="noopener" color="inherit">
+            <LinkedIn />
+          </IconButton>
+          {/* Add more social media links as needed */}
+        </Box>
+      </Box>
+      </Box>
+
+      
+    </Container>
   );
-}
+};
 
 export default LandingPage;
