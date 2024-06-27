@@ -1,8 +1,9 @@
- import React from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Container, IconButton, Link } from '@mui/material';
 import { Facebook, Twitter, LinkedIn } from '@mui/icons-material';
 import logo from '../src/assets/logo.png';
+
 const LandingPage = () => {
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const LandingPage = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         textAlign: 'center',
-        bgcolor: 'rgba(29 ,78 ,216,1)', // Semi-transparent white background
+        bgcolor: 'rgba(30, 58, 138,1)', // Change the background color here
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: 8,
@@ -53,7 +54,7 @@ const LandingPage = () => {
         <Typography variant="h6" gutterBottom>
           Securely Store and Manage Your Health Data
         </Typography>
-        <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600 }}>
+        <Typography variant="body1" sx={{ color: 'rgba(30, 58, 138, 0.9)',  maxWidth: 600 }}>
           Upload and access your health reports anytime, anywhere. Powered by blockchain technology for enhanced security.
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, marginTop: 3 }}>
@@ -75,39 +76,24 @@ const LandingPage = () => {
           </Button>
         </Box>
         <Box
-        sx={{
-          width: '100%',
-          textAlign: 'center',
-          padding: 2,
-          borderRadius: 3,
-          bgcolor: 'rgba(224, 247, 250, 0.6)', // Semi-transparent white background
-          marginTop: 6,
-        }}
-      >
-        <Typography variant="body1" gutterBottom>
-          Contact Information
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-        Email:<Link href="mailto:contact@healthhive.com"> contact@healthhive.com</Link> |{' '}
-          Phone:<Link href="tel:+1234567890"> (123) 456-7890</Link>
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginTop: 1 }}>
-          {/* Social Media Icons */}
-          <IconButton href="https://facebook.com" target="_blank" rel="noopener" color="inherit">
-            <Facebook />
-          </IconButton>
-          <IconButton href="https://twitter.com" target="_blank" rel="noopener" color="inherit">
-            <Twitter />
-          </IconButton>
-          <IconButton href="https://linkedin.com" target="_blank" rel="noopener" color="inherit">
-            <LinkedIn />
-          </IconButton>
-          {/* Add more social media links as needed */}
+          sx={{
+            width: '100%',
+            textAlign: 'center',
+            padding: 2,
+            borderRadius: 3,
+            bgcolor: 'rgba(224, 247, 250, 0.6)', // Semi-transparent white background
+            marginTop: 6,
+          }}
+        >
+          <Typography variant="body1" gutterBottom>
+            Contact Information
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Email:<Link href="mailto:contact@healthhive.com"> contact@healthhive.com</Link> |{' '}
+            Phone:<Link href="tel:+1234567890"> (123) 456-7890</Link>
+          </Typography>
         </Box>
       </Box>
-      </Box>
-
-      
     </Container>
   );
 };

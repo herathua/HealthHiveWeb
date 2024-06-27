@@ -21,6 +21,7 @@ import { logoutUser } from '../../services/apiService';
 import logo from '../../assets/logo.png';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import PersonIcon from '@mui/icons-material/Person';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 const drawerWidth = 240;
 
@@ -96,7 +97,13 @@ const lightTheme = createTheme({
 
 const MyAppBar = ({ open, handleDrawerOpen }) => {
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar
+    position="fixed"
+    open={open}
+    sx={{
+      backgroundColor: 'rgb(30, 58, 138)',
+    }}
+  >
       <Toolbar>
         <IconButton
           color="inherit"
@@ -157,8 +164,10 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'Laboratary', icon: <BiotechIcon />, path: '/admin/labcreation' },
-              { text: 'User', icon: <PersonIcon />, path: '/admin/usercreation' },
+              { text: 'Laboratary', icon: <BiotechIcon style={{ color: 'black' }}/>, path: '/admin/labcreation' },
+              { text: 'User', icon: <PersonIcon style={{ color: 'black' }}/>, path: '/admin/usercreation' },
+              { text: 'Tips', icon: <LightbulbIcon style={{ color: 'black' }}/>, path: '/admin/dailytips' },
+              
             ].map((item, index) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton

@@ -7,6 +7,7 @@ import {GetToken,GetLabIdByEmail } from './services/apiService';
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 
+
 const LabLoginContainer = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -75,18 +76,24 @@ const LabLoginContainer = () => {
       setLoginError('Invalid email or password');
     }
   };
+  
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      <div className="flex-1 bg-blue-700 rounded-r-3xl flex flex-col justify-center items-center">
-        <img src={Logo} alt="Health Hive Logo" className="mx-auto h-24 w-24 md:h-48 md:w-48" />
+      <div
+    className="flex-1 bg-blue-700 rounded-r-3xl flex flex-col justify-center items-center"
+    style={{ backgroundColor: 'rgb(30, 58, 138)' }}
+  >
+       <a href="/">
+          <img src={Logo} alt="Health Hive Logo" className="mx-auto h-24 w-24 md:h-48 md:w-48" />
+        </a>
         <h2 className="text-white text-xl font-semibold mt-4" style={{ fontSize: 'calc(2rem + 1vw)' }}>Health Hive</h2>
         <span className="text-white" style={{ padding: '10px' }}>Health passport system</span>
       </div>
       <div className="flex-1 flex justify-center items-center bg-gray-100" style={{ padding: '10px' }}>
         <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96">
           <div className="mb-4 flex flex-col items-center">
-            <LockIcon style={{ fontSize: 40, color: '#3B82F6' }} />
+            <LockIcon style={{ fontSize: 40, color: '#1e3a8a' }} />
             <h3 className="text-xl font-semibold my-2">Sign In</h3>
           </div>
           <div className="mb-4">
@@ -132,7 +139,7 @@ const LabLoginContainer = () => {
           {loginError && <p className="text-red-500 text-xs italic">{loginError}</p>}
           <div className="flex flex-col space-y-2">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+              className="bg-blue-500 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
               type="submit"
             >
               Sign In

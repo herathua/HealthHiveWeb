@@ -5,12 +5,14 @@ import LoginPage from './LoginPage'; // Assuming this is your login page compone
 import AdminPage from './pages/admin/AdminPage'; // Import your AdminPage component here
 import LabPage from './pages/lab/LabPage'; // Import your LabPage component here
 import PrivateRoute from './components/PrivateRoute';
+import LandingPagecopy from './Landing copy';
 
 function App() {
+  const isMobile = window.innerWidth <= 1315;
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={isMobile ? <LandingPagecopy /> : <LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/*" element={<PrivateRoute element={<AdminPage />} />} />
         <Route path="/lab/*" element={<PrivateRoute element={<LabPage />} />} />
