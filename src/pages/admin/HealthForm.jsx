@@ -68,24 +68,6 @@ const HealthForm = () => {
         </Select>
       </FormControl>
 
-      <FormControl fullWidth>
-        <InputLabel id="type-label">Type</InputLabel>
-        <Select
-          labelId="type-label"
-          id="type"
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
-          label="Type"
-        >
-          <MenuItem value="">
-            <em>Select a type</em>
-          </MenuItem>
-          <MenuItem value="normal_news">Normal News</MenuItem>
-          <MenuItem value="warning">Warning</MenuItem>
-        </Select>
-      </FormControl>
-
       <TextField
         id="message"
         name="message"

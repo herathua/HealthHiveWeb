@@ -47,7 +47,7 @@ function App() {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-8 pt-3 p-5">
-      <h1 className="text-4xl font-bold mb-4">Settings</h1>
+      <h1 className="text-4xl font-bold mb-4">Qr code</h1>
       <Box className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center border border-blue-500">
         <Typography variant="h4" component="h2" fontWeight="bold">
           {labInfo ? labInfo.labName : "Loading..."}

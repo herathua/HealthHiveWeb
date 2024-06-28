@@ -24,6 +24,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { logoutUser } from '../../services/apiService';
 import logo from '../../assets/logo.png';
 import Footer from '../../LabComponent/FooterComponent/Footer';
+import Avatar from '@mui/material/Avatar';
+import AvatarWithEditIcon from './avatar';
 
 const drawerWidth = 240;
 
@@ -100,12 +102,12 @@ const lightTheme = createTheme({
 const MyAppBar = ({ open, handleDrawerOpen }) => {
   return (
     <AppBar
-  position="fixed"
-  open={open}
-  sx={{
-    backgroundColor: 'rgb(30, 58, 138)',
-  }}
->
+      position="fixed"
+      open={open}
+      sx={{
+        backgroundColor: 'rgb(30, 58, 138)',
+      }}
+    >
       <Toolbar>
         <IconButton
           color="inherit"
@@ -125,7 +127,13 @@ const MyAppBar = ({ open, handleDrawerOpen }) => {
             Health Hive
           </Typography>
         </Link>
+        <Box sx={{ flexGrow: 2 }} />
+        <IconButton sx={{ p: 0 }}>
+        <AvatarWithEditIcon />
+      </IconButton>
+      
       </Toolbar>
+
     </AppBar>
   );
 };
@@ -166,10 +174,10 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'QR code', icon: <QrCodeIcon style={{ color: 'black' }}/>, path: '/lab/qrcode' },
-              { text: 'Reports', icon: <TableChartIcon style={{ color: 'black' }}/>, path: '/lab/table' },
-              { text: 'Settings', icon: <SettingsIcon style={{ color: 'black' }}/>, path: '/lab/settings' },
-              { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }}/>, action: 'logout' },
+              { text: 'QR code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
+              { text: 'Reports', icon: <TableChartIcon style={{ color: 'black' }} />, path: '/lab/table' },
+              { text: 'Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
+              { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }} />, action: 'logout' },
             ].map((item) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
@@ -190,9 +198,9 @@ export default function MiniDrawer({ children }) {
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText
-          primary={item.text}
-          sx={{ color: item.text === 'Logout' ? 'red' : 'black', opacity: open ? 1 : 0 }}
-        />
+                    primary={item.text}
+                    sx={{ color: item.text === 'Logout' ? 'red' : 'black', opacity: open ? 1 : 0 }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}
@@ -201,7 +209,7 @@ export default function MiniDrawer({ children }) {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           {children}
-          <Footer/>
+          <Footer />
         </Box>
       </Box>
     </ThemeProvider>

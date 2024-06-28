@@ -3,6 +3,7 @@ import { Button, TextField, Typography, Grid } from '@mui/material';
 import { updatePassword } from '../../services/apiService';
 import LabData from '../../labinfo';
 
+
 function SettingsComponent() {
   const [tempPassword, setTempPassword] = useState('');
   const [password, setPassword] = useState('');
@@ -52,9 +53,10 @@ function SettingsComponent() {
   const isPasswordUpdateDisabled = !password || !confirmPassword || error.password || error.confirmPassword;
 
   return (
-    <div className="w-3/4 mx-auto px-4 sm:px-8 pt-3">
+    <div className="w-3/4 mx-auto px-4 sm:px-8 pt-3">  
       <h1 className="text-4xl font-bold mb-4">Settings</h1>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-full flex flex-col border border-blue-500">
+      
         <LabData className="flex-grow" />
       </div>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-blue-500">
