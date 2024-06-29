@@ -18,7 +18,7 @@ import FileOpenIcon from '@mui/icons-material/FileOpen';
 import Tooltip from '@mui/material/Tooltip';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import { fetchLabRequestsByLabId, fetchUserName, fetchUserDataByUserId, UplodeFileToIPFS, handleLabDataUploadinAPI, handleFileMetadatainAPI, checkUploadStatusInAPI } from '.././../services/apiService';
+import { fetchLabRequestsByLabId, fetchUserUrl, fetchUserName, fetchUserDataByUserId, UplodeFileToIPFS, handleLabDataUploadinAPI, handleFileMetadatainAPI, checkUploadStatusInAPI } from '.././../services/apiService';
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
@@ -44,12 +44,14 @@ const LabRequestTable = () => {
         setPrevRequests(requests); // Update previous requests
         const formattedRequests = await Promise.all(requests.map(async (request) => {
           const userName = await fetchUserName(request.user);
+          const avatar = await fetchUserUrl(request.user);
           const status = await checkUploadStatus(request.id);
           //console.log(status);
           return {
             id: request.id,
             description: request.description,
             userName: userName,
+            userAvatar: avatar,
             userId: request.user,
             status: status || 'Not Uploaded',
           };
@@ -194,24 +196,24 @@ const LabRequestTable = () => {
         </Typography>
       </Box>
 
-      <Box  borderRadius={8} p={2}  mx="auto" display="block" margin={2}>
-      <TextField
+      <Box borderRadius={8} p={2} mx="auto" display="block" margin={2}>
+        <TextField
 
-        label="Search User Name"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        sx={{ width: 400, mx: 'auto', display: 'block' }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      /></Box>
+          label="Search User Name"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          sx={{ width: 400, mx: 'auto', display: 'block' }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        /></Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead className="bg-blue-100">
@@ -226,26 +228,58 @@ const LabRequestTable = () => {
           </TableHead>
 
           <TableBody>
-            {filteredRequests.map((request) => (
-              <TableRow key={request.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component="th" scope="row">{request.id}</TableCell>
-                <TableCell>
-                  <Button onClick={() => fetchUserDetails(request.userId)}>{request.userName}</Button>
-                </TableCell>
-                <TableCell>{request.description}</TableCell>
-                <TableCell>{request.status === 'Uploaded' ? (
-                  <Tooltip title="File Uploaded">
-                    <CheckCircleIcon color="success" />
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Upload Pending">
-                    <PendingActionsIcon color="info" />
-                  </Tooltip>
-                )}</TableCell>
-                <TableCell><Tooltip title="Upload file"><Button onClick={() => handleFileUpload(request.id)}><FileOpenIcon /></Button></Tooltip></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+  {filteredRequests.map((request) => (
+    <TableRow 
+      key={request.id} 
+      sx={{ 
+        '&:last-child td, &:last-child th': { border: 0 }, 
+        padding: 0 // minimize padding for the row
+      }}
+    >
+      <TableCell 
+        component="th" 
+        scope="row" 
+        sx={{ padding: '4px' }} // minimize padding for the cell
+      >
+        <img
+          src={request.userAvatar}
+          alt="request"
+          style={{
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            objectFit: 'cover'
+          }}
+        />
+      </TableCell>
+      <TableCell sx={{ padding: '4px' }}>
+        <Button onClick={() => fetchUserDetails(request.userId)}>
+          {request.userName}
+        </Button>
+      </TableCell>
+      <TableCell sx={{ padding: '4px' }}>{request.description}</TableCell>
+      <TableCell sx={{ padding: '4px' }}>
+        {request.status === 'Uploaded' ? (
+          <Tooltip title="File Uploaded">
+            <CheckCircleIcon color="success" />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Upload Pending">
+            <PendingActionsIcon color="info" />
+          </Tooltip>
+        )}
+      </TableCell>
+      <TableCell sx={{ padding: '4px' }}>
+        <Tooltip title="Upload file">
+          <Button onClick={() => handleFileUpload(request.id)}>
+            <FileOpenIcon />
+          </Button>
+        </Tooltip>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
         </Table>
       </TableContainer>
 

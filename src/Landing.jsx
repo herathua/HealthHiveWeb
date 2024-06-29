@@ -66,7 +66,7 @@ function LandingPage() {
             <div className="space-y-4 w-full p-6">
               <button onClick={handleUserClick} className="bg-blue-500 text-white py-3 px-6 rounded-full w-full text-lg font-semibold">Laboratory login</button>
               <button onClick={handleAdminClick} className="border-spacing-4 border border-blue-500 text-black py-3 px-6 rounded-full w-full text-lg font-semibold">Admin login</button>
-              {/* <button className="bg-blue-500 text-white py-3 px-6 rounded-full w-full text-lg font-semibold">Download App</button> */}
+              <button className="bg-red-500 text-white py-3 px-6 rounded-full w-full text-lg font-semibold">Download App</button>
             </div>
           </div>
         </div>

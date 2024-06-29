@@ -37,9 +37,9 @@ const LabLoginContainer = () => {
 
   const getRolesFromToken = (token) => {
     const decodedToken = decodeToken(token);
-    if (decodedToken && decodedToken.realm_access && decodedToken.resource_access['health-hive-client'].roles[0]) {
-      console.log('Is lab:', decodedToken.resource_access['health-hive-client'].roles[0].includes('lab'));
-      return decodedToken.resource_access['health-hive-client'].roles[0];
+    if (decodedToken && decodedToken.realm_access && decodedToken.resource_access['Health-Hive-Client'].roles[0]) {
+      console.log('Is lab:', decodedToken.resource_access['Health-Hive-Client'].roles[0].includes('lab'));
+      return decodedToken.resource_access['Health-Hive-Client'].roles[0];
     }
     return [];
   };
@@ -59,7 +59,7 @@ const LabLoginContainer = () => {
 
         // Store the token in cookies
         Cookies.set('authToken', token, { expires: response.expires_in / 86400 }); // expires_in is in seconds
-
+        console.log('Token');
         // Call the GetLabIdByEmail function
 
 

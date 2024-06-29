@@ -4,7 +4,11 @@ import QRCode from "qrcode.react";
 import { Box, Typography, CircularProgress, Button } from '@mui/material';
 import { jsPDF } from "jspdf";
 import 'tailwindcss/tailwind.css';
-import { fetchLabInfo } from '../../services/apiService';
+import profilePicture from '../../assets/download.png';
+import ProfilePictureUploader from './UserAvatar';
+
+const name = "ABC laboratery";
+const email = "abc@ gmail.com";
 
 function App() {
   const [labInfo, setLabInfo] = useState(null);
@@ -15,7 +19,7 @@ function App() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetchLabInfo();
+        const response = 1;
         setLabInfo(response);
         setLoading(false);
       } catch (error) {
@@ -48,26 +52,36 @@ function App() {
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-8 pt-3 p-5">
       <h1 className="text-4xl font-bold mb-4">Qr code</h1>
-      <Box className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center border border-blue-500">
+      <Box className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center border border-blue-100 mr-6">
         <Typography variant="h4" component="h2" fontWeight="bold">
           {labInfo ? labInfo.labName : "Loading..."}
         </Typography>
         <Box className="flex flex-col sm:flex-row justify-center items-center mt-4">
           <Box className="mr-0 sm:mr-4 text-left">
-            <Typography variant="body1" className="mb-2">
-              1. Open the lab report sharing app on your phone.
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              2. Navigate to the "Scan" option in the app.
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              3. Point your phone's camera at this QR code to identify the lab.
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              4. Once the lab is identified, we can share the lab reports.
-            </Typography>
+            <div className="flex flex-col items-center p-4">
+              <div className="relative w-32 h-32">
+                <img
+                  className="w-32 h-32 rounded-full border-1 border-gray-100 object-cover shadow-md"
+                  src={profilePicture}
+                  alt="Profile"
+                />
+
+              </div>
+
+              <div className="mt-4 text-2xl font-bold text-gray-800">{name}</div>
+              <div className="text-sm text-gray-500">{email}</div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={downloadQRCodeAsPDF}
+                className="mt-4"
+              >
+                Download QR Code as PDF
+              </Button>
+            </div>
+
           </Box>
-          <Box className="flex flex-col items-center p-3">
+          <Box className=" flex flex-col items-center p-border-1 border-blue-400 object-cover shadow-md rounded-lg ml-7">
             {loading ? (
               <CircularProgress />
             ) : (
@@ -79,15 +93,9 @@ function App() {
                     size={300}
                     level="H"
                     includeMargin={true}
+
                   />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={downloadQRCodeAsPDF}
-                    className="mt-4"
-                  >
-                    Download QR Code as PDF
-                  </Button>
+
                 </>
               )
             )}
@@ -99,6 +107,7 @@ function App() {
           </Box>
         </Box>
       </Box>
+      <ProfilePictureUploader/>
     </div>
   );
 }
