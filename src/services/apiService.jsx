@@ -267,7 +267,7 @@ export const fetchLabInfo = async () => {
       'Authorization': 'Bearer ' + authToken // Set the token in headers
     };
     const response = await axios.get(`${BASE_URL}/labs/${labId}`, { headers });
-    //console.log('Lab data fetched successfully:', response.data);
+    console.log('Lab data fetched successfully:', response.data);
     return response.data;
   } catch (error) {
     console.error("There was an error fetching the lab information: ", error);

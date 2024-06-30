@@ -8,8 +8,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Skeleton from '@mui/material/Skeleton';
 import profilePicdimo from '../../assets/dimoprofile.svg';
 import EditIcon from '@mui/icons-material/Edit';
+import { PutLabdata, fetchLabInfo } from '../../services/apiService';
+import Avatar from '@mui/material/Avatar';
 
-const Userid = 1; // Make sure this is dynamic based on the logged-in user
+const Userid = 2; // Make sure this is dynamic based on the logged-in user
 
 // Your Firebase configuration
 const firebaseConfig = {
@@ -29,9 +31,9 @@ const auth = getAuth(app);
 
 const ProfilePictureUploader = () => {
   const [user, setUser] = useState(null);
-  const [profilePicUri, setProfilePicUri] = useState(null);
   const [imageActionModalVisible, setImageActionModalVisible] = useState(false);
   const [hover, setHover] = useState(false);
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     // Fetch user details when the component mounts
@@ -40,9 +42,9 @@ const ProfilePictureUploader = () => {
 
   const getUserDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:33000/api/labs/${Userid}`);
-      setUser(response.data);
-      setProfilePicUri(response.data.labProfilePictureUrl);
+      const response = await fetchLabInfo();
+      setUser(response);
+      setAvatar(response.labProfilePictureUrl);
     } catch (error) {
       console.error('Error fetching user details:', error);
       alert('Error: Failed to fetch user details. Please try again.');
@@ -65,8 +67,8 @@ const ProfilePictureUploader = () => {
             const storageRef = ref(storage, `labPics/${Userid}`);
             await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(storageRef);
-            setProfilePicUri(downloadURL);
-            await axios.put(`http://localhost:33000/api/labs/${Userid}`, {
+            setAvatar(downloadURL);
+            await PutLabdata({
               id: user.id,
               labRegID: user.labRegID,
               labName: user.labName,
@@ -99,7 +101,7 @@ const ProfilePictureUploader = () => {
         telephone: user.telephone,
         labProfilePictureUrl: null
       });
-      setProfilePicUri(null);
+      setAvatar(null);
     } catch (error) {
       console.error('Error deleting image:', error);
       alert('Error: Failed to delete image. Please try again.');
@@ -125,8 +127,8 @@ const ProfilePictureUploader = () => {
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
           >
-            <img
-              src={profilePicUri}
+            <Avatar
+              src={avatar}
               alt="Profile"
               className="w-32 h-32 object-cover"
               style={{
@@ -162,22 +164,59 @@ const ProfilePictureUploader = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded shadow-lg">
-              <IconButton
-                className="absolute top-2 right-2"
-                onClick={() => setImageActionModalVisible(false)}
-              >
-                <CloseIcon />
-              </IconButton>
-              {profilePicUri ? (
+            <Box
+  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded shadow-lg"
+  sx={{
+    width: '100%',  // Ensures the box takes full width
+    maxWidth: '500px',  // Limits the maximum width of the box
+    padding: '24px',
+    backgroundColor: 'white',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    position: 'relative' // Ensure the close button is positioned relative to this box
+  }}
+>
+  <IconButton
+    className="absolute top-0 right-0 m-2"
+    onClick={() => setImageActionModalVisible(false)}
+    sx={{
+      position: 'absolute',
+      top: '8px',  // Adjust the top positioning as needed
+      right: '8px'  // Adjust the right positioning as needed
+    }}
+  >
+    <CloseIcon />
+  </IconButton>
+              {avatar ? (
                 <>
-                  <img src={profilePicUri} alt="Profile" className="w-32 h-32 rounded-full border border-gray-100 object-cover shadow-md mx-auto" />
+                  <Avatar
+                    src={avatar}
+                    alt="Profile"
+                    className="rounded-full border border-gray-100 object-cover shadow-md mx-auto"
+                    sx={{
+                      width: '150px',
+                      height: '150px',
+                      marginBottom: '16px',
+                    }}
+                  />
                   <Button variant="contained" color="secondary" onClick={handleDeletePhoto} className="mt-4">
                     Delete Photo
                   </Button>
                 </>
               ) : (
-                <p><img src={profilePicdimo} alt="Profile" className="w-32 h-32 rounded-full border border-gray-100 object-cover shadow-md mx-auto" /></p>
+                <Avatar
+                  src={avatar}
+                  alt="Profile"
+                  className="rounded-full border border-gray-100 object-cover shadow-md mx-auto"
+                  sx={{
+                    width: '150px',
+                    height: '150px',
+                    marginBottom: '16px',
+                  }}
+                />
               )}
               <Button variant="contained" onClick={() => handleChoosePhoto(false)} className="mt-4">
                 Add Image
