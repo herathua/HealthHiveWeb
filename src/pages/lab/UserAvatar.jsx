@@ -6,11 +6,8 @@ import { getAuth } from 'firebase/auth';
 import { Modal, Box, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
 import profilePicdimo from '../../assets/dimoprofile.svg';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-
+import EditIcon from '@mui/icons-material/Edit';
 
 const Userid = 1; // Make sure this is dynamic based on the logged-in user
 
@@ -34,6 +31,7 @@ const ProfilePictureUploader = () => {
   const [user, setUser] = useState(null);
   const [profilePicUri, setProfilePicUri] = useState(null);
   const [imageActionModalVisible, setImageActionModalVisible] = useState(false);
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     // Fetch user details when the component mounts
@@ -112,22 +110,52 @@ const ProfilePictureUploader = () => {
     <div>
       {user ? (
         <>
-          <div className="relative w-32 h-32 mx-auto">
+          <Box
+            sx={{
+              position: 'relative',
+              width: '8rem',
+              height: '8rem',
+              borderRadius: '50%',
+              overflow: 'hidden',
+              boxShadow: 3,
+              '&:hover .editIcon': {
+                opacity: 1,
+              },
+            }}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
             <img
               src={profilePicUri}
               alt="Profile"
-              className="w-32 h-32 rounded-full border border-gray-100 object-cover shadow-md"
+              className="w-32 h-32 object-cover"
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
             />
-            <Fab
-              size="small"
-              color="secondary"
-              aria-label="add"
-              className="absolute bottom-14 right-0 transform translate-x-24 translate-y-1/2"
-              onClick={() => setImageActionModalVisible(true)}
-            >
-              <AddIcon />
-            </Fab>
-          </div>
+            {hover && (
+              <IconButton
+                className="editIcon"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  opacity: 0,
+                  transition: 'opacity 0.3s',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  },
+                }}
+                onClick={() => setImageActionModalVisible(true)}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
+          </Box>
           <Modal
             open={imageActionModalVisible}
             onClose={() => setImageActionModalVisible(false)}
@@ -161,7 +189,6 @@ const ProfilePictureUploader = () => {
         <Skeleton variant="circular" width={129} height={129} />
       )}
     </div>
-
   );
 };
 
