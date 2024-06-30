@@ -6,6 +6,8 @@ import { jsPDF } from "jspdf";
 import 'tailwindcss/tailwind.css';
 import profilePicture from '../../assets/download.png';
 import ProfilePictureUploader from './UserAvatar';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 const name = "ABC laboratery";
 const email = "abc@ gmail.com";
@@ -60,12 +62,7 @@ function App() {
           <Box className="mr-0 sm:mr-4 text-left">
             <div className="flex flex-col items-center p-4">
               <div className="relative w-32 h-32">
-                <img
-                  className="w-32 h-32 rounded-full border-1 border-gray-100 object-cover shadow-md"
-                  src={profilePicture}
-                  alt="Profile"
-                />
-
+                <ProfilePictureUploader />
               </div>
 
               <div className="mt-4 text-2xl font-bold text-gray-800">{name}</div>
@@ -107,7 +104,6 @@ function App() {
           </Box>
         </Box>
       </Box>
-      <ProfilePictureUploader/>
     </div>
   );
 }
