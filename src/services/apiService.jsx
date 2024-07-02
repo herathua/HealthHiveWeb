@@ -393,6 +393,23 @@ export const handleLabDataUploadinAPI = async (labRequestId, description) => {
   }
 };
 
+export const HealthtipAPI = async (newTip) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.post(`${BASE_URL}/dailyTips`,newTip , { headers });
+    return response.data;
+  } catch (error) {
+    console.error('Error handling lab data upload:', error);
+    return null;
+  }
+};
+
 export const handleFileMetadatainAPI = async (fileName, fileType, filePath, createdDate, labDataUploadId) => {
   try {
     if (!authToken) {

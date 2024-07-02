@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
+import {HealthtipAPI} from '../../services/apiService';
 
 const HealthForm = () => {
   const [formData, setFormData] = useState({
@@ -35,11 +36,7 @@ const HealthForm = () => {
 
     if (window.confirm('Do you want to submit?')) {
       try {
-        const response = await axios.post('http://localhost:33000/api/dailyTips', newTip, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
+        const response = await HealthtipAPI(newTip);
         console.log('Form submitted:', response.data);
       } catch (error) {
         console.error('There was an error submitting the form!', error);

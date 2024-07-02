@@ -32,7 +32,6 @@ const ViewUser = () => {
     setCreateOpen(false);
   };
 
-
   useEffect(() => {
     axios.get('http://localhost:33000/api/users')
       .then(response => {
