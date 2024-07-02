@@ -97,7 +97,7 @@ export const RefreshToken = async () => {
 
 export const logoutUser = async () => {
   try {
-    if (!refreshToken) {
+    if (!authToken) {
       throw new Error('No refresh token available');
     }
 

@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
 
 const HealthForm = () => {
   const [formData, setFormData] = useState({
-    heading: '',
     type: '',
     message: ''
+  });
+
+  const [tip, settip] = useState({
+    tip: '',
+    heading: '',
+    type: ''
   });
 
   const handleChange = (e) => {
@@ -16,17 +22,33 @@ const HealthForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const newTip = {
+      tip: formData.message,
+      heading: formData.type,
+      type: formData.type,
+      date: new Date().toISOString()
+    };
+
+    settip(newTip);
+
     if (window.confirm('Do you want to submit?')) {
-      console.log('Form submitted:', formData);
-      // Process form data here
+      try {
+        const response = await axios.post('http://localhost:33000/api/dailyTips', newTip, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log('Form submitted:', response.data);
+      } catch (error) {
+        console.error('There was an error submitting the form!', error);
+      }
     }
   };
 
   const handleCancel = () => {
     setFormData({
-      heading: '',
       type: '',
       message: ''
     });
@@ -50,17 +72,17 @@ const HealthForm = () => {
       }}
     >
       <FormControl fullWidth>
-        <InputLabel id="heading-label">Heading</InputLabel>
+        <InputLabel id="type-label">Type</InputLabel>
         <Select
-          labelId="heading-label"
-          id="heading"
-          name="heading"
-          value={formData.heading}
+          labelId="type-label"
+          id="type"
+          name="type"
+          value={formData.type}
           onChange={handleChange}
-          label="Heading"
+          label="Type"
         >
           <MenuItem value="">
-            <em>Select a heading</em>
+            <em>Select a type</em>
           </MenuItem>
           <MenuItem value="health_tip">Health Tips</MenuItem>
           <MenuItem value="health_news">Health News</MenuItem>

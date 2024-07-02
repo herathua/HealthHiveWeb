@@ -92,7 +92,7 @@ const ProfilePictureUploader = () => {
     try {
       const storageRef = ref(storage, `labPics/${Userid}`);
       await deleteObject(storageRef);
-      await axios.put(`http://localhost:33000/api/labs/${Userid}`, {
+      await PutLabdata({
         id: user.id,
         labRegID: user.labRegID,
         labName: user.labName,
