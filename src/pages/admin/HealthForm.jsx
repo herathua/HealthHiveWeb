@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
 import {HealthtipAPI} from '../../services/apiService';
 
-const HealthForm = () => {
+const HealthForm1 = () => {
   const [formData, setFormData] = useState({
     type: '',
     message: ''
@@ -81,9 +81,9 @@ const HealthForm = () => {
           <MenuItem value="">
             <em>Select a type</em>
           </MenuItem>
-          <MenuItem value="health_tip">Health Tips</MenuItem>
-          <MenuItem value="health_news">Health News</MenuItem>
-          <MenuItem value="health_warning">Health Warnings</MenuItem>
+          <MenuItem value="Health Tips">Health Tips</MenuItem>
+          <MenuItem value="Health News">Health News</MenuItem>
+          <MenuItem value="Health Warnings">Health Warnings</MenuItem>
         </Select>
       </FormControl>
 
@@ -107,4 +107,4 @@ const HealthForm = () => {
   );
 };
 
-export default HealthForm;
+export default HealthForm1;

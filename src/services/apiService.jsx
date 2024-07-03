@@ -557,7 +557,7 @@ export const updatePassword = async (newPassword) => {
     };
 
     // Making the PUT request to update the password
-    const response = await axios.put(`http://keycloak-hh:8080/admin/realms/Health-Hive/users/${userId}/reset-password`, requestBody,{
+    const response = await axios.put(`https://lemur-6.cloud-iam.com/auth/realms/teamnova/users/${userId}/reset-password`, requestBody,{
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,

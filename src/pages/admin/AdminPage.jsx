@@ -4,6 +4,8 @@ import MinDrawer from './MinDrawer';
 import CreateUserPage from './CreateUserPage';
 import CreateLabPage from './CreateLabPage';
 import HealthForm from './HealthForm';
+import DailyTipPage from './window/DailyTipPage';
+import ViewDailyTips from './Table/ViewDailyTips';
 
 const AdminPage = () =>  (
         <MinDrawer>
@@ -11,6 +13,7 @@ const AdminPage = () =>  (
           <Route path="/dailytips" element={<HealthForm/>}/>
             <Route path="/usercreation" element={<CreateUserPage />} />
             <Route path="/labcreation" element={<CreateLabPage />} />
+            <Route path="/tips" element={<ViewDailyTips />} />
             <Route path="*" element={<Navigate to="usercreation" />} />
           </Routes>
         </MinDrawer>

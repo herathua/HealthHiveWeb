@@ -144,7 +144,7 @@ const LabLoginContainer = () => {
             >
               Sign In
             </button>
-            <a href="http://keycloak-hh:8080/realms/Health-Hive/login-actions/reset-credentials" className="text-sm text-blue-500 hover:text-blue-700 text-left">
+            <a href="https://lemur-6.cloud-iam.com/auth/realms/teamnova/login-actions/reset-credentials" className="text-sm text-blue-500 hover:text-blue-700 text-left">
               Forgot password?
             </a>
           </div>
