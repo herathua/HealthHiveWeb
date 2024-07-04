@@ -1,6 +1,6 @@
 # Health Hive
 
-![Health Hive Logo](https://your-logo-url.com/logo.png)
+![Health Hive Logo]([https://your-logo-url.com/logo.png](https://github.com/herathua/HealthHiveWeb/blob/main/public/logo.png))
 
 **Health Hive** is a blockchain-based health data storing system designed to serve as a health passport. This web app ensures secure and efficient management of health records using modern web technologies.
 
@@ -43,8 +43,16 @@ Ensure you have the following installed:
    git clone https://github.com/your-username/health-hive.git
    cd health-hive
    
-### Running the Development Server
-To start the development server with Hot Module Replacement (HMR):
-```bash
-   npm run dev
-This will start the Vite development server and open the app in your default browser.The app will reload automatically if you make changes to the code.
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/health-hive.git
+   cd health-hive
+2. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/health-hive.git
+   cd health-hive
+   
