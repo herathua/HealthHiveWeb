@@ -1,6 +1,6 @@
 # Health Hive
 
-![Health Hive Logo]([https://your-logo-url.com/logo.png](https://github.com/herathua/HealthHiveWeb/blob/main/public/logo.png))
+![Health Hive Logo]([https://github.com/herathua/HealthHiveWeb/blob/main/public/logo.png])
 
 **Health Hive** is a blockchain-based health data storing system designed to serve as a health passport. This web app ensures secure and efficient management of health records using modern web technologies.
 
