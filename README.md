@@ -37,22 +37,3 @@ Ensure you have the following installed:
    ```bash
    git clone https://github.com/your-username/health-hive.git
    cd health-hive
-2. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/your-username/health-hive.git
-   cd health-hive
-   
-### Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/your-username/health-hive.git
-   cd health-hive
-2. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/your-username/health-hive.git
-   cd health-hive
-   
