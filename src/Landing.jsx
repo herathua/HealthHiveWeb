@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Landing.css'; // Ensure you import your CSS file
 import backgroundImage from './assets/landing.svg';
 import logo from '../public/logo.png';
 import click from '../src/assets/click.svg';
@@ -20,7 +19,6 @@ function LandingPage() {
 
   return (
     <div className="flex flex-col" style={{
-      
       backgroundImage: `url(${backgroundImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
