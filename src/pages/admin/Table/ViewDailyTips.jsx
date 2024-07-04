@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+  Table,Select, MenuItem,TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   TextField, Container, IconButton, Snackbar, Alert, Grid, InputAdornment
 } from '@mui/material';
@@ -119,38 +119,22 @@ const ViewDailyTips = () => {
   return (
     <Container maxWidth="lg">
       <div style={{ display: 'flex', marginBottom: '16px' }}>
-        <Grid container spacing={2} justifyContent="center" style={{ margin: '20px 0' }}>
+        <Grid>
           <Grid item xs={12} sm={6} style={{ marginBottom: '5%', display: 'flex' }}>
-            <TextField
-              label="Search by Tip Name or Email"
-              variant="outlined"
-              fullWidth
-              sx={{ marginRight: '10px' }}
-              value={searchTerm}
-              onChange={handleSearch}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setSearchTerm('')}>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
             <Button
               variant="contained"
               color="primary"
               onClick={handleClickOpen}
               sx={{ height: '56px' }}
             >
+              <p className="pr-5">Add daily tip</p>
               <AddIcon />
             </Button>
 
             <Dialog open={createOpen} onClose={handleClickClose} fullWidth maxWidth="sm">
               <DialogTitle>
                 <div className="text-center text-4xl">
-                  Create Tip Account
+                Add daily tip
                 </div>
               </DialogTitle>
               <DialogContent>
@@ -198,7 +182,7 @@ const ViewDailyTips = () => {
 
       {/* View Dialog */}
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Tip Details</DialogTitle>
+        <DialogTitle>Daily Tip Details</DialogTitle>
         <DialogContent>
           <TableContainer style={{ marginBottom: '20px' }}>
             <Table>
@@ -254,14 +238,13 @@ const ViewDailyTips = () => {
                 }}
               />
 
-              <TextField
+              <Select
                 label="Type"
                 name="type"
                 value={selectedTip.type}
                 onChange={handleFieldChange}
                 fullWidth
                 margin="normal"
-                disabled={!editableFields.type}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -271,25 +254,11 @@ const ViewDailyTips = () => {
                     </InputAdornment>
                   ),
                 }}
-              />
-              <TextField
-                label="Date"
-                name="date"
-                value={selectedTip.date}
-                onChange={handleFieldChange}
-                fullWidth
-                margin="normal"
-                disabled={!editableFields.date}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => enableFieldEditing('date')}>
-                        <EditIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              >
+                <MenuItem value="Health News">Health News</MenuItem>
+                <MenuItem value="Health Warnings">Health Warnings</MenuItem>
+                <MenuItem value="Health Tips">Health Tips</MenuItem>
+              </Select>
             </form>
           )}
         </DialogContent>

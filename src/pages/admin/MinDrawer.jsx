@@ -166,7 +166,6 @@ export default function MiniDrawer({ children }) {
             {[
               { text: 'Laboratary', icon: <BiotechIcon style={{ color: 'black' }}/>, path: '/admin/labcreation' },
               { text: 'User', icon: <PersonIcon style={{ color: 'black' }}/>, path: '/admin/usercreation' },
-              { text: 'Tips', icon: <LightbulbIcon style={{ color: 'black' }}/>, path: '/admin/dailytips' },
               { text: 'Tips', icon: <LightbulbIcon style={{ color: 'black' }}/>, path: '/admin/tips' },
             ].map((item, index) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>

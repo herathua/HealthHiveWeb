@@ -61,7 +61,7 @@ const HealthForm1 = () => {
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
-        marginTop: 20,
+        marginTop: 2,
         padding: 3,
         borderRadius: 2,
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',

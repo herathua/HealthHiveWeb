@@ -10,7 +10,6 @@ import ViewDailyTips from './Table/ViewDailyTips';
 const AdminPage = () =>  (
         <MinDrawer>
           <Routes>
-          <Route path="/dailytips" element={<HealthForm/>}/>
             <Route path="/usercreation" element={<CreateUserPage />} />
             <Route path="/labcreation" element={<CreateLabPage />} />
             <Route path="/tips" element={<ViewDailyTips />} />
