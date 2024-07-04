@@ -20,6 +20,7 @@ function LandingPage() {
 
   return (
     <div className="flex flex-col" style={{
+      
       backgroundImage: `url(${backgroundImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
