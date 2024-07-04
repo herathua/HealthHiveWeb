@@ -33,7 +33,7 @@ const ViewUser = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:33000/api/users')
+    axios.get('http://13.202.67.81:33000/api/users')
       .then(response => {
         setUsers(response.data);
       })
@@ -76,7 +76,7 @@ const ViewUser = () => {
   };
 
   const handleUpdateUser = () => {
-    axios.put(`http://localhost:33000/api/users/${selectedUser.id}`, selectedUser)
+    axios.put(`http://13.202.67.81:33000/api/users/${selectedUser.id}`, selectedUser)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('User updated successfully');
@@ -94,7 +94,7 @@ const ViewUser = () => {
   };
 
   const handleDeleteUser = (email) => {
-    axios.delete(`http://localhost:33000/api/users/${email}`)
+    axios.delete(`http://13.202.67.81:33000/api/users/${email}`)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('User deleted successfully');

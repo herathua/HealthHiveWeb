@@ -31,7 +31,7 @@ const ViewDailyTips = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:33000/api/dailyTips')
+    axios.get('http://13.202.67.81:33000/api/dailyTips')
       .then(response => {
         setTips(response.data);
       })
@@ -74,7 +74,7 @@ const ViewDailyTips = () => {
   };
 
   const handleUpdateTip = () => {
-    axios.put(`http://localhost:33000/api/dailyTips/${selectedTip.id}`, selectedTip)
+    axios.put(`http://13.202.67.81:33000/api/dailyTips/${selectedTip.id}`, selectedTip)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Tip updated successfully');
@@ -93,7 +93,7 @@ const ViewDailyTips = () => {
   };
 
   const handleDeleteTip = (id) => {
-    axios.delete(`http://localhost:33000/api/dailyTips/${id}`)
+    axios.delete(`http://13.202.67.81:33000/api/dailyTips/${id}`)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Tip deleted successfully');

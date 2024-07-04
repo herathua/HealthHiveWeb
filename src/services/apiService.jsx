@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const BASE_URL = 'http://localhost:33000/api';
+const BASE_URL = 'http://13.202.67.81:33000/api';
 // const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
 const KEYCLOAK_LOGOUT_URL ='https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';

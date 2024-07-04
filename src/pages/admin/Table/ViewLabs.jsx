@@ -32,7 +32,7 @@ const ViewLabs = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:33000/api/labs')
+    axios.get('http://13.202.67.81:33000/api/labs')
       .then(response => {
         setLabs(response.data);
       })
@@ -75,7 +75,7 @@ const ViewLabs = () => {
   };
 
   const handleUpdateLab = () => {
-    axios.put(`http://localhost:33000/api/labs/${selectedLab.id}`, selectedLab)
+    axios.put(`http://13.202.67.81:33000/api/labs/${selectedLab.id}`, selectedLab)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Lab updated successfully');
@@ -93,7 +93,7 @@ const ViewLabs = () => {
   };
 
   const handleDeleteLab = (id) => {
-    axios.delete(`http://localhost:33000/api/labs/${id}`)
+    axios.delete(`http://13.202.67.81:33000/api/labs/${id}`)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Lab deleted successfully');
