@@ -1,8 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const BASE_URL = 'http://localhost:33000/api';
-const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
+const BASE_URL = 'http://13.202.67.81:33000/api';
+// const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
+const KEYCLOAK_LOGOUT_URL ='https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
 //let labId = getEmailFromToken(authToken); // Get lab ID from token
@@ -27,14 +28,15 @@ export const GetToken = async (email, password) => {
     };
 
     const data = new URLSearchParams({
-      'client_id': 'health-hive-client',
+      'client_id': 'Health-Hive-Client',
       'grant_type': 'password',
       //'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
       'username': email,
       'password': password
     }).toString();
 
-    const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
+    // const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the token
     refreshToken = response.data.refresh_token; // Save the refresh token
     console.log('AuthToken:', authToken);
@@ -70,7 +72,8 @@ export const RefreshToken = async () => {
       'refresh_token': refreshToken
     }).toString();
 
-    const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
+    // const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the new token
     refreshToken = response.data.refresh_token; // Save the new refresh token
     console.log('New AuthToken:', authToken);
@@ -94,7 +97,7 @@ export const RefreshToken = async () => {
 
 export const logoutUser = async () => {
   try {
-    if (!refreshToken) {
+    if (!authToken) {
       throw new Error('No refresh token available');
     }
 
@@ -264,7 +267,7 @@ export const fetchLabInfo = async () => {
       'Authorization': 'Bearer ' + authToken // Set the token in headers
     };
     const response = await axios.get(`${BASE_URL}/labs/${labId}`, { headers });
-    //console.log('Lab data fetched successfully:', response.data);
+    console.log('Lab data fetched successfully:', response.data);
     return response.data;
   } catch (error) {
     console.error("There was an error fetching the lab information: ", error);
@@ -295,6 +298,23 @@ export const fetchLabRequestsByLabId = async () => {
       window.location.href = '/login';
     } else {
     throw error;}
+  }
+};
+//fetchUserUrl
+export const fetchUserUrl = async (userId) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/users/${userId}`, { headers });
+    return response.data.profilePictureUrl;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return 'Unknown User';
   }
 };
 
@@ -366,6 +386,23 @@ export const handleLabDataUploadinAPI = async (labRequestId, description) => {
       description,
       labRequest: labRequestId,
     }, { headers });
+    return response.data;
+  } catch (error) {
+    console.error('Error handling lab data upload:', error);
+    return null;
+  }
+};
+
+export const HealthtipAPI = async (newTip) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.post(`${BASE_URL}/dailyTips`,newTip , { headers });
     return response.data;
   } catch (error) {
     console.error('Error handling lab data upload:', error);
@@ -520,7 +557,7 @@ export const updatePassword = async (newPassword) => {
     };
 
     // Making the PUT request to update the password
-    const response = await axios.put(`http://keycloak-hh:8080/admin/realms/Health-Hive/users/${userId}/reset-password`, requestBody,{
+    const response = await axios.put(`https://lemur-6.cloud-iam.com/auth/realms/teamnova/users/${userId}/reset-password`, requestBody,{
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,
