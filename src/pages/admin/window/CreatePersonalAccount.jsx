@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
+import { CreatePersonalAcountPostAPI } from "../../../services/apiService";
 import React, { useState } from "react";
 function PersonalFormComponent() {
   const [formValues, setFormValues] = useState({
@@ -90,11 +90,8 @@ function PersonalFormComponent() {
     if (Object.keys(formErrors).length === 0) {
       setButtonEnabled(true);
       try {
-        const response = await axios.post(
-          "http://13.202.67.81:33000/api/users",
-          formValues
-        );
-
+        const response = await CreatePersonalAcountPostAPI(formValues);
+        window.location.reload();
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);

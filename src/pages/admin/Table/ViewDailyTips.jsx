@@ -6,9 +6,9 @@ import {
   TextField, Container, IconButton, Snackbar, Alert, Grid, InputAdornment
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import HealthForm1 from '../HealthForm';
+import { fetchTip, ViewTipPutAPI, deleteLabAccount } from '../../../services/apiService';
 
 const ViewDailyTips = () => {
   const [tips, setTips] = useState([]);
@@ -31,12 +31,13 @@ const ViewDailyTips = () => {
   };
 
   useEffect(() => {
-    axios.get('http://13.202.67.81:33000/api/dailyTips')
+    fetchTip()
       .then(response => {
         setTips(response.data);
       })
       .catch(error => {
         console.error('Error fetching dailyTips:', error);
+        //window.location.reload();
       });
   }, []);
 
@@ -74,7 +75,7 @@ const ViewDailyTips = () => {
   };
 
   const handleUpdateTip = () => {
-    axios.put(`http://13.202.67.81:33000/api/dailyTips/${selectedTip.id}`, selectedTip)
+    ViewTipPutAPI(selectedTip.id, selectedTip)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Tip updated successfully');
@@ -82,7 +83,7 @@ const ViewDailyTips = () => {
           setSnackbarOpen(true);
           setTips(tips.map(tip => tip.id === selectedTip.id ? selectedTip : tip));
           handleEditClose();
-          window.location.reload();
+          //window.location.reload();
         }
       })
       .catch(error => {
@@ -93,14 +94,14 @@ const ViewDailyTips = () => {
   };
 
   const handleDeleteTip = (id) => {
-    axios.delete(`http://13.202.67.81:33000/api/dailyTips/${id}`)
+    deleteLabAccount(id)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Tip deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
           setTips(tips.filter(tip => tip.id !== id));
-          window.location.reload();
+          //window.location.reload();
         }
       })
       .catch(error => {

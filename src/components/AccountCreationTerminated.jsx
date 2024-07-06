@@ -3,6 +3,10 @@ import { Box, Button, Paper, Typography } from '@mui/material';
 import React from 'react';
 
 export default function AccountCreationTerminated() {
+  const handleBackToForm = () => {
+    //window.location.reload();
+  };
+
   return (
     <Box
       sx={{
@@ -36,7 +40,11 @@ export default function AccountCreationTerminated() {
         >
           We were unable to create your account due to a processing error. Please try again or contact support if the problem persists.
         </Typography>
-        <Button variant="contained" sx={{ marginTop: 4, backgroundColor: '#4f6bed' }} href="/signup">
+        <Button
+          variant="contained"
+          sx={{ marginTop: 4, backgroundColor: '#4f6bed' }}
+          onClick={handleBackToForm}
+        >
           Back to Form
         </Button>
       </Paper>

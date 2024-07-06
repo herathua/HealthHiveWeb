@@ -1,9 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const BASE_URL = 'http://13.202.67.81:33000/api';
+const BASE_URL = 'http://localhost:33000/api';
 // const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
-const KEYCLOAK_LOGOUT_URL ='http://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/logout';
+const KEYCLOAK_LOGOUT_URL = 'https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
 //let labId = getEmailFromToken(authToken); // Get lab ID from token
@@ -36,7 +36,7 @@ export const GetToken = async (email, password) => {
     }).toString();
 
     // const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
-    const response = await axios.post("http://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the token
     refreshToken = response.data.refresh_token; // Save the refresh token
     console.log('AuthToken:', authToken);
@@ -73,7 +73,7 @@ export const RefreshToken = async () => {
     }).toString();
 
     // const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
-    const response = await axios.post("http://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the new token
     refreshToken = response.data.refresh_token; // Save the new refresh token
     console.log('New AuthToken:', authToken);
@@ -91,7 +91,8 @@ export const RefreshToken = async () => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-    throw error;}
+      throw error;
+    }
   }
 };
 
@@ -128,7 +129,8 @@ export const logoutUser = async () => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-    throw error;}
+      throw error;
+    }
   }
 };
 
@@ -166,7 +168,8 @@ export const performAuthenticatedRequest = async (url, method, data) => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-    throw error;}
+      throw error;
+    }
   }
 };
 
@@ -212,8 +215,9 @@ export const fetchLabData = async (labId) => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-    throw error; // Propagate error for handling elsewhere
-  }}
+      throw error; // Propagate error for handling elsewhere
+    }
+  }
 };
 export const updateLabData = async (labId, newData) => {
   try {
@@ -227,6 +231,50 @@ export const updateLabData = async (labId, newData) => {
     localStorage.removeItem(cachingKey);
     const response = await axios.put(`${BASE_URL}/labs/${labId}`, newData, { headers });
     return response.data; // Return updated data or handle response as needed
+  } catch (error) {
+    throw new Error('Error updating lab information');
+  }
+};
+export const ViewUserPutAPI = async (id, selectedUser) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.put(`${BASE_URL}/users/${id}`, selectedUser, { headers });
+    return response; // Return updated data or handle response as needed
+  } catch (error) {
+    throw new Error('Error updating lab information');
+  }
+};
+
+export const ViewLabPutAPI = async (id, selectedLab) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.put(`${BASE_URL}/labs/${id}`, selectedLab, { headers });
+    return response; // Return updated data or handle response as needed
+  } catch (error) {
+    throw new Error('Error updating lab information');
+  }
+};
+
+export const ViewTipPutAPI = async (id, selectedTip) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.put(`${BASE_URL}/dailyTips/${id}`, selectedTip, { headers });
+    return response; // Return updated data or handle response as needed
   } catch (error) {
     throw new Error('Error updating lab information');
   }
@@ -276,8 +324,9 @@ export const fetchLabInfo = async () => {
       window.location.href = '/login';
     } else {
 
-    throw error;
-  }}
+      throw error;
+    }
+  }
 };
 
 export const fetchLabRequestsByLabId = async () => {
@@ -297,7 +346,8 @@ export const fetchLabRequestsByLabId = async () => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-    throw error;}
+      throw error;
+    }
   }
 };
 //fetchUserUrl
@@ -318,6 +368,22 @@ export const fetchUserUrl = async (userId) => {
   }
 };
 
+export const fetchTip= async () => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/dailyTips`, { headers });
+    return response;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return 'Unknown User';
+  }
+};
+
 export const fetchUserName = async (userId) => {
   try {
     if (!authToken) {
@@ -329,6 +395,42 @@ export const fetchUserName = async (userId) => {
     };
     const response = await axios.get(`${BASE_URL}/users/${userId}`, { headers });
     return response.data.fullName;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return 'Unknown User';
+  }
+};
+
+
+export const FetchUserAPI = async () => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/users`, { headers });
+    return response;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return 'Unknown User';
+  }
+};
+
+
+export const FetchLabAPI = async () => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/labs`, { headers });
+    return response;
   } catch (error) {
     console.error('Error fetching user details:', error);
     return 'Unknown User';
@@ -402,7 +504,7 @@ export const HealthtipAPI = async (newTip) => {
     const headers = {
       'Authorization': 'Bearer ' + authToken // Set the token in headers
     };
-    const response = await axios.post(`${BASE_URL}/dailyTips`,newTip , { headers });
+    const response = await axios.post(`${BASE_URL}/dailyTips`, newTip, { headers });
     return response.data;
   } catch (error) {
     console.error('Error handling lab data upload:', error);
@@ -423,7 +525,7 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
       name: fileName,
       type: fileType,
       filePath,
-      fileHash:filePath,
+      fileHash: filePath,
       createdDate,
       labDataUpload: labDataUploadId,
     }, { headers });
@@ -435,7 +537,8 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
       window.location.href = '/login';
     } else {
       throw error;
-  }}
+    }
+  }
 };
 
 export const checkUploadStatusInAPI = async (labRequestId) => {
@@ -462,7 +565,8 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-      throw error;}
+      throw error;
+    }
   }
 };
 
@@ -477,7 +581,39 @@ export const deleteUserAccount = async (userId) => {
       Authorization: `Bearer ${authToken}`
     };
     const response = await axios.delete(`${BASE_URL}/users/${userId}`, { headers });
-    return response.data; // Return response data if needed
+    return response; // Return response data if needed
+  } catch (error) {
+    throw error; // Throw error for handling in component
+  }
+};
+
+export const deleteLabAccount = async (id) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`
+    };
+    const response = await axios.delete(`${BASE_URL}/labs/${id}`, { headers });
+    return response; // Return response data if needed
+  } catch (error) {
+    throw error; // Throw error for handling in component
+  }
+};
+
+export const deleteUserAccountByemail = async (email) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`
+    };
+    const response = await axios.delete(`${BASE_URL}/users/${email}`, { headers });
+    return response; // Return response data if needed
   } catch (error) {
     throw error; // Throw error for handling in component
   }
@@ -503,7 +639,7 @@ export const PutLabdata = async (lab) => {
       window.location.href = '/login';
     } else {
       throw error;
-}
+    }
   }
 };
 
@@ -521,7 +657,8 @@ export const loginUser = async (email, password) => {
       // Redirect to the login page
       window.location.href = '/login';
     } else {
-      throw error;}
+      throw error;
+    }
   }
 };
 
@@ -534,7 +671,7 @@ export const deleteAccount = async () => {
     const headers = {
       'Authorization': 'Bearer ' + authToken // Set the token in headers
     };
-    const response = await axios.delete(`${BASE_URL}/users/${labId}`,  lab, { headers });
+    const response = await axios.delete(`${BASE_URL}/users/${labId}`, lab, { headers });
     //console.log('Account deleted successfully:', response.data);
     return response.data;
   } catch (error) {
@@ -544,9 +681,60 @@ export const deleteAccount = async () => {
       window.location.href = '/login';
     } else {
       throw error;
-}
+    }
   }
 };
+export const LabFormPostAPI = async (formValues) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.post(`${BASE_URL}/labs`, formValues, { headers });
+    return response;
+  } catch (error) {
+    console.error('Error handling lab data upload:', error);
+    return null;
+  }
+};
+
+export const DailyTipsPostAPI = async (formValues) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.post(`${BASE_URL}/dailyTips`, formValues, { headers });
+    return response;
+  } catch (error) {
+    console.error('Error handling lab data upload:', error);
+    return null;
+  }
+};
+
+export const CreatePersonalAcountPostAPI = async (formValues) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.post(`${BASE_URL}/users`, formValues, { headers });
+    return response;
+  } catch (error) {
+    console.error('Error handling lab data upload:', error);
+    return null;
+  }
+};
+
 export const updatePassword = async (newPassword) => {
   try {
     // Construct the request body
@@ -557,7 +745,7 @@ export const updatePassword = async (newPassword) => {
     };
 
     // Making the PUT request to update the password
-    const response = await axios.put(`https://lemur-6.cloud-iam.com/auth/realms/teamnova/users/${userId}/reset-password`, requestBody,{
+    const response = await axios.put(`https://lemur-6.cloud-iam.com/auth/realms/teamnova/users/${userId}/reset-password`, requestBody, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,
@@ -576,6 +764,7 @@ export const updatePassword = async (newPassword) => {
       window.location.href = '/login';
     } else {
       throw error;
-}
+    }
   }
+  
 };
