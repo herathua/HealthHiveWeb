@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../src/assets/logo.png';
+import Logo from '../assets/logo.png';
 import LockIcon from '@mui/icons-material/Lock';
-import {GetToken,GetLabIdByEmail } from './services/apiService';
+import {GetToken,GetLabIdByEmail } from '../services/apiService';
 //import { GetToken } from './auth/Keycloak';
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";

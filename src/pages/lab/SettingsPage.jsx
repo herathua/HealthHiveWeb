@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography, Grid } from '@mui/material';
 import { updatePassword } from '../../services/apiService';
-import LabData from '../../labinfo';
+import LabData from '../../components/labinfo';
 
 
 function SettingsComponent() {

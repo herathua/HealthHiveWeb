@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Container, Link } from '@mui/material';
-import logo from '../src/assets/logo.png';
-import click from '../src/assets/click.svg';
-import chain from '../src/assets/chain.svg';
-import lock from '../src/assets/lock.svg';
+import logo from '../assets/logo.png';
+import click from '../assets/click.svg';
+import chain from '../assets/chain.svg';
+import lock from '../assets/lock.svg';
 
 const LandingPage = () => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Grid } from '@mui/material';
-import { PutLabdata, fetchLabInfo } from './services/apiService';
+import { PutLabdata, fetchLabInfo } from '../services/apiService';
 
 const LabData = () => {
   const [lab, setLab] = useState({
