@@ -23,7 +23,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate, Link } from 'react-router-dom';
 import { logoutUser } from '../../services/apiService';
 import logo from '../../assets/logo.png';
-import Footer from '../../LabComponent/FooterComponent/Footer';
+import Footer from '../../components/Footer';
 import Avatar from '@mui/material/Avatar';
 import AvatarWithEditIcon from './avatar';
 

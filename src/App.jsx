@@ -5,7 +5,7 @@ import LoginPage from './LoginPage'; // Assuming this is your login page compone
 import AdminPage from './pages/admin/AdminPage'; // Import your AdminPage component here
 import LabPage from './pages/lab/LabPage'; // Import your LabPage component here
 import PrivateRoute from './components/PrivateRoute';
-import LandingPagecopy from './Landing copy';
+import LandingPagecopy from './MobileLandingPage';
 
 function App() {
   const isMobile = window.innerWidth <= 1315;

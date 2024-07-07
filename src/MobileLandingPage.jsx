@@ -27,7 +27,7 @@ const LandingPage = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         textAlign: 'center',
-        bgcolor: 'rgba(30, 58, 138,1)', // Change the background color here
+        bgcolor: 'rgba(30, 58, 138,0.9)', // Change the background color here
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: 8,
@@ -41,7 +41,7 @@ const LandingPage = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: 'rgba(224, 247, 250, 0.7)', // Semi-transparent white background
+          bgcolor: 'rgba(224, 247, 250, 0.9)', // Semi-transparent white background
           padding: 5,
           borderRadius: 3,
           boxShadow: 3,
