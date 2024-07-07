@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import backgroundImage from './assets/landing.svg';
-import logo from '../public/logo.png';
+import logo from '../src/assets/logo.png';
 import click from '../src/assets/click.svg';
 import chain from '../src/assets/chain.svg';
 import lock from '../src/assets/lock.svg';
