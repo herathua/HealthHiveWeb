@@ -7,6 +7,13 @@ import chain from '../assets/chain.svg';
 import lock from '../assets/lock.svg';
 
 function LandingPage() {
+  const styles = {
+    backgroundImage: `url('data:image/svg+xml,<svg id="visual" viewBox="0 0 900 900" width="900" height="900" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><rect x="0" y="0" width="900" height="900" fill="%231E3A8A"></rect><path d="M0 518L50 522.7C100 527.3 200 536.7 300 507C400 477.3 500 408.7 600 393.5C700 378.3 800 416.7 850 435.8L900 455L900 901L850 901C800 901 700 901 600 901C500 901 400 901 300 901C200 901 100 901 50 901L0 901Z" fill="%23fff" stroke-linecap="round" stroke-linejoin="miter"></path></svg>')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    height: '150vh', // Adjust as needed
+  };
+
   const navigate = useNavigate();
 
   const handleAdminClick = () => {
@@ -18,12 +25,7 @@ function LandingPage() {
   };
 
   return (
-    <div className="flex flex-col" style={{
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      height: '150vh' // Set the height to 200% of viewport height
-    }}>
+ <div style={styles}>
       {/* Blue section */}
       <div className="text-white flex flex-col">
         <header className="w-full flex justify-between items-center p-2">
@@ -38,7 +40,7 @@ function LandingPage() {
                 <polyline points="22,6 12,13 2,6" />
               </svg>
               <p className='ml-2 sm:ml-4 text-white'>
-                <a href="mailto:contact@healthhive.com">contact@healthhive.com</a>
+                <a href="mailto:teamnova.uom@gmail.com">teamnova.uom@gmail.com</a>
               </p>
             </div>
             <div className='flex items-center sm:mb-0'>
@@ -54,17 +56,17 @@ function LandingPage() {
 
         <div className="flex items-center">
           <div className="w-3/5 py-4 p-10">
-            <h1 className="text-6xl font-bold m-1">Securely Store and Manage <p>Your Health Data</p></h1>
+            <h1 className="text-6xl font-bold m-1">Securely Store and Manage Your Health Data</h1>
             <p className="text-xl mt-6">
-              Upload and access your health reports anytime, anywhere. <p>Powered by blockchain technology for enhanced security.</p>
+              Upload and access your health reports anytime, anywhere. Powered by blockchain technology for enhanced security.
             </p>
           </div>
 
           <div className="aspect-w-1 aspect-h-1 py-12 justify-center items-center bg-white text-black p-10 rounded-lg shadow-lg m-5">
             <h2 className="text-4xl mb-9 font-bold p-9 text-center">Let's get started</h2>
             <div className="space-y-4 w-full p-6">
-              <button onClick={handleUserClick} className="bg-blue-500 text-white py-3 px-6 rounded-full w-full text-lg font-semibold">Laboratory login</button>
-              <button onClick={handleAdminClick} className="border-spacing-4 border border-blue-500 text-black py-3 px-6 rounded-full w-full text-lg font-semibold">Admin login</button>
+              <button onClick={handleUserClick} className="bg-blue-500 text-white py-3 px-6 rounded-full w-full text-lg font-semibold">Laboratory Login</button>
+              <button onClick={handleAdminClick} className="border-spacing-4 border border-blue-500 text-black py-3 px-6 rounded-full w-full text-lg font-semibold">Admin Login</button>
               <button className="bg-red-500 text-white py-3 px-6 rounded-full w-full text-lg font-semibold">Download App</button>
             </div>
           </div>
@@ -72,26 +74,24 @@ function LandingPage() {
       </div>
 
       {/* White section */}
-      <div>
-        <div className="max-w-screen-xl mx-auto py-20 px-4 mt-[150px]">
-          <h2 className="text-center text-5xl font-bold text-black">Revolutionize Your Health Data Management</h2>
-          <h4 className="text-center text-2xl font-bold text-black mt-4">Upload and retrieve your health reports on-the-go. Enjoy unparalleled security with our blockchain-based platform.</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 ">
-            <div className="flex flex-col items-center m-10">
-              <img src={lock} alt="Lock" className="h-16 m-10" />
-              <h3 className="text-3xl font-semibold text-black">Secure and Encrypted</h3>
-              <p className="text-2xl text-black text-center m-4">Your health data is securely stored and encrypted, ensuring privacy and protection against unauthorized access.</p>
-            </div>
-            <div className="flex flex-col items-center m-10">
-              <img src={click} alt="Click" className="h-16 m-10" />
-              <h3 className="text-3xl font-semibold text-black">User-Friendly Interface</h3>
-              <p className="text-2xl text-black text-center m-4">Our platform is designed with a simple and intuitive interface, making it easy for users of all technical levels to navigate and manage their health data.</p>
-            </div>
-            <div className="flex flex-col items-center m-10">
-              <img src={chain} alt="Chain" className="h-16 m-10" />
-              <h3 className="text-3xl font-semibold text-black text-center break-normal ...">Blockchain Technology</h3>
-              <p className="text-2xl text-black text-center m-4">Experience the unparalleled security and transparency of blockchain technology for managing and storing your health data.</p>
-            </div>
+      <div className="max-w-screen-xl mx-auto py-20 px-4 mt-[150px]">
+        <h2 className="text-center text-5xl font-bold text-black">Revolutionize Your Health Data Management</h2>
+        <h4 className="text-center text-2xl font-bold text-black mt-4">Upload and retrieve your health reports on-the-go. Enjoy unparalleled security with our blockchain-based platform.</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 ">
+          <div className="flex flex-col items-center m-10">
+            <img src={lock} alt="Lock" className="h-16 m-10" />
+            <h3 className="text-3xl font-semibold text-black">Secure and Encrypted</h3>
+            <p className="text-2xl text-black text-center m-4">Your health data is securely stored and encrypted, ensuring privacy and protection against unauthorized access.</p>
+          </div>
+          <div className="flex flex-col items-center m-10">
+            <img src={click} alt="Click" className="h-16 m-10" />
+            <h3 className="text-3xl font-semibold text-black">User-Friendly Interface</h3>
+            <p className="text-2xl text-black text-center m-4">Our platform is designed with a simple and intuitive interface, making it easy for users of all technical levels to navigate and manage their health data.</p>
+          </div>
+          <div className="flex flex-col items-center m-10">
+            <img src={chain} alt="Chain" className="h-16 m-10" />
+            <h3 className="text-3xl font-semibold text-black">Blockchain Technology</h3>
+            <p className="text-2xl text-black text-center m-4">Experience the unparalleled security and transparency of blockchain technology for managing and storing your health data.</p>
           </div>
         </div>
       </div>
