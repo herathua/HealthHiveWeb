@@ -94,14 +94,16 @@ const ViewLabs = () => {
       });
   };
 
-  const handleDeleteLab = (id) => {
-    deleteLabAccount(id)
+  const handleDeleteLab = (email) => {
+    deleteLabAccount(email)
       .then(response => {
         if (response.status === 200) {
+          console.log(response);
+          console.log(response.status);
           setSnackbarMessage('Lab deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
-          setLabs(labs.filter(lab => lab.id !== id));
+          // setLabs(labs.filter(lab => lab.id !== id));
           //window.location.reload();
         }
       })
@@ -195,7 +197,7 @@ const ViewLabs = () => {
                 <TableCell>
                   <Button variant="contained" color="primary" onClick={() => handleView(lab)}>View</Button>
                   <Button variant="contained" color="secondary" style={{ marginLeft: '10px' }} onClick={() => handleEdit(lab)}>Edit</Button>
-                  <Button variant="contained" color="error" style={{ marginLeft: '10px' }} onClick={() => handleDeleteLab(lab.id)}>Delete</Button>
+                  <Button variant="contained" color="error" style={{ marginLeft: '10px' }} onClick={() => handleDeleteLab(lab.email)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}

@@ -96,12 +96,12 @@ const ViewUser = () => {
   const handleDeleteUser = (email) => {
     deleteUserAccountByemail(email)
       .then(response => {
+        window.location.reload();
         if (response.status === 200) {
           setSnackbarMessage('User deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
           setUsers(users.filter(user => user.email !== email));
-          //window.location.reload();
         }
       })
       .catch(error => {
