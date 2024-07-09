@@ -604,6 +604,22 @@ export const deleteLabAccount = async (email) => {
   }
 };
 
+export const deleteDailytip = async (id) => {
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`
+    };
+    const response = await axios.delete(`${BASE_URL}/dailyTips/${id}`, { headers });
+    return response; // Return response data if needed
+  } catch (error) {
+    throw error; // Throw error for handling in component
+  }
+};
+
 export const deleteUserAccountByemail = async (email) => {
   try {
     if (!authToken) {

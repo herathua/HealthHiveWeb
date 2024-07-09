@@ -8,7 +8,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import HealthForm1 from '../HealthForm';
-import { fetchTip, ViewTipPutAPI, deleteLabAccount } from '../../../services/apiService';
+import { fetchTip, ViewTipPutAPI, deleteDailytip } from '../../../services/apiService';
 
 const ViewDailyTips = () => {
   const [tips, setTips] = useState([]);
@@ -94,14 +94,14 @@ const ViewDailyTips = () => {
   };
 
   const handleDeleteTip = (id) => {
-    deleteLabAccount(id)
+    deleteDailytip(id)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Tip deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
           setTips(tips.filter(tip => tip.id !== id));
-          //window.location.reload();
+          window.location.reload();
         }
       })
       .catch(error => {

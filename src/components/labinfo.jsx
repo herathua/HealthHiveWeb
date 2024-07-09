@@ -47,7 +47,7 @@ const LabData = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ maxWidth: '500px', mt: 4 }}>
       <h2 className="text-2xl font-semibold mb-4">Lab data</h2>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
