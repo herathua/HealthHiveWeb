@@ -56,7 +56,7 @@ function SettingsComponent() {
   return (
     <div className="w-full md:w-3/4 mx-auto px-4 sm:px-8 pt-3">
       <h1 className="text-4xl font-bold mb-4">Settings</h1>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 md:mb-0 md:flex md:flex-col md:border md:border-blue-500 md:max-w-48 md:h-full">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 md:mb-0 md:flex md:flex-col md:border md:border-blue-500md:h-full">
         <LabData className="flex-grow" />
       </div>
       

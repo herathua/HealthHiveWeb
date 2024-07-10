@@ -22,6 +22,7 @@ import logo from '../../assets/logo.png';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import PersonIcon from '@mui/icons-material/Person';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -167,7 +168,8 @@ export default function MiniDrawer({ children }) {
               { text: 'Laboratary', icon: <BiotechIcon style={{ color: 'black' }}/>, path: '/admin/labcreation' },
               { text: 'User', icon: <PersonIcon style={{ color: 'black' }}/>, path: '/admin/usercreation' },
               { text: 'Tips', icon: <LightbulbIcon style={{ color: 'black' }}/>, path: '/admin/tips' },
-            ].map((item, index) => (
+              { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }} />, action: 'logout' },
+            ].map((item) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
@@ -175,7 +177,7 @@ export default function MiniDrawer({ children }) {
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
                   }}
-                  onClick={() => handleNavigation(item.path)}
+                  onClick={() => handleNavigation(item.path, item.action)}
                 >
                   <ListItemIcon
                     sx={{
@@ -186,7 +188,10 @@ export default function MiniDrawer({ children }) {
                   >
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                   primary={item.text} 
+                   sx={{ color: item.text === 'Logout' ? 'red' : 'black', opacity: open ? 1 : 0 }}
+                   />
                 </ListItemButton>
               </ListItem>
             ))}

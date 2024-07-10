@@ -1,10 +1,11 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+//localhost:33000
+//const BASE_URL = 'http://13.202.67.81:10000/usermgtapi/api';
 const BASE_URL = 'http://localhost:33000/api';
 // const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
 //https://lemur-1.cloud-iam.com/auth/admin/healthhivelk/console/
-const KEYCLOAK_LOGOUT_URL = 'https://lemur-1.cloud-iam.com/auth/realms/healthhivelk/protocol/openid-connect/logout';
+const KEYCLOAK_LOGOUT_URL = 'https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
 //let labId = getEmailFromToken(authToken); // Get lab ID from token
@@ -37,7 +38,7 @@ export const GetToken = async (email, password) => {
     }).toString();
 
     // const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
-    const response = await axios.post("https://lemur-1.cloud-iam.com/auth/realms/healthhivelk/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the token
     refreshToken = response.data.refresh_token; // Save the refresh token
     console.log('AuthToken:', authToken);
@@ -74,7 +75,7 @@ export const RefreshToken = async () => {
     }).toString();
 
     // const response = await axios.post("http://localhost:8080/realms/Health-Hive/protocol/openid-connect/token", data, { headers });
-    const response = await axios.post("https://lemur-1.cloud-iam.com/auth/realms/healthhivelk/protocol/openid-connect/token", data, { headers });
+    const response = await axios.post("https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the new token
     refreshToken = response.data.refresh_token; // Save the new refresh token
     console.log('New AuthToken:', authToken);
@@ -762,7 +763,7 @@ export const updatePassword = async (newPassword) => {
     };
 
     // Making the PUT request to update the password
-    const response = await axios.put(`https://lemur-6.cloud-iam.com/auth/realms/teamnova/users/${userId}/reset-password`, requestBody, {
+    const response = await axios.put(`https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/users/${userId}/reset-password`, requestBody, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,

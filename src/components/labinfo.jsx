@@ -75,6 +75,17 @@ const LabData = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              label="Email"
+              name="email"
+              value={lab.email}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
               label="Lab Name"
               name="labName"
               value={lab.labName}
@@ -88,16 +99,6 @@ const LabData = () => {
               label="Address"
               name="address"
               value={lab.address}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Email"
-              name="email"
-              value={lab.email}
               onChange={handleChange}
               fullWidth
               margin="normal"
