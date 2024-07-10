@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
-import {HealthtipAPI} from '../../services/apiService';
+import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box, Snackbar, Alert } from '@mui/material';
+import { HealthtipAPI } from '../../services/apiService';
 
 const HealthForm1 = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,10 @@ const HealthForm1 = () => {
     heading: '',
     type: ''
   });
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,13 +38,31 @@ const HealthForm1 = () => {
 
     settip(newTip);
 
-    if (window.confirm('Do you want to submit?')) {
+    if (newTip.tip && newTip.heading && newTip.type && newTip.date) {
       try {
+
         const response = await HealthtipAPI(newTip);
-        console.log('Form submitted:', response.data);
+
+        console.log('Form submitted:', response);
+        setSnackbarMessage('Form submitted successfully!');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
       } catch (error) {
         console.error('There was an error submitting the form!', error);
+        setSnackbarMessage('Error submitting the form!');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      } finally {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); // 6000 ms = 6 seconds
       }
+    
+    }
+    else {
+      setSnackbarMessage('Please fill all the fields!');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
@@ -86,7 +108,6 @@ const HealthForm1 = () => {
           <MenuItem value="Health Warnings">Health Warnings</MenuItem>
         </Select>
       </FormControl>
-
       <TextField
         id="message"
         name="message"
@@ -103,6 +124,16 @@ const HealthForm1 = () => {
         <Button type="submit" variant="contained" color="primary">Submit</Button>
         <Button type="button" onClick={handleCancel} variant="outlined" color="secondary">Cancel</Button>
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

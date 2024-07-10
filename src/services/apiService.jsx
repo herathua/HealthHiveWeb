@@ -120,10 +120,10 @@ export const logoutUser = async () => {
     // Clear tokens from client-side storage
     authToken = null;
     refreshToken = null;
-    Cookies.remove('authToken');
-    Cookies.remove('refreshToken');
+    Cookies.remove(authToken);
+    Cookies.remove(refreshToken);
     console.log('User logged out successfully');
-    window.location.href = '/login';
+    //window.location.href = '/login';
 
   } catch (error) {
     console.error('Logout error:', error);
