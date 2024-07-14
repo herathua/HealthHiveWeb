@@ -370,6 +370,31 @@ export const fetchUserUrl = async (userId) => {
   }
 };
 
+export const fetchReports = async (formattedStartDate,formattedEndDate) => {
+  localStorage.getItem('labId');
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    const response = await axios.get(`${BASE_URL}/labOldUploadss/lab-old-uploads`, { 
+      params: {
+        labid: labId, 
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      },
+      headers 
+    });
+    return response;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return 'Unknown User';
+  }
+};
+
 export const fetchTip= async () => {
   try {
     if (!authToken) {

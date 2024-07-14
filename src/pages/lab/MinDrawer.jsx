@@ -26,6 +26,7 @@ import logo from '../../assets/logo.png';
 import Footer from '../../components/Footer';
 import Avatar from '@mui/material/Avatar';
 import AvatarWithEditIcon from './avatar';
+import HistoryIcon from '@mui/icons-material/History';
 
 const drawerWidth = 240;
 
@@ -174,9 +175,10 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'QR code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
-              { text: 'Reports', icon: <TableChartIcon style={{ color: 'black' }} />, path: '/lab/table' },
-              { text: 'Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
+              { text: 'laboratory QR code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
+              { text: 'laboratory request ', icon: <TableChartIcon style={{ color: 'black' }} />, path: '/lab/table' },
+              { text: 'Laboratory Reports', icon: <HistoryIcon style={{ color: 'black' }} />, path: '/lab/LabOldUploadsComponent' },
+              { text: 'laboratory Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
               { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }} />, action: 'logout' },
             ].map((item) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
