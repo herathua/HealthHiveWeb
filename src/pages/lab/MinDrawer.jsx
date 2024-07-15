@@ -178,8 +178,8 @@ export default function MiniDrawer({ children }) {
           <List>
             {[
               { text: 'laboratory QR code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
-              { text: 'laboratory request ', icon: <MoveToInboxIcon style={{ color: 'black' }} />, path: '/lab/table' },
-              { text: 'Laboratory Reports', icon: <UploadFileIcon style={{ color: 'black' }} />, path: '/lab/LabOldUploadsComponent' },
+              { text: 'laboratory request ', icon: <MoveToInboxIcon style={{ color: 'black' }} />, path: '/lab/requests' },
+              { text: 'Laboratory Reports', icon: <UploadFileIcon style={{ color: 'black' }} />, path: '/lab/reports' },
               { text: 'laboratory Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
               { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }} />, action: 'logout' },
             ].map((item) => (

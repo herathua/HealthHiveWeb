@@ -60,6 +60,7 @@ const LabOldUploadsComponent = () => {
             const formattedEndDate = endDate ? new Date(endDate).toISOString() : '';
 
             const response = await fetchReports(formattedStartDate, formattedEndDate, headers);
+            console.log('API response:', response);
 
             setData(response.data);
         } catch (error) {
@@ -71,17 +72,31 @@ const LabOldUploadsComponent = () => {
         fetchData();
     };
 
+    const formatDate = (dateString) => {
+        const options = {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+          timeZone: 'UTC'
+        };
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('en-GB', options).format(date).replace(',', '');
+      };
     const handleDownloadPDF = () => {
         const doc = new jsPDF();
         doc.text("Laboratory Reports", 14, 15);
         
-        const tableColumn = ["Lab ID", "Description", "File Name", "Lab Request ID", "Date Created"];
+        const tableColumn = ["Lab ID", "File Name", "CID of the file", "Lab Request ID", "Date Created"];
         const tableRows = data.map(item => [
             item.labid,
             item.description,
             item.fileName,
             item.labRequestId,
-            item.dateCreated,
+            formatDate(item.dateCreated),
         ]);
 
         doc.autoTable({
@@ -96,9 +111,10 @@ const LabOldUploadsComponent = () => {
     return (
         <Container maxWidth="lg">
             <Box sx={{ my: 4 }}>
-
-                <h1 className="text-4xl font-bold mb-4"> Laboratory Reports</h1>
-                <Grid container spacing={2} sx={{ mb: 4 }}>
+                <Typography variant="h4" component="h1" fontWeight="bold" mb={4}>
+                    Laboratory Reports
+                </Typography>
+                <Grid container spacing={2} mb={4}>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
@@ -137,13 +153,11 @@ const LabOldUploadsComponent = () => {
                     <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead>
                             <TableRow>
-                                
                                 <StyledTableCell>Lab ID</StyledTableCell>
-                                <StyledTableCell>Description</StyledTableCell>
                                 <StyledTableCell>File Name</StyledTableCell>
+                                <StyledTableCell>CID of the file</StyledTableCell>
                                 <StyledTableCell>Lab Request ID</StyledTableCell>
                                 <StyledTableCell>Date Created</StyledTableCell>
-                
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -154,12 +168,12 @@ const LabOldUploadsComponent = () => {
                                         <StyledTableCell>{item.description}</StyledTableCell>
                                         <StyledTableCell>{item.fileName}</StyledTableCell>
                                         <StyledTableCell>{item.labRequestId}</StyledTableCell>
-                                        <StyledTableCell>{item.dateCreated}</StyledTableCell>
+                                        <StyledTableCell>{formatDate(item.dateCreated)}</StyledTableCell>
                                     </StyledTableRow>
                                 ))
                             ) : (
                                 <StyledTableRow>
-                                    <StyledTableCell colSpan={7} align="center">No data found</StyledTableCell>
+                                    <StyledTableCell colSpan={5} align="center">No data found</StyledTableCell>
                                 </StyledTableRow>
                             )}
                         </TableBody>

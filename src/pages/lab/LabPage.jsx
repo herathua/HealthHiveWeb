@@ -10,9 +10,9 @@ const LabPage = () => (
   <MiniDrawer>
     <Routes>
       <Route path="/qrcode" element={<QRCodePage />} />
-      <Route path="/table" element={<TablePage />} />
+      <Route path="/requests" element={<TablePage />} />
       <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/LabOldUploadsComponent" element={<LabOldUploadsComponent />} />
+      <Route path="/reports" element={<LabOldUploadsComponent />} />
       <Route path="*" element={<Navigate to="qrcode" />} />
     </Routes>
   </MiniDrawer>

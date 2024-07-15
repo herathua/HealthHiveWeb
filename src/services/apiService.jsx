@@ -91,7 +91,7 @@ export const RefreshToken = async () => {
     console.error('Refresh token error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -129,7 +129,7 @@ export const logoutUser = async () => {
     console.error('Logout error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -168,7 +168,7 @@ export const performAuthenticatedRequest = async (url, method, data) => {
     console.error('Authenticated request error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -194,6 +194,7 @@ const decodeToken = (token) => {
 
 
 export const fetchLabData = async (labId) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -215,13 +216,14 @@ export const fetchLabData = async (labId) => {
     console.error('Fetch lab data error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error; // Propagate error for handling elsewhere
     }
   }
 };
 export const updateLabData = async (labId, newData) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -238,6 +240,7 @@ export const updateLabData = async (labId, newData) => {
   }
 };
 export const ViewUserPutAPI = async (id, selectedUser) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -253,6 +256,7 @@ export const ViewUserPutAPI = async (id, selectedUser) => {
 };
 
 export const ViewLabPutAPI = async (id, selectedLab) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -268,6 +272,7 @@ export const ViewLabPutAPI = async (id, selectedLab) => {
 };
 
 export const ViewTipPutAPI = async (id, selectedTip) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -283,6 +288,7 @@ export const ViewTipPutAPI = async (id, selectedTip) => {
 };
 
 export const GetLabIdByEmail = async (email) => {
+  const authToken=Cookies.get('authToken');
   try {
     const authToken = Cookies.get('authToken'); // Assuming you store the authToken in cookies
 
@@ -308,6 +314,7 @@ export const GetLabIdByEmail = async (email) => {
 };
 
 export const fetchLabInfo = async () => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -323,7 +330,7 @@ export const fetchLabInfo = async () => {
     console.error("There was an error fetching the lab information: ", error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
 
       throw error;
@@ -331,7 +338,9 @@ export const fetchLabInfo = async () => {
   }
 };
 
+
 export const fetchLabRequestsByLabId = async () => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -346,7 +355,7 @@ export const fetchLabRequestsByLabId = async () => {
     console.error('Error fetching lab requests:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -354,6 +363,7 @@ export const fetchLabRequestsByLabId = async () => {
 };
 //fetchUserUrl
 export const fetchUserUrl = async (userId) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -371,7 +381,7 @@ export const fetchUserUrl = async (userId) => {
 };
 
 export const fetchReports = async (formattedStartDate,formattedEndDate) => {
-  localStorage.getItem('labId');
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -396,6 +406,7 @@ export const fetchReports = async (formattedStartDate,formattedEndDate) => {
 };
 
 export const fetchTip= async () => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -412,6 +423,7 @@ export const fetchTip= async () => {
 };
 
 export const fetchUserName = async (userId) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -430,6 +442,7 @@ export const fetchUserName = async (userId) => {
 
 
 export const FetchUserAPI = async () => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -448,6 +461,7 @@ export const FetchUserAPI = async () => {
 
 
 export const FetchLabAPI = async () => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -465,6 +479,7 @@ export const FetchLabAPI = async () => {
 };
 
 export const fetchUserDataByUserId = async (userId) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -482,6 +497,7 @@ export const fetchUserDataByUserId = async (userId) => {
 };
 
 export const UplodeFileToIPFS = async (file) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -503,6 +519,7 @@ export const UplodeFileToIPFS = async (file) => {
 };
 
 export const handleLabDataUploadinAPI = async (labRequestId, description) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -521,8 +538,47 @@ export const handleLabDataUploadinAPI = async (labRequestId, description) => {
     return null;
   }
 };
+export const setReportUploads = async (fileName, filePath, labDataUploadId) => {
+  const labId = localStorage.getItem('labId');
+  const authToken = Cookies.get('authToken');
+
+  if (!authToken) {
+    console.error('No auth token available');
+    return null;
+  }
+
+  // Convert labId to integer format
+  const labIdInt = parseInt(labId, 10);
+  if (isNaN(labIdInt)) {
+    console.error('Invalid labId, must be an integer');
+    return null;
+  }
+
+  const data = {
+    labid: labIdInt, // Use the integer format of labId
+    description: fileName,
+    fileName: filePath,
+    labRequestId: labDataUploadId
+  };
+
+  console.log('data', data);
+
+  try {
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+
+    const response = await axios.post(`${BASE_URL}/labOldUploadss`, data, { headers });
+    console.log('Report uploaded:', response.data);
+    return response;
+  } catch (error) {
+    console.error('Error handling lab data upload:', error);
+    return null;
+  }
+};
 
 export const HealthtipAPI = async (newTip) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -540,11 +596,14 @@ export const HealthtipAPI = async (newTip) => {
 };
 
 export const handleFileMetadatainAPI = async (fileName, fileType, filePath, createdDate, labDataUploadId) => {
+  const authToken=Cookies.get('authToken');
+  console.log('authToken:', authToken);
+  if (!authToken) {
+    console.error('No auth token available');
+    //window.location.href = '/login';
+    return;
+  }
   try {
-    if (!authToken) {
-      throw new Error('No auth token available');
-    }
-
     const headers = {
       'Authorization': 'Bearer ' + authToken // Set the token in headers
     };
@@ -556,19 +615,23 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
       createdDate,
       labDataUpload: labDataUploadId,
     }, { headers });
-    //console.log('File metadata uploaded:', response.data);
+
+    console.log('File metadata uploaded:', response.data);
+    return response;
   } catch (error) {
     console.error('Error handling file metadata:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
+  } finally {
+    await setReportUploads(fileName, filePath, labDataUploadId); // Call setReportUploads regardless of the outcome
   }
 };
-
 export const checkUploadStatusInAPI = async (labRequestId) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -590,7 +653,7 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
     //console.error('Error logging in:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -599,6 +662,7 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
 
 // Function to delete user account
 export const deleteUserAccount = async (userId) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -615,6 +679,7 @@ export const deleteUserAccount = async (userId) => {
 };
 
 export const deleteLabAccount = async (email) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -631,6 +696,7 @@ export const deleteLabAccount = async (email) => {
 };
 
 export const deleteDailytip = async (id) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -647,6 +713,7 @@ export const deleteDailytip = async (id) => {
 };
 
 export const deleteUserAccountByemail = async (email) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -663,6 +730,7 @@ export const deleteUserAccountByemail = async (email) => {
 };
 
 export const PutLabdata = async (lab) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -679,7 +747,7 @@ export const PutLabdata = async (lab) => {
     console.error('Error updating lab data:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -687,6 +755,7 @@ export const PutLabdata = async (lab) => {
 };
 
 export const loginUser = async (email, password) => {
+  const authToken=Cookies.get('authToken');
   try {
     const response = await axios.post(`${BASE_URL}/users/login`, {
       email,
@@ -698,7 +767,7 @@ export const loginUser = async (email, password) => {
     console.error('Error logging in:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -706,6 +775,7 @@ export const loginUser = async (email, password) => {
 };
 
 export const deleteAccount = async () => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -721,13 +791,14 @@ export const deleteAccount = async () => {
     console.error('Error deleting account:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+     // window.location.href = '/login';
     } else {
       throw error;
     }
   }
 };
 export const LabFormPostAPI = async (formValues) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -745,6 +816,7 @@ export const LabFormPostAPI = async (formValues) => {
 };
 
 export const DailyTipsPostAPI = async (formValues) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -762,6 +834,7 @@ export const DailyTipsPostAPI = async (formValues) => {
 };
 
 export const CreatePersonalAcountPostAPI = async (formValues) => {
+  const authToken=Cookies.get('authToken');
   try {
     if (!authToken) {
       throw new Error('No auth token available');
@@ -779,6 +852,7 @@ export const CreatePersonalAcountPostAPI = async (formValues) => {
 };
 
 export const updatePassword = async (newPassword) => {
+  const authToken=Cookies.get('authToken');
   try {
     // Construct the request body
     const requestBody = {
@@ -804,7 +878,7 @@ export const updatePassword = async (newPassword) => {
     console.error('Error updating password:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      window.location.href = '/login';
+      //window.location.href = '/login';
     } else {
       throw error;
     }

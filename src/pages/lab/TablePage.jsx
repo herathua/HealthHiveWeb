@@ -19,8 +19,6 @@ import Tooltip from '@mui/material/Tooltip';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import { fetchLabRequestsByLabId, fetchUserUrl, fetchUserName, fetchUserDataByUserId, UplodeFileToIPFS, handleLabDataUploadinAPI, handleFileMetadatainAPI, checkUploadStatusInAPI } from '.././../services/apiService';
-import FilePreview from './FileUploadComponent';
-//import SSEComponent from '../../components/SSEComponent';
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
@@ -34,7 +32,7 @@ const LabRequestTable = () => {
 
   useEffect(() => {
     fetchLabRequests();
-    const interval = setInterval(fetchLabRequests, 800000); // Fetch every 30 seconds
+    const interval = setInterval(fetchLabRequests, 30000); // Fetch every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -196,7 +194,6 @@ const LabRequestTable = () => {
         >
           Lab Requests
         </Typography>
-        {/* <SSEComponent/> */}
       </Box>
 
       <Box borderRadius={8} p={2} mx="auto" display="block" margin={2}>
@@ -318,7 +315,19 @@ const LabRequestTable = () => {
             <Box sx={{ alignItems: 'center', marginBottom: 2, borderBottom: 'solid 2px #666' }}></Box>
           )}
           {selectedFile && (
-            <FilePreview selectedFile={selectedFile} />
+            <div>
+              <Typography variant="body1">File Name: {selectedFile.name}</Typography>
+              <Typography variant="body1">File Size: {(selectedFile.size / 1024).toFixed(2)} KB</Typography>
+              <Box sx={{ mt: 2, maxHeight: 400, overflow: 'auto' }}>
+                {selectedFile.type === 'application/pdf' ? (
+                  <embed src={URL.createObjectURL(selectedFile)} type="application/pdf" width="100%" height="400px" />
+                ) : selectedFile.type.startsWith('image/') ? (
+                  <img src={URL.createObjectURL(selectedFile)} alt={selectedFile.name} style={{ width: '100%' }} />
+                ) : (
+                  <Typography variant="body1">Unsupported file type</Typography>
+                )}
+              </Box>
+            </div>
           )}
           <Box sx={{ mt: 2 }}>
             <Button onClick={handleFileSelect} variant="contained" color="primary" sx={{ mr: 2 }}>Select</Button>
