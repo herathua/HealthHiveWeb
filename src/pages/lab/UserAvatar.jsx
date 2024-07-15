@@ -54,7 +54,7 @@ const ProfilePictureUploader = () => {
     let file;
     try {
       if (fromCamera) {
-        console.log('Camera functionality not implemented for web.');
+        //console.log('Camera functionality not implemented for web.');
       } else {
         getUserDetails();
         const input = document.createElement('input');

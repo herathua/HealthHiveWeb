@@ -145,7 +145,7 @@ export default function MiniDrawer({ children }) {
   const handleNavigation = (path, action) => {
     if (action === 'logout') {
       logoutUser();
-      console.log('User logged out');
+      //console.log('User logged out');
     } else {
       navigate(path);
     }

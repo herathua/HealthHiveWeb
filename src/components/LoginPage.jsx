@@ -27,7 +27,7 @@ const LabLoginContainer = () => {
 
   const decodeToken = (token) => {
     try {
-      console.log('Token decoded:', jwtDecode(token));
+      //console.log('Token decoded:', jwtDecode(token));
       return jwtDecode(token);
     } catch (error) {
       console.error('Token decoding error:', error);
@@ -38,7 +38,7 @@ const LabLoginContainer = () => {
   const getRolesFromToken = (token) => {
     const decodedToken = decodeToken(token);
     if (decodedToken && decodedToken.realm_access && decodedToken.resource_access['Health-Hive-Client'].roles[0]) {
-      console.log('Is lab:', decodedToken.resource_access['Health-Hive-Client'].roles[0].includes('lab'));
+      //console.log('Is lab:', decodedToken.resource_access['Health-Hive-Client'].roles[0].includes('lab'));
       return decodedToken.resource_access['Health-Hive-Client'].roles[0];
     }
     return [];
@@ -59,7 +59,7 @@ const LabLoginContainer = () => {
 
         // Store the token in cookies
         Cookies.set('authToken', token, { expires: response.expires_in / 86400 }); // expires_in is in seconds
-        console.log('Token');
+        //console.log('Token');
         // Call the GetLabIdByEmail function
 
 
@@ -67,7 +67,7 @@ const LabLoginContainer = () => {
         //jwtDecode(token);
         if (getRolesFromToken(token) === 'lab') { await GetLabIdByEmail(email); navigate('/lab'); }
         else if (getRolesFromToken(token) === 'admin') navigate('/admin');
-        else console.log('Invalid email or password');
+        //else console.log('Invalid email or password');
       } else {
         setLoginError('Invalid email or password');
       }

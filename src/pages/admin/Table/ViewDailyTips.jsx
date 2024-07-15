@@ -92,11 +92,11 @@ const ViewDailyTips = () => {
   };
 
   const handleDeleteTip = (id) => {
-    console.log('Deleting tip with ID:', id);
+    //console.log('Deleting tip with ID:', id);
     deleteDailytip(id)
       .then(response => {
         if (response.status === 204) {
-          console.log('Tip deleted successfully:', response);
+          //console.log('Tip deleted successfully:', response);
           setSnackbarMessage('Tip deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);

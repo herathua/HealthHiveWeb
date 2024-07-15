@@ -60,7 +60,7 @@ const LabOldUploadsComponent = () => {
             const formattedEndDate = endDate ? new Date(endDate).toISOString() : '';
 
             const response = await fetchReports(formattedStartDate, formattedEndDate, headers);
-            console.log('API response:', response);
+            //console.log('API response:', response);
 
             setData(response.data);
         } catch (error) {

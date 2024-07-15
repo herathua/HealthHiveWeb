@@ -43,7 +43,7 @@ const HealthForm1 = () => {
 
         const response = await HealthtipAPI(newTip);
 
-        console.log('Form submitted:', response);
+        //console.log('Form submitted:', response);
         setSnackbarMessage('Form submitted successfully!');
         setSnackbarSeverity('success');
         setSnackbarOpen(true);

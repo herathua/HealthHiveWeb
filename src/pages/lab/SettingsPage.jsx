@@ -41,7 +41,7 @@ function SettingsComponent() {
       try {
         const response = await updatePassword(password);
         setResponseMessage('Password updated successfully!');
-        console.log('Password update initiated:', response);
+        //console.log('Password update initiated:', response);
         
       } catch (error) {
         setResponseMessage('There was an error updating the password.');

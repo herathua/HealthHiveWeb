@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 const BASE_URL = 'http://localhost:33000/api';
 // const KEYCLOAK_LOGOUT_URL ='http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/logout';
 //https://lemur-1.cloud-iam.com/auth/admin/healthhivelk/console/
+//const response = await axios.post("https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token", data, { headers });
 const KEYCLOAK_LOGOUT_URL = 'https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
 const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
@@ -16,7 +17,7 @@ let refreshToken = null; // Variable to store the refresh token
 const initializeTokensFromCookies = () => {
   authToken = Cookies.get('authToken');
   refreshToken = Cookies.get('refreshToken');
-  console.log('Initialized tokens from cookies');
+  //console.log('Initialized tokens from cookies');
 };
 
 // Call this function when the app starts
@@ -41,9 +42,9 @@ export const GetToken = async (email, password) => {
     const response = await axios.post("https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the token
     refreshToken = response.data.refresh_token; // Save the refresh token
-    console.log('AuthToken:', authToken);
-    console.log('RefreshToken:', refreshToken);
-    console.log('User logged in:', response.data);
+    //console.log('AuthToken:', authToken);
+    //console.log('RefreshToken:', refreshToken);
+    //console.log('User logged in:', response.data);
 
     // Store tokens in cookies
     Cookies.set('authToken', authToken, { expires: response.data.expires_in / 86400 }); // expires_in is in seconds, convert to days
@@ -78,8 +79,8 @@ export const RefreshToken = async () => {
     const response = await axios.post("https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token", data, { headers });
     authToken = response.data.access_token; // Save the new token
     refreshToken = response.data.refresh_token; // Save the new refresh token
-    console.log('New AuthToken:', authToken);
-    console.log('New RefreshToken:', refreshToken);
+    //console.log('New AuthToken:', authToken);
+    //console.log('New RefreshToken:', refreshToken);
 
     // Update tokens in cookies
     Cookies.set('authToken', authToken, { expires: response.data.expires_in / 86400 }); // expires_in is in seconds, convert to days
@@ -99,37 +100,40 @@ export const RefreshToken = async () => {
 };
 
 export const logoutUser = async () => {
+  const authToken = Cookies.get('authToken');
+  const refreshToken = Cookies.get('refreshToken');
+  
   try {
-    if (!authToken) {
-      throw new Error('No refresh token available');
+    //console.log(authToken);
+    //console.log(refreshToken);
+    if (!authToken || !refreshToken) {
+      throw new Error('No auth token or refresh token available');
     }
 
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + btoa('myclient:L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL')
+      'Authorization': `Bearer ${authToken}`
     };
 
     const data = new URLSearchParams({
-      'client_id': 'health-hive-client',
-      'client_secret': 'L3EAIPntMBOoVJYfc0p1gM4PpIIwcqrL',
+      'client_id': 'Health-Hive-Client',
+      //'client_secret': 'YOUR_CLIENT_SECRET', // Uncomment and replace with your actual client secret
       'refresh_token': refreshToken
     }).toString();
 
+    // Replace KEYCLOAK_LOGOUT_URL with your actual Keycloak logout endpoint
     await axios.post(KEYCLOAK_LOGOUT_URL, data, { headers });
 
     // Clear tokens from client-side storage
-    authToken = null;
-    refreshToken = null;
-    Cookies.remove(authToken);
-    Cookies.remove(refreshToken);
-    console.log('User logged out successfully');
-    //window.location.href = '/login';
-
+    Cookies.remove('authToken');
+    Cookies.remove('refreshToken');
+    //console.log('User logged out successfully');
+    window.location.href = '/login';
   } catch (error) {
     console.error('Logout error:', error);
+    window.location.href = '/login';
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
     } else {
       throw error;
     }
@@ -306,7 +310,7 @@ export const GetLabIdByEmail = async (email) => {
     // Store the labId in localStorage
     localStorage.setItem('labId', labId);
 
-    console.log('lab id :', labId);
+    //console.log('lab id :', labId);
     return labId;
   } catch (error) {
     throw new Error('Error updating lab information');
@@ -324,7 +328,7 @@ export const fetchLabInfo = async () => {
       'Authorization': 'Bearer ' + authToken // Set the token in headers
     };
     const response = await axios.get(`${BASE_URL}/labs/${labId}`, { headers });
-    console.log('Lab data fetched successfully:', response.data);
+    //console.log('Lab data fetched successfully:', response.data);
     return response.data;
   } catch (error) {
     console.error("There was an error fetching the lab information: ", error);
@@ -374,6 +378,24 @@ export const fetchUserUrl = async (userId) => {
     };
     const response = await axios.get(`${BASE_URL}/users/${userId}`, { headers });
     return response.data.profilePictureUrl;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return 'Unknown User';
+  }
+};
+
+export const handleFileDeleteinAPI= async (labRequestId) => {
+  const authToken=Cookies.get('authToken');
+  try {
+    if (!authToken) {
+      throw new Error('No auth token available');
+    }
+
+    const headers = {
+      'Authorization': 'Bearer ' + authToken // Set the token in headers
+    };
+    await axios.delete(`${BASE_URL}/labRequests/${labRequestId}`, { headers });
+    return null;
   } catch (error) {
     console.error('Error fetching user details:', error);
     return 'Unknown User';
@@ -561,7 +583,7 @@ export const setReportUploads = async (fileName, filePath, labDataUploadId) => {
     labRequestId: labDataUploadId
   };
 
-  console.log('data', data);
+  //console.log('data', data);
 
   try {
     const headers = {
@@ -569,7 +591,7 @@ export const setReportUploads = async (fileName, filePath, labDataUploadId) => {
     };
 
     const response = await axios.post(`${BASE_URL}/labOldUploadss`, data, { headers });
-    console.log('Report uploaded:', response.data);
+    //console.log('Report uploaded:', response.data);
     return response;
   } catch (error) {
     console.error('Error handling lab data upload:', error);
@@ -597,7 +619,7 @@ export const HealthtipAPI = async (newTip) => {
 
 export const handleFileMetadatainAPI = async (fileName, fileType, filePath, createdDate, labDataUploadId) => {
   const authToken=Cookies.get('authToken');
-  console.log('authToken:', authToken);
+  //console.log('authToken:', authToken);
   if (!authToken) {
     console.error('No auth token available');
     //window.location.href = '/login';
@@ -616,7 +638,7 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
       labDataUpload: labDataUploadId,
     }, { headers });
 
-    console.log('File metadata uploaded:', response.data);
+    //console.log('File metadata uploaded:', response.data);
     return response;
   } catch (error) {
     console.error('Error handling file metadata:', error);
@@ -642,11 +664,11 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
         'Authorization': 'Bearer ' + authToken // Set the token in headers
       };
       const response = await axios.get(`${BASE_URL}/labDataUploads/lab-data-uploads/${labRequestId}`, { headers });
-      console.log('Upload status:', response.data);
-      console.log('Upload labRequestId :', labRequestId);
+      //console.log('Upload status:', response.data);
+      //console.log('Upload labRequestId :', labRequestId);
       return response.data;
     } else {
-      console.log('No labRequestId found');
+      //console.log('No labRequestId found');
       return null;
     }
   } catch (error) {
@@ -862,7 +884,7 @@ export const updatePassword = async (newPassword) => {
     };
 
     // Making the PUT request to update the password
-    const response = await axios.put(`https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/users/${userId}/reset-password`, requestBody, {
+    const response = await axios.put(`https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/users/reset-password`, requestBody, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authToken}`,

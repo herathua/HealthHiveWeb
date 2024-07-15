@@ -98,8 +98,8 @@ const ViewLabs = () => {
     deleteLabAccount(email)
       .then(response => {
         if (response.status === 200) {
-          console.log(response);
-          console.log(response.status);
+          //console.log(response);
+          //console.log(response.status);
           setSnackbarMessage('Lab deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);

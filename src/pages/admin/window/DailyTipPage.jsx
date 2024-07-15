@@ -51,7 +51,7 @@ const DailyTipPage = () => {
       try {
         const response = await DailyTipsPostAPI(formValues);
         window.location.reload();
-        console.log("Form Submitted", response.data);
+        //console.log("Form Submitted", response.data);
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);

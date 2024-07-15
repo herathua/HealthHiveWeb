@@ -34,10 +34,10 @@ const LabData = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting lab data:', lab); // Debug log
+    //console.log('Submitting lab data:', lab); // Debug log
     PutLabdata(lab)
       .then(response => {
-        console.log('Lab data updated successfully:', response);
+        //console.log('Lab data updated successfully:', response);
         setResponseMessage('Lab data updated successfully!');
       })
       .catch(error => {
