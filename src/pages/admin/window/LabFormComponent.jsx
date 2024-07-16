@@ -6,10 +6,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {LabFormPostAPI } from './../../../services/apiService';
+import { LabFormPostAPI } from './../../../services/apiService';
 import React, { useState, useEffect } from "react";
 import AccountCreationSuccessful from '../../../components/AccountCreationSuccessful';
 import AccountCreationTerminated from '../../../components/AccountCreationTerminated';
+
 const LabFormComponent = () => {
   const [formValues, setFormValues] = useState({
     labName: "",
@@ -27,8 +28,8 @@ const LabFormComponent = () => {
   const [isFormValid, setIsFormValid] = useState(false); // state to track form validity
 
   useEffect(() => {
-    setIsFormValid(Object.values(formValues).every(val => val !== "")); // check if all values are filled
-  }, [formValues]);
+    setIsFormValid(Object.values(formValues).every(val => val !== "") && Object.keys(errors).length === 0); // check if all values are filled and no errors
+  }, [formValues, errors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +39,12 @@ const LabFormComponent = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formValues.labName) newErrors.labName = "Lab Name is required";
+    if (!formValues.email || !/\S+@\S+\.\S+/.test(formValues.email)) {
+      newErrors.email = "Valid Email is required";
+    }
+    if (!formValues.telephone || !/^\d{10}$/.test(formValues.telephone)) {
+      newErrors.telephone = "Valid Phone Number is required (10 digits)";
+    }
     // Add validation for other fields if necessary
     return newErrors;
   };
@@ -50,8 +57,7 @@ const LabFormComponent = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await LabFormPostAPI(formValues);
-        window.location.reload();
-        //console.log("Form Submitted", response.data);
+        // window.location.reload(); // Uncomment if you want to reload the page after form submission
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);
@@ -77,12 +83,10 @@ const LabFormComponent = () => {
 
   return (
     <Box>
-      
       <Container
         maxWidth="sm"
         sx={{ padding: 3, borderRadius: 2, backgroundColor: "white" }}
       >
-
         <Box
           component="form"
           sx={{
@@ -133,6 +137,8 @@ const LabFormComponent = () => {
             type="email"
             value={formValues.email}
             onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             label="Telephone"
@@ -141,6 +147,8 @@ const LabFormComponent = () => {
             name="telephone"
             value={formValues.telephone}
             onChange={handleChange}
+            error={!!errors.telephone}
+            helperText={errors.telephone}
           />
           <Button
             variant="contained"
