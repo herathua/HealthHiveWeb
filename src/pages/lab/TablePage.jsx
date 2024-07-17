@@ -34,7 +34,7 @@ const LabRequestTable = () => {
 
   useEffect(() => {
     fetchLabRequests();
-    const interval = setInterval(fetchLabRequests, 30000); // Fetch every 30 seconds
+    const interval = setInterval(fetchLabRequests, 45000); // Fetch every 30 seconds
     return () => clearInterval(interval);
   }, []);
 

@@ -92,7 +92,7 @@ export const RefreshToken = async () => {
     console.error('Refresh token error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -133,6 +133,7 @@ export const logoutUser = async () => {
     console.error('Logout error:', error);
     window.location.href = '/login';
     if (error.response && error.response.status === 401) {
+      window.location.href = '/login';
       // Redirect to the login page
     } else {
       throw error;
@@ -172,7 +173,7 @@ export const performAuthenticatedRequest = async (url, method, data) => {
     console.error('Authenticated request error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -220,7 +221,7 @@ export const fetchLabData = async (labId) => {
     console.error('Fetch lab data error:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error; // Propagate error for handling elsewhere
     }
@@ -334,7 +335,7 @@ export const fetchLabInfo = async () => {
     console.error("There was an error fetching the lab information: ", error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
 
       throw error;
@@ -359,7 +360,7 @@ export const fetchLabRequestsByLabId = async () => {
     console.error('Error fetching lab requests:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -644,7 +645,7 @@ export const handleFileMetadatainAPI = async (fileName, fileType, filePath, crea
     console.error('Error handling file metadata:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -675,7 +676,7 @@ export const checkUploadStatusInAPI = async (labRequestId) => {
     //console.error('Error logging in:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -769,7 +770,7 @@ export const PutLabdata = async (lab) => {
     console.error('Error updating lab data:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -789,7 +790,7 @@ export const loginUser = async (email, password) => {
     console.error('Error logging in:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -813,7 +814,7 @@ export const deleteAccount = async () => {
     console.error('Error deleting account:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-     // window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }
@@ -900,7 +901,7 @@ export const updatePassword = async (newPassword) => {
     console.error('Error updating password:', error);
     if (error.response && error.response.status === 401) {
       // Redirect to the login page
-      //window.location.href = '/login';
+      window.location.href = '/login';
     } else {
       throw error;
     }

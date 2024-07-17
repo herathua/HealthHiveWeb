@@ -175,10 +175,10 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'laboratory QR code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
-              { text: 'laboratory request ', icon: <MoveToInboxIcon style={{ color: 'black' }} />, path: '/lab/requests' },
+              { text: 'Laboratory QR Code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
+              { text: 'Laboratory Request ', icon: <MoveToInboxIcon style={{ color: 'black' }} />, path: '/lab/requests' },
               { text: 'Laboratory Reports', icon: <UploadFileIcon style={{ color: 'black' }} />, path: '/lab/reports' },
-              { text: 'laboratory Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
+              { text: 'Laboratory Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
               { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }} />, action: 'logout' },
             ].map((item) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
