@@ -25,10 +25,13 @@ const LabFormComponent = () => {
   const [failure, setFailure] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openFailureModal, setOpenFailureModal] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false); // state to track form validity
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    setIsFormValid(Object.values(formValues).every(val => val !== "") && Object.keys(errors).length === 0); // check if all values are filled and no errors
+    setIsFormValid(
+      Object.values(formValues).every((val) => val !== "") &&
+      Object.keys(errors).length === 0
+    );
   }, [formValues, errors]);
 
   const handleChange = (e) => {
@@ -51,13 +54,14 @@ const LabFormComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted");
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await LabFormPostAPI(formValues);
-        // window.location.reload(); // Uncomment if you want to reload the page after form submission
+        console.log("API response:", response);
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);
@@ -160,7 +164,7 @@ const LabFormComponent = () => {
               mt: 3,
             }}
             type="submit"
-            disabled={!isFormValid} // disable button if form is not valid
+            disabled={!isFormValid}
           >
             Create
           </Button>
