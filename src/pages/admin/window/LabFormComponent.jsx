@@ -14,29 +14,27 @@ import AccountCreationTerminated from '../../../components/AccountCreationTermin
 const LabFormComponent = () => {
   const [formValues, setFormValues] = useState({
     labName: "",
-    labRegID: "",
-    address: "",
     email: "",
-    telephone: "",
+    telephone: ""
   });
 
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false); // state to track form validity
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openFailureModal, setOpenFailureModal] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    setIsFormValid(
-      Object.values(formValues).every((val) => val !== "") &&
-      Object.keys(errors).length === 0
-    );
+    setIsFormValid(Object.values(formValues).every(val => val !== "") && Object.keys(errors).length === 0); // check if all values are filled and no errors
   }, [formValues, errors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
   const validateForm = () => {
@@ -54,14 +52,12 @@ const LabFormComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await LabFormPostAPI(formValues);
-        console.log("API response:", response);
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);
@@ -70,9 +66,9 @@ const LabFormComponent = () => {
           setOpenFailureModal(true);
         }
       } catch (error) {
+        console.error("Error creating lab:", error);
         setFailure(true);
         setOpenFailureModal(true);
-        console.error("Error submitting form:", error);
       }
     }
   };
@@ -94,17 +90,10 @@ const LabFormComponent = () => {
         <Box
           component="form"
           sx={{
-            "& .MuiTextField-root": {
-              m: 1,
-              backgroundColor: "white",
-              borderRadius: 1,
-            },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
-          noValidate
-          autoComplete="off"
           onSubmit={handleSubmit}
         >
           <TextField
@@ -116,22 +105,7 @@ const LabFormComponent = () => {
             onChange={handleChange}
             error={!!errors.labName}
             helperText={errors.labName}
-          />
-          <TextField
-            label="Lab Registration ID"
-            variant="outlined"
-            fullWidth
-            name="labRegID"
-            value={formValues.labRegID}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Address"
-            variant="outlined"
-            fullWidth
-            name="address"
-            value={formValues.address}
-            onChange={handleChange}
+            sx={{ marginBottom: 2 }}
           />
           <TextField
             label="Email"
@@ -143,6 +117,7 @@ const LabFormComponent = () => {
             onChange={handleChange}
             error={!!errors.email}
             helperText={errors.email}
+            sx={{ marginBottom: 2 }}
           />
           <TextField
             label="Telephone"
@@ -153,6 +128,7 @@ const LabFormComponent = () => {
             onChange={handleChange}
             error={!!errors.telephone}
             helperText={errors.telephone}
+            sx={{ marginBottom: 2 }}
           />
           <Button
             variant="contained"
@@ -164,11 +140,12 @@ const LabFormComponent = () => {
               mt: 3,
             }}
             type="submit"
-            disabled={!isFormValid}
+            disabled={!isFormValid} // disable button if form is not valid
           >
             Create
           </Button>
         </Box>
+
         {/* Success Modal */}
         <Modal
           open={openSuccessModal}
