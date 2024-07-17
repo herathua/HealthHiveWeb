@@ -41,11 +41,29 @@ function PersonalFormComponent() {
     setIsFormValid(allFieldsFilled);
   }, [formValues]);
 
+  const calculateAge = (birthDate) => {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    
+    return age;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "dateOfBirth") {
       const formattedDate = new Date(value).toISOString().split("T")[0];
-      setFormValues((prev) => ({ ...prev, [name]: formattedDate }));
+      const calculatedAge = calculateAge(formattedDate);
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: formattedDate,
+        age: calculatedAge.toString()
+      }));
     } else {
       setFormValues((prev) => ({ ...prev, [name]: value }));
     }
@@ -192,7 +210,7 @@ function PersonalFormComponent() {
                 name="age"
                 type="number"
                 value={formValues.age}
-                onChange={handleChange}
+                InputProps={{ readOnly: true }}
                 error={!!errors.age}
                 helperText={errors.age}
               />
