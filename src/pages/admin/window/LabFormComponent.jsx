@@ -4,9 +4,8 @@ import {
   Container,
   Modal,
   TextField,
-  Typography,
 } from "@mui/material";
-import { LabFormPostAPI } from './../../../services/apiService';
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import AccountCreationSuccessful from '../../../components/AccountCreationSuccessful';
 import AccountCreationTerminated from '../../../components/AccountCreationTerminated';
@@ -28,11 +27,9 @@ const LabFormComponent = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    setIsFormValid(
-      Object.values(formValues).every((val) => val !== "") &&
-      Object.keys(errors).length === 0
-    );
-  }, [formValues, errors]);
+    const allFieldsFilled = Object.values(formValues).every(val => val.trim() !== "");
+    setIsFormValid(allFieldsFilled);
+  }, [formValues]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,27 +38,40 @@ const LabFormComponent = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formValues.labName) newErrors.labName = "Lab Name is required";
-    if (!formValues.email || !/\S+@\S+\.\S+/.test(formValues.email)) {
-      newErrors.email = "Valid Email is required";
+    if (!formValues.labName.trim()) newErrors.labName = "Lab Name is required";
+    if (!formValues.labRegID.trim()) newErrors.labRegID = "Lab Registration ID is required";
+    if (!formValues.address.trim()) newErrors.address = "Address is required";
+    if (!formValues.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+      newErrors.email = "Email is invalid";
     }
-    if (!formValues.telephone || !/^\d{10}$/.test(formValues.telephone)) {
-      newErrors.telephone = "Valid Phone Number is required (10 digits)";
+    if (!formValues.telephone.trim()) {
+      newErrors.telephone = "Telephone is required";
+    } else if (!/^\d{10}$/.test(formValues.telephone)) {
+      newErrors.telephone = "Telephone should be a 10-digit number";
     }
-    // Add validation for other fields if necessary
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await LabFormPostAPI(formValues);
-        console.log("API response:", response);
+        const response = await axios.post(
+          "http://localhost:33000/api/labs",
+          formValues,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+        console.log("Form Submitted", response.data);
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);
@@ -124,6 +134,8 @@ const LabFormComponent = () => {
             name="labRegID"
             value={formValues.labRegID}
             onChange={handleChange}
+            error={!!errors.labRegID}
+            helperText={errors.labRegID}
           />
           <TextField
             label="Address"
@@ -132,6 +144,8 @@ const LabFormComponent = () => {
             name="address"
             value={formValues.address}
             onChange={handleChange}
+            error={!!errors.address}
+            helperText={errors.address}
           />
           <TextField
             label="Email"
@@ -169,7 +183,6 @@ const LabFormComponent = () => {
             Create
           </Button>
         </Box>
-        {/* Success Modal */}
         <Modal
           open={openSuccessModal}
           onClose={handleCloseSuccessModal}
@@ -191,7 +204,6 @@ const LabFormComponent = () => {
           </Box>
         </Modal>
 
-        {/* Failure Modal */}
         <Modal
           open={openFailureModal}
           onClose={handleCloseFailureModal}

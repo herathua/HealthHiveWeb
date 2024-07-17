@@ -11,10 +11,9 @@ import {
   Modal,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
-import { CreatePersonalAcountPostAPI } from "../../../services/apiService";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 function PersonalFormComponent() {
   const [formValues, setFormValues] = useState({
@@ -30,21 +29,28 @@ function PersonalFormComponent() {
     emergencyContactNumber: "",
   });
 
-  const [formErrors, setFormErrors] = useState({});
+  const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
-  const [buttonEnabled, setButtonEnabled] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openFailureModal, setOpenFailureModal] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
+  useEffect(() => {
+    const allFieldsFilled = Object.values(formValues).every(val => val.toString().trim() !== "");
+    setIsFormValid(allFieldsFilled);
+  }, [formValues]);
+
+  const calculateAge = (birthDate) => {
     const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
     }
+    
     return age;
   };
 
@@ -52,11 +58,11 @@ function PersonalFormComponent() {
     const { name, value } = e.target;
     if (name === "dateOfBirth") {
       const formattedDate = new Date(value).toISOString().split("T")[0];
-      const age = calculateAge(formattedDate);
+      const calculatedAge = calculateAge(formattedDate);
       setFormValues((prev) => ({
         ...prev,
         [name]: formattedDate,
-        age: age.toString(),
+        age: calculatedAge.toString()
       }));
     } else {
       setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -64,46 +70,44 @@ function PersonalFormComponent() {
   };
 
   const validateForm = () => {
-    const errors = {};
-    if (!formValues.fullName || !/^[a-zA-Z\s]+$/.test(formValues.fullName)) {
-      errors.fullName = "Full Name is required and should contain only letters";
+    const formErrors = {};
+    if (!formValues.fullName.trim()) formErrors.fullName = "Full Name is required";
+    if (!formValues.email.trim() || !/\S+@\S+\.\S+/.test(formValues.email)) {
+      formErrors.email = "Valid Email is required";
     }
-    if (!formValues.email || !/\S+@\S+\.\S+/.test(formValues.email)) {
-      errors.email = "Valid Email is required";
-    }
-    if (!formValues.dateOfBirth) {
-      errors.dateOfBirth = "Date of Birth is required";
-    }
-    if (!formValues.telephoneNumber || !/^\d{10}$/.test(formValues.telephoneNumber)) {
-      errors.telephoneNumber = "Valid Phone Number is required (10 digits)";
+    if (!formValues.dateOfBirth) formErrors.dateOfBirth = "Date of Birth is required";
+    if (!formValues.telephoneNumber.trim() || !/^\d{10}$/.test(formValues.telephoneNumber)) {
+      formErrors.telephoneNumber = "Valid Phone Number is required";
     }
     if (!formValues.age || isNaN(formValues.age) || formValues.age <= 0) {
-      errors.age = "Valid Age is required";
+      formErrors.age = "Valid Age is required";
     }
-    if (!formValues.emergencyContactName || !/^[a-zA-Z\s]+$/.test(formValues.emergencyContactName)) {
-      errors.emergencyContactName = "Emergency Contact Name is required and should contain only letters";
+    if (!formValues.emergencyContactName.trim()) {
+      formErrors.emergencyContactName = "Emergency Contact Name is required";
     }
-    if (!formValues.emergencyContactNumber || !/^\d{10}$/.test(formValues.emergencyContactNumber)) {
-      errors.emergencyContactNumber = "Valid Emergency Contact Number is required (10 digits)";
+    if (!formValues.emergencyContactNumber.trim() || !/^\d{10}$/.test(formValues.emergencyContactNumber)) {
+      formErrors.emergencyContactNumber = "Valid Emergency Contact Number is required";
     }
-    if (!formValues.birthCertificateNumber || !/^\d{4}$/.test(formValues.birthCertificateNumber)) {
-      errors.birthCertificateNumber = "Valid Birth Certificate Number is required (4 digits)";
+    if (!formValues.birthCertificateNumber.trim()) {
+      formErrors.birthCertificateNumber = "Birth Certificate Number is required";
     }
-    if (!formValues.nic || !/^\d{12}$/.test(formValues.nic)) {
-      errors.nic = "Valid National ID is required (12 digits)";
-    }
-    return errors;
+    if (!formValues.nic.trim()) formErrors.nic = "National ID is required";
+    if (!formValues.gender) formErrors.gender = "Gender is required";
+    return formErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = validateForm();
-    setFormErrors(errors);
+    const formErrors = validateForm();
+    setErrors(formErrors);
 
-    if (Object.keys(errors).length === 0) {
-      setButtonEnabled(true);
+    if (Object.keys(formErrors).length === 0) {
       try {
-        const response = await CreatePersonalAcountPostAPI(formValues);
+        const response = await axios.post(
+          "http://localhost:33000/api/users",
+          formValues
+        );
+
         if (response.status === 201) {
           setSuccess(true);
           setOpenSuccessModal(true);
@@ -146,154 +150,149 @@ function PersonalFormComponent() {
           onSubmit={handleSubmit}
         >
           <Grid container spacing={2}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Full Name"
-                  variant="outlined"
-                  fullWidth
-                  name="fullName"
-                  value={formValues.fullName}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Full Name"
+                variant="outlined"
+                fullWidth
+                name="fullName"
+                value={formValues.fullName}
+                onChange={handleChange}
+                error={!!errors.fullName}
+                helperText={errors.fullName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Email Address"
+                variant="outlined"
+                fullWidth
+                name="email"
+                type="email"
+                value={formValues.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Telephone Number"
+                variant="outlined"
+                fullWidth
+                name="telephoneNumber"
+                type="tel"
+                value={formValues.telephoneNumber}
+                onChange={handleChange}
+                error={!!errors.telephoneNumber}
+                helperText={errors.telephoneNumber}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Date of Birth"
+                variant="outlined"
+                fullWidth
+                name="dateOfBirth"
+                type="date"
+                value={formValues.dateOfBirth}
+                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.dateOfBirth}
+                helperText={errors.dateOfBirth}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Age"
+                variant="outlined"
+                fullWidth
+                name="age"
+                type="number"
+                value={formValues.age}
+                InputProps={{ readOnly: true }}
+                error={!!errors.age}
+                helperText={errors.age}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Birth Certificate Number"
+                variant="outlined"
+                fullWidth
+                name="birthCertificateNumber"
+                value={formValues.birthCertificateNumber}
+                onChange={handleChange}
+                error={!!errors.birthCertificateNumber}
+                helperText={errors.birthCertificateNumber}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="National ID"
+                variant="outlined"
+                fullWidth
+                name="nic"
+                value={formValues.nic}
+                onChange={handleChange}
+                error={!!errors.nic}
+                helperText={errors.nic}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Emergency Contact Name"
+                variant="outlined"
+                fullWidth
+                name="emergencyContactName"
+                value={formValues.emergencyContactName}
+                onChange={handleChange}
+                error={!!errors.emergencyContactName}
+                helperText={errors.emergencyContactName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Emergency Contact Number"
+                variant="outlined"
+                fullWidth
+                name="emergencyContactNumber"
+                type="tel"
+                value={formValues.emergencyContactNumber}
+                onChange={handleChange}
+                error={!!errors.emergencyContactNumber}
+                helperText={errors.emergencyContactNumber}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth sx={{ mt: 1 }}>
+                <InputLabel id="gender-label">Gender</InputLabel>
+                <Select
+                  labelId="gender-label"
+                  name="gender"
+                  value={formValues.gender}
                   onChange={handleChange}
-                  error={!!formErrors.fullName}
-                  helperText={formErrors.fullName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Email Address"
-                  variant="outlined"
-                  fullWidth
-                  name="email"
-                  type="email"
-                  value={formValues.email}
-                  onChange={handleChange}
-                  error={!!formErrors.email}
-                  helperText={formErrors.email}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Telephone Number"
-                  variant="outlined"
-                  fullWidth
-                  name="telephoneNumber"
-                  type="tel"
-                  value={formValues.telephoneNumber}
-                  onChange={handleChange}
-                  error={!!formErrors.telephoneNumber}
-                  helperText={formErrors.telephoneNumber}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Date of Birth"
-                  variant="outlined"
-                  fullWidth
-                  name="dateOfBirth"
-                  type="date"
-                  value={formValues.dateOfBirth}
-                  onChange={handleChange}
-                  InputLabelProps={{ shrink: true }}
-                  error={!!formErrors.dateOfBirth}
-                  helperText={formErrors.dateOfBirth}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Age"
-                  variant="outlined"
-                  fullWidth
-                  name="age"
-                  type="number"
-                  value={formValues.age}
-                  onChange={handleChange}
-                  error={!!formErrors.age}
-                  helperText={formErrors.age}
-                  InputProps={{ readOnly: true }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Birth Certificate Number"
-                  variant="outlined"
-                  fullWidth
-                  name="birthCertificateNumber"
-                  value={formValues.birthCertificateNumber}
-                  onChange={handleChange}
-                  error={!!formErrors.birthCertificateNumber}
-                  helperText={formErrors.birthCertificateNumber}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="National ID"
-                  variant="outlined"
-                  fullWidth
-                  name="nic"
-                  value={formValues.nic}
-                  onChange={handleChange}
-                  error={!!formErrors.nic}
-                  helperText={formErrors.nic}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Emergency Contact Name"
-                  variant="outlined"
-                  fullWidth
-                  name="emergencyContactName"
-                  value={formValues.emergencyContactName}
-                  onChange={handleChange}
-                  error={!!formErrors.emergencyContactName}
-                  helperText={formErrors.emergencyContactName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Emergency Contact Number"
-                  variant="outlined"
-                  fullWidth
-                  name="emergencyContactNumber"
-                  type="tel"
-                  value={formValues.emergencyContactNumber}
-                  onChange={handleChange}
-                  error={!!formErrors.emergencyContactNumber}
-                  helperText={formErrors.emergencyContactNumber}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth sx={{ mt: 1 }}>
-                  <InputLabel id="gender-label">Gender</InputLabel>
-                  <Select
-                    labelId="gender-label"
-                    name="gender"
-                    value={formValues.gender}
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="MALE">Male</MenuItem>
-                    <MenuItem value="FEMALE">Female</MenuItem>
-                    <MenuItem value="NON-BINARY">Non-binary</MenuItem>
-                    <MenuItem value="PREFER_NOT_TO_SAY">Prefer not to say</MenuItem>
-                  </Select>
-                  {formErrors.gender && (
-                    <Typography color="error">{formErrors.gender}</Typography>
-                  )}
-                </FormControl>
-              </Grid>
+                  error={!!errors.gender}
+                >
+                  <MenuItem value="MALE">Male</MenuItem>
+                  <MenuItem value="FEMALE">Female</MenuItem>
+                  <MenuItem value="NON-BINARY">Non-binary</MenuItem>
+                  <MenuItem value="PREFER_NOT_TO_SAY">Prefer not to say</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
+
           <Button
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             type="submit"
-            disabled={!buttonEnabled}
+            disabled={!isFormValid}
           >
             Create Account
           </Button>
         </Box>
 
-        {/* Success Modal */}
         <Modal
           open={openSuccessModal}
           onClose={handleCloseSuccessModal}
@@ -315,7 +314,6 @@ function PersonalFormComponent() {
           </Box>
         </Modal>
 
-        {/* Failure Modal */}
         <Modal
           open={openFailureModal}
           onClose={handleCloseFailureModal}
