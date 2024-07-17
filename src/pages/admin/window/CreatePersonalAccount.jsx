@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { CreatePersonalAcountPostAPI } from "../../../services/apiService";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function PersonalFormComponent() {
   const [formValues, setFormValues] = useState({
@@ -62,6 +62,12 @@ function PersonalFormComponent() {
       setFormValues((prev) => ({ ...prev, [name]: value }));
     }
   };
+
+  useEffect(() => {
+    const errors = validateForm();
+    setFormErrors(errors);
+    setButtonEnabled(Object.keys(errors).length === 0 && Object.values(formValues).every(val => val !== ""));
+  }, [formValues]);
 
   const validateForm = () => {
     const errors = {};
