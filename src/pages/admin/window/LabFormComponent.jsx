@@ -82,7 +82,7 @@ const LabFormComponent = () => {
     setOpenSuccessModal(false);
   };
 
-  const handleCloseFailureModal = () => {
+  const handleCloseFailureModal = (lab) => {
     setOpenFailureModal(false);
   };
 

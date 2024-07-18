@@ -101,7 +101,7 @@ const LandingPage = () => {
       },
     }}
   >
-    User Login
+    Lab Login
   </Button>
   <Button
     

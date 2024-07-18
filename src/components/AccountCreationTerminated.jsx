@@ -1,10 +1,14 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function AccountCreationTerminated() {
+export default function AccountCreationTerminated({ formType }) {
+  const navigate = useNavigate();
+ console.log(formType);
   const handleBackToForm = () => {
-    //window.location.reload();
+    const path = formType === 'lab' ? 'admin/labcreation' : 'admin/usercreation';
+    navigate(path);
   };
 
   return (

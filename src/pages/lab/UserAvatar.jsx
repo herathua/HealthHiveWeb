@@ -60,6 +60,7 @@ const ProfilePictureUploader = () => {
         input.onchange = async (event) => {
           file = event.target.files[0];
           if (file) {
+            const Userid = localStorage.getItem('userId');
             const storageRef = ref(storage, `labPics/${Userid}`);
             await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(storageRef);
