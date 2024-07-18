@@ -9,9 +9,6 @@ import profilePicdimo from '../../assets/dimoprofile.svg';
 import EditIcon from '@mui/icons-material/Edit';
 import { PutLabdata, fetchLabInfo } from '../../services/apiService';
 import Avatar from '@mui/material/Avatar';
-
-const Userid = 2; // Make sure this is dynamic based on the logged-in user
-
 // Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB5b79qQqo8iRGGbeOYrE2yIzmTEQARvwU",
@@ -90,6 +87,7 @@ const ProfilePictureUploader = () => {
 
   const handleDeletePhoto = async () => {
     try {
+      const Userid = localStorage.getItem('userId');
       const storageRef = ref(storage, `labPics/${Userid}`);
       await deleteObject(storageRef);
       await PutLabdata({

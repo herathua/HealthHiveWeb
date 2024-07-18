@@ -12,7 +12,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import axios from "axios";
+import { CreatePersonalAcountPostAPI } from "../../../services/apiService";
 import React, { useState, useEffect } from "react";
 
 function PersonalFormComponent() {
@@ -103,10 +103,7 @@ function PersonalFormComponent() {
 
     if (Object.keys(formErrors).length === 0) {
       try {
-        const response = await axios.post(
-          "http://localhost:33000/api/users",
-          formValues
-        );
+        const response = await CreatePersonalAcountPostAPI(formValues);
 
         if (response.status === 201) {
           setSuccess(true);
