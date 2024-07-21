@@ -23,6 +23,7 @@ const LabData = () => {
       .catch(error => {
         console.error('There was an error fetching the lab data!', error);
       });
+    
   }, []);
 
   const handleChange = (e) => {
