@@ -13,8 +13,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+<<<<<<< HEAD
+import { CreatePersonalAcountPostAPI } from "../../../services/apiService";
+import React, { useState, useEffect } from "react";
+
+=======
 import axios from "axios";
 import React, { useState } from "react";
+>>>>>>> e07bfebf4148e28cc68da00edd018cf280ece2c3
 function PersonalFormComponent() {
   const [formValues, setFormValues] = useState({
     fullName: "",
@@ -90,10 +96,7 @@ function PersonalFormComponent() {
     if (Object.keys(formErrors).length === 0) {
       setButtonEnabled(true);
       try {
-        const response = await axios.post(
-          "http://localhost:33000/api/users",
-          formValues
-        );
+        const response = await CreatePersonalAcountPostAPI(formValues);
 
         if (response.status === 201) {
           setSuccess(true);

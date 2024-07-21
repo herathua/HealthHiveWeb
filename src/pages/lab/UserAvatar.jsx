@@ -9,9 +9,6 @@ import profilePicdimo from '../../assets/dimoprofile.svg';
 import EditIcon from '@mui/icons-material/Edit';
 import { PutLabdata, fetchLabInfo } from '../../services/apiService';
 import Avatar from '@mui/material/Avatar';
-
-const Userid = 2; // Make sure this is dynamic based on the logged-in user
-
 // Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB5b79qQqo8iRGGbeOYrE2yIzmTEQARvwU",
@@ -27,7 +24,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const auth = getAuth(app);
-
+const Userid = localStorage.getItem('labId');
 const ProfilePictureUploader = () => {
   const [user, setUser] = useState(null);
   const [imageActionModalVisible, setImageActionModalVisible] = useState(false);

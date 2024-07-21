@@ -8,7 +8,6 @@ const BASE_URL = 'http://localhost:33000/api';
 //const response = await axios.post("https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token", data, { headers });
 const KEYCLOAK_LOGOUT_URL = 'https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/logout';
 const cachingKey = 'cachedLabData';
-const userId = '60038a45-147a-48ef-866b-5bda9beb245f';
 //let labId = getEmailFromToken(authToken); // Get lab ID from token
 let labId = localStorage.getItem('labId') || null;
 let authToken = null; // Variable to store the authentication token
@@ -308,7 +307,14 @@ export const GetLabIdByEmail = async (email) => {
     labId = response.data.id;
 
     // Store the labId in localStorage
+    // Store the labId in localStorage
+    // Check if labId exists in local storage
+    if (localStorage.getItem('labId')) {
+      // Remove existing labId from local storage
+      localStorage.removeItem('labId');
+    }
     localStorage.setItem('labId', labId);
+
 
     //console.log('lab id :', labId);
     return labId;
