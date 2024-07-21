@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
@@ -9,7 +10,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import LabFormComponent from '../window/LabFormComponent';
-import { FetchLabAPI, ViewLabPutAPI, deleteLabAccount } from '../../../services/apiService';
 
 const ViewLabs = () => {
   const [labs, setLabs] = useState([]);
@@ -21,8 +21,9 @@ const ViewLabs = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [CreateOpen, setCreateOpen] = useState(false);
-  
+  const [createOpen, setCreateOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [labToDelete, setLabToDelete] = useState(null);
 
   const handleClickOpen = () => {
     setCreateOpen(true);
@@ -33,15 +34,26 @@ const ViewLabs = () => {
   };
 
   useEffect(() => {
-    FetchLabAPI()
-      .then(response => {
-        setLabs(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching labs:', error);
-      });
+    const authToken = Cookies.get('authToken');
+    try {
+      if (!authToken) {
+        throw new Error('No auth token available');
+      }
+      const headers = {
+        'Authorization': 'Bearer ' + authToken // Set the token in headers
+      };
+      axios.get('http://13.202.67.81:10000/usermgtapi/api/labs', { headers })
+        .then(response => {
+          setLabs(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching labs:', error);
+        });
+    } catch (error) {
+      console.error('Authentication error:', error);
+    }
   }, []);
-  //window.location.reload();
+
   const handleView = (lab) => {
     setSelectedLab(lab);
     setOpen(true);
@@ -76,42 +88,72 @@ const ViewLabs = () => {
   };
 
   const handleUpdateLab = () => {
-    ViewLabPutAPI(selectedLab.id, selectedLab)
-      .then(response => {
-        if (response.status === 200) {
-          setSnackbarMessage('Lab updated successfully');
-          setSnackbarSeverity('success');
+    const authToken = Cookies.get('authToken');
+    try {
+      if (!authToken) {
+        throw new Error('No auth token available');
+      }
+      const headers = {
+        'Authorization': 'Bearer ' + authToken // Set the token in headers
+      };
+      axios.put(`http://13.202.67.81:10000/usermgtapi/api/labs/${selectedLab.id}`, selectedLab, { headers })
+        .then(response => {
+          if (response.status === 200) {
+            setSnackbarMessage('Lab updated successfully');
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
+            setLabs(labs.map(lab => lab.id === selectedLab.id ? selectedLab : lab));
+            handleEditClose();
+          }
+        })
+        .catch(error => {
+          setSnackbarMessage('Error updating lab');
+          setSnackbarSeverity('error');
           setSnackbarOpen(true);
-          setLabs(labs.map(lab => lab.id === selectedLab.id ? selectedLab : lab));
-          handleEditClose();
-          //window.location.reload();
-        }
-      })
-      .catch(error => {
-        setSnackbarMessage('Error updating lab');
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
-      });
+        });
+    } catch (error) {
+      console.error('Error handling auth token:', error);
+      setSnackbarMessage('Error handling authentication');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
   };
 
-  const handleDeleteLab = (email) => {
-    deleteLabAccount(email)
-      .then(response => {
-        if (response.status === 200) {
-          //console.log(response);
-          //console.log(response.status);
-          setSnackbarMessage('Lab deleted successfully');
-          setSnackbarSeverity('success');
+  const handleDeleteLab = () => {
+    const authToken = Cookies.get('authToken');
+    try {
+      if (!authToken) {
+        throw new Error('No auth token available');
+      }
+      const headers = {
+        'Authorization': 'Bearer ' + authToken // Set the token in headers
+      };
+      axios.delete(`http://13.202.67.81:10000/usermgtapi/api/labs/${labToDelete}`, { headers })
+        .then(response => {
+          if (response.status === 200) {
+            setSnackbarMessage('Lab deleted successfully');
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
+            setLabs(labs.filter(lab => lab.id !== labToDelete));
+            setConfirmOpen(false);
+          }
+        })
+        .catch(error => {
+          setSnackbarMessage('Error deleting lab');
+          setSnackbarSeverity('error');
           setSnackbarOpen(true);
-          // setLabs(labs.filter(lab => lab.id !== id));
-          //window.location.reload();
-        }
-      })
-      .catch(error => {
-        setSnackbarMessage('Error deleting lab');
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
-      });
+        });
+    } catch (error) {
+      setSnackbarMessage(error.message);
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
+};
+
+
+  const handleDeleteConfirm = (id) => {
+    setLabToDelete(id);
+    setConfirmOpen(true);
   };
 
   const filteredLabs = labs.filter(lab =>
@@ -152,7 +194,7 @@ const ViewLabs = () => {
         <AddIcon />
       </Button>
 
-      <Dialog open={CreateOpen} onClose={handleClickClose} fullWidth maxWidth="sm">
+      <Dialog open={createOpen} onClose={handleClickClose} fullWidth maxWidth="sm">
         <DialogTitle>
           <div className="text-center text-4xl">
             Create Lab Account
@@ -197,7 +239,7 @@ const ViewLabs = () => {
                 <TableCell>
                   <Button variant="contained" color="primary" onClick={() => handleView(lab)}>View</Button>
                   <Button variant="contained" color="secondary" style={{ marginLeft: '10px' }} onClick={() => handleEdit(lab)}>Edit</Button>
-                  <Button variant="contained" color="error" style={{ marginLeft: '10px' }} onClick={() => handleDeleteLab(lab.email)}>Delete</Button>
+                  <Button variant="contained" color="error" style={{ marginLeft: '10px' }} onClick={() => handleDeleteConfirm(lab.id)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -256,113 +298,132 @@ const ViewLabs = () => {
                 label="Lab Registration ID"
                 name="labRegID"
                 value={selectedLab.labRegID}
-                onChange={handleFieldChange}
-                margin="dense"
                 fullWidth
+                margin="normal"
                 disabled={!editableFields.labRegID}
                 InputProps={{
                   endAdornment: (
-                    <IconButton edge="end" onClick={() => enableFieldEditing('labRegID')}>
-                      <EditIcon />
-                    </IconButton>
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => enableFieldEditing('labRegID')}>
+                        <EditIcon />
+                      </IconButton>
+                    </InputAdornment>
                   ),
                 }}
+                onChange={handleFieldChange}
               />
               <TextField
                 label="Lab Name"
                 name="labName"
                 value={selectedLab.labName}
-                onChange={handleFieldChange}
-                margin="dense"
                 fullWidth
+                margin="normal"
                 disabled={!editableFields.labName}
                 InputProps={{
                   endAdornment: (
-                    <IconButton edge="end" onClick={() => enableFieldEditing('labName')}>
-                      <EditIcon />
-                    </IconButton>
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => enableFieldEditing('labName')}>
+                        <EditIcon />
+                      </IconButton>
+                    </InputAdornment>
                   ),
                 }}
-                inputProps={{
-                  maxLength: 255,
-                }}
+                onChange={handleFieldChange}
               />
               <TextField
                 label="Address"
                 name="address"
                 value={selectedLab.address}
-                onChange={handleFieldChange}
-                margin="dense"
                 fullWidth
+                margin="normal"
                 disabled={!editableFields.address}
                 InputProps={{
                   endAdornment: (
-                    <IconButton edge="end" onClick={() => enableFieldEditing('address')}>
-                      <EditIcon />
-                    </IconButton>
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => enableFieldEditing('address')}>
+                        <EditIcon />
+                      </IconButton>
+                    </InputAdornment>
                   ),
                 }}
-                inputProps={{
-                  maxLength: 255,
-                }}
+                onChange={handleFieldChange}
               />
               <TextField
                 label="Email"
                 name="email"
                 value={selectedLab.email}
-                onChange={handleFieldChange}
-                margin="dense"
                 fullWidth
+                margin="normal"
                 disabled={!editableFields.email}
                 InputProps={{
                   endAdornment: (
-                    <IconButton edge="end" onClick={() => enableFieldEditing('email')}>
-                      <EditIcon />
-                    </IconButton>
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => enableFieldEditing('email')}>
+                        <EditIcon />
+                      </IconButton>
+                    </InputAdornment>
                   ),
                 }}
-                inputProps={{
-                  maxLength: 255,
-                }}
+                onChange={handleFieldChange}
               />
               <TextField
                 label="Telephone"
                 name="telephone"
                 value={selectedLab.telephone}
-                onChange={handleFieldChange}
-                margin="dense"
                 fullWidth
+                margin="normal"
                 disabled={!editableFields.telephone}
                 InputProps={{
                   endAdornment: (
-                    <IconButton edge="end" onClick={() => enableFieldEditing('telephone')}>
-                      <EditIcon />
-                    </IconButton>
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => enableFieldEditing('telephone')}>
+                        <EditIcon />
+                      </IconButton>
+                    </InputAdornment>
                   ),
                 }}
-                inputProps={{
-                  maxLength: 10,
-                }}
+                onChange={handleFieldChange}
               />
             </form>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleUpdateLab} color="primary">Update Lab</Button>
-          <Button onClick={handleEditClose} color="secondary">Cancel</Button>
+          <Button onClick={handleEditClose} color="primary">Cancel</Button>
+          <Button onClick={handleUpdateLab} color="primary">Save</Button>
         </DialogActions>
       </Dialog>
 
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this lab? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteLab} color="error" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for notifications */}
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
-        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      
     </Container>
-    
   );
-  
 };
 
 export default ViewLabs;

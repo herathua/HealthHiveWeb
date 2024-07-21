@@ -24,7 +24,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const auth = getAuth(app);
-
+const Userid = localStorage.getItem('labId');
 const ProfilePictureUploader = () => {
   const [user, setUser] = useState(null);
   const [imageActionModalVisible, setImageActionModalVisible] = useState(false);
@@ -60,7 +60,6 @@ const ProfilePictureUploader = () => {
         input.onchange = async (event) => {
           file = event.target.files[0];
           if (file) {
-            const Userid = localStorage.getItem('userId');
             const storageRef = ref(storage, `labPics/${Userid}`);
             await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(storageRef);
@@ -88,7 +87,6 @@ const ProfilePictureUploader = () => {
 
   const handleDeletePhoto = async () => {
     try {
-      const Userid = localStorage.getItem('userId');
       const storageRef = ref(storage, `labPics/${Userid}`);
       await deleteObject(storageRef);
       await PutLabdata({

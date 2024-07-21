@@ -12,6 +12,7 @@ const LabData = () => {
     telephone: ''
   });
   const [responseMessage, setResponseMessage] = useState('');
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     // Fetch the lab data with GET request
@@ -30,14 +31,33 @@ const LabData = () => {
       ...prevLab,
       [name]: value
     }));
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: ''
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!lab.labName) newErrors.labName = 'Lab Name is required';
+    if (!lab.address) newErrors.address = 'Address is required';
+    if (!lab.telephone) newErrors.telephone = 'Telephone is required';
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(lab.telephone)) {
+      newErrors.telephone = 'Telephone must be 10 digits and contain numbers only';
+    }
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //console.log('Submitting lab data:', lab); // Debug log
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
     PutLabdata(lab)
       .then(response => {
-        //console.log('Lab data updated successfully:', response);
         setResponseMessage('Lab data updated successfully!');
       })
       .catch(error => {
@@ -92,6 +112,8 @@ const LabData = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              error={!!errors.labName}
+              helperText={errors.labName}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -102,6 +124,8 @@ const LabData = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              error={!!errors.address}
+              helperText={errors.address}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -112,6 +136,8 @@ const LabData = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              error={!!errors.telephone}
+              helperText={errors.telephone}
             />
           </Grid>
         </Grid>

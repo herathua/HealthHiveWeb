@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function AccountCreationSuccessful() {
   const handleHomeClick = () => {
-    //window.location.reload();
+    window.location.reload();
   };
 
   return (
