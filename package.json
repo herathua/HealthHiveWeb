@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -19,6 +20,7 @@
     "@mui/material": "^5.15.20",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@react-keycloak/web": "^3.4.0",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "cookie-parser": "^1.4.6",
@@ -29,6 +31,7 @@
     "firebase": "^10.12.2",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "jwt-decode": "^4.0.0",
     "keycloak-js": "^24.0.4",
     "qrcode": "^1.5.3",
@@ -42,7 +45,9 @@
     "react-qr-code": "^2.0.12",
     "react-router-dom": "^6.23.1",
     "react-virtuoso": "^4.7.11",
-    "styled-components": "^6.1.8"
+    "sockjs-client": "^1.6.1",
+    "styled-components": "^6.1.8",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",

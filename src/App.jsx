@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './Landing';
-import LoginPage from './LoginPage'; // Assuming this is your login page component
+import LandingPage from './components/Landing';
+import LoginPage from './components/LoginPage'; // Assuming this is your login page component
 import AdminPage from './pages/admin/AdminPage'; // Import your AdminPage component here
 import LabPage from './pages/lab/LabPage'; // Import your LabPage component here
 import PrivateRoute from './components/PrivateRoute';
-import LandingPagecopy from './Landing copy';
+import LandingPagecopy from './components/MobileLandingPage';
 
 function App() {
   const isMobile = window.innerWidth <= 1315;

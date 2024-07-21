@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   TextField, Container, IconButton, Snackbar, Alert, Grid, Select, MenuItem, InputAdornment,
@@ -9,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonalFormComponent from '../window/CreatePersonalAccount';
-import LabFormComponent from '../window/LabFormComponent';
+import { deleteUserAccountByemail,FetchUserAPI, ViewUserPutAPI } from '../../../services/apiService';
 
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
@@ -31,11 +30,11 @@ const ViewUser = () => {
   const handleClickClose = () => {
     setCreateOpen(false);
   };
-
   useEffect(() => {
-    axios.get('http://13.202.67.81:33000/api/users')
+    FetchUserAPI()
       .then(response => {
         setUsers(response.data);
+        //window.location.reload();
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -76,7 +75,7 @@ const ViewUser = () => {
   };
 
   const handleUpdateUser = () => {
-    axios.put(`http://13.202.67.81:33000/api/users/${selectedUser.id}`, selectedUser)
+    ViewUserPutAPI(selectedUser.id, selectedUser)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('User updated successfully');
@@ -84,6 +83,7 @@ const ViewUser = () => {
           setSnackbarOpen(true);
           setUsers(users.map(user => user.id === selectedUser.id ? selectedUser : user));
           handleEditClose();
+          //window.location.reload();
         }
       })
       .catch(error => {
@@ -94,8 +94,9 @@ const ViewUser = () => {
   };
 
   const handleDeleteUser = (email) => {
-    axios.delete(`http://13.202.67.81:33000/api/users/${email}`)
+    deleteUserAccountByemail(email)
       .then(response => {
+        window.location.reload();
         if (response.status === 200) {
           setSnackbarMessage('User deleted successfully');
           setSnackbarSeverity('success');

@@ -45,7 +45,7 @@ function App() {
     pdf.addImage(imgData, 'PNG', 5, 5, 280, 280);
     pdf.text(labInfo.labName, 145, 30, { align: "center" });
     pdf.save(`${String(labInfo.id)}-QRCode.pdf`);
-    console.log(labInfo);
+    //console.log(labInfo);
   };
 
   return (

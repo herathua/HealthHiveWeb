@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import LabFormComponent from '../window/LabFormComponent';
+import { FetchLabAPI, ViewLabPutAPI, deleteLabAccount } from '../../../services/apiService';
 
 const ViewLabs = () => {
   const [labs, setLabs] = useState([]);
@@ -32,7 +33,7 @@ const ViewLabs = () => {
   };
 
   useEffect(() => {
-    axios.get('http://13.202.67.81:33000/api/labs')
+    FetchLabAPI()
       .then(response => {
         setLabs(response.data);
       })
@@ -40,7 +41,7 @@ const ViewLabs = () => {
         console.error('Error fetching labs:', error);
       });
   }, []);
-
+  //window.location.reload();
   const handleView = (lab) => {
     setSelectedLab(lab);
     setOpen(true);
@@ -75,7 +76,7 @@ const ViewLabs = () => {
   };
 
   const handleUpdateLab = () => {
-    axios.put(`http://13.202.67.81:33000/api/labs/${selectedLab.id}`, selectedLab)
+    ViewLabPutAPI(selectedLab.id, selectedLab)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Lab updated successfully');
@@ -83,6 +84,7 @@ const ViewLabs = () => {
           setSnackbarOpen(true);
           setLabs(labs.map(lab => lab.id === selectedLab.id ? selectedLab : lab));
           handleEditClose();
+          //window.location.reload();
         }
       })
       .catch(error => {
@@ -92,14 +94,17 @@ const ViewLabs = () => {
       });
   };
 
-  const handleDeleteLab = (id) => {
-    axios.delete(`http://13.202.67.81:33000/api/labs/${id}`)
+  const handleDeleteLab = (email) => {
+    deleteLabAccount(email)
       .then(response => {
         if (response.status === 200) {
+          //console.log(response);
+          //console.log(response.status);
           setSnackbarMessage('Lab deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
-          setLabs(labs.filter(lab => lab.id !== id));
+          // setLabs(labs.filter(lab => lab.id !== id));
+          //window.location.reload();
         }
       })
       .catch(error => {
@@ -192,7 +197,7 @@ const ViewLabs = () => {
                 <TableCell>
                   <Button variant="contained" color="primary" onClick={() => handleView(lab)}>View</Button>
                   <Button variant="contained" color="secondary" style={{ marginLeft: '10px' }} onClick={() => handleEdit(lab)}>Edit</Button>
-                  <Button variant="contained" color="error" style={{ marginLeft: '10px' }} onClick={() => handleDeleteLab(lab.id)}>Delete</Button>
+                  <Button variant="contained" color="error" style={{ marginLeft: '10px' }} onClick={() => handleDeleteLab(lab.email)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}

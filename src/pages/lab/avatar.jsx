@@ -19,7 +19,7 @@ const AvatarWithPhotoOnly = () => {
                 const data = await fetchLabInfo();
                 const { labProfilePictureUrl } = data;
                 setAvatar(labProfilePictureUrl);
-                console.log(data);
+                //console.log(data);
             } catch (error) {
                 console.error('Error fetching profile picture:', error);
             }

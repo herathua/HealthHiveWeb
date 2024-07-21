@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -55,7 +54,7 @@ const ProfilePictureUploader = () => {
     let file;
     try {
       if (fromCamera) {
-        console.log('Camera functionality not implemented for web.');
+        //console.log('Camera functionality not implemented for web.');
       } else {
         getUserDetails();
         const input = document.createElement('input');
@@ -78,6 +77,7 @@ const ProfilePictureUploader = () => {
               labProfilePictureUrl: downloadURL
             });
             setImageActionModalVisible(false);
+            window.location.reload();
           }
         };
         input.click();
@@ -102,6 +102,7 @@ const ProfilePictureUploader = () => {
         labProfilePictureUrl: null
       });
       setAvatar(null);
+      window.location.reload();
     } catch (error) {
       console.error('Error deleting image:', error);
       alert('Error: Failed to delete image. Please try again.');

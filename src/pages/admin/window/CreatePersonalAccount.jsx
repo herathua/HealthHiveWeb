@@ -91,7 +91,7 @@ function PersonalFormComponent() {
       setButtonEnabled(true);
       try {
         const response = await axios.post(
-          "http://13.202.67.81:33000/api/users",
+          "http://localhost:33000/api/users",
           formValues
         );
 

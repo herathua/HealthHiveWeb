@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Table,Select, MenuItem,TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   TextField, Container, IconButton, Snackbar, Alert, Grid, InputAdornment
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import HealthForm1 from '../HealthForm';
+import { fetchTip, ViewTipPutAPI, deleteDailytip } from '../../../services/apiService';
 
 const ViewDailyTips = () => {
   const [tips, setTips] = useState([]);
@@ -28,10 +27,11 @@ const ViewDailyTips = () => {
 
   const handleClickClose = () => {
     setCreateOpen(false);
+    window.location.reload();
   };
 
   useEffect(() => {
-    axios.get('http://13.202.67.81:33000/api/dailyTips')
+    fetchTip()
       .then(response => {
         setTips(response.data);
       })
@@ -74,7 +74,7 @@ const ViewDailyTips = () => {
   };
 
   const handleUpdateTip = () => {
-    axios.put(`http://13.202.67.81:33000/api/dailyTips/${selectedTip.id}`, selectedTip)
+    ViewTipPutAPI(selectedTip.id, selectedTip)
       .then(response => {
         if (response.status === 200) {
           setSnackbarMessage('Tip updated successfully');
@@ -82,7 +82,6 @@ const ViewDailyTips = () => {
           setSnackbarOpen(true);
           setTips(tips.map(tip => tip.id === selectedTip.id ? selectedTip : tip));
           handleEditClose();
-          window.location.reload();
         }
       })
       .catch(error => {
@@ -93,17 +92,19 @@ const ViewDailyTips = () => {
   };
 
   const handleDeleteTip = (id) => {
-    axios.delete(`http://13.202.67.81:33000/api/dailyTips/${id}`)
+    //console.log('Deleting tip with ID:', id);
+    deleteDailytip(id)
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 204) {
+          //console.log('Tip deleted successfully:', response);
           setSnackbarMessage('Tip deleted successfully');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
           setTips(tips.filter(tip => tip.id !== id));
-          window.location.reload();
         }
       })
       .catch(error => {
+        console.error('Error deleting tip:', error);
         setSnackbarMessage('Error deleting tip');
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
@@ -154,8 +155,7 @@ const ViewDailyTips = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>ID</TableCell>
+              <TableCell>No</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Actions</TableCell>
@@ -165,10 +165,8 @@ const ViewDailyTips = () => {
             {filteredTips.map((tip, index) => (
               <TableRow key={tip.id}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{tip.id}</TableCell>
-
                 <TableCell>{tip.type}</TableCell>
-                <TableCell>{tip.date}</TableCell>
+                <TableCell>{tip.date.split('T')[0]}</TableCell>
                 <TableCell>
                   <Button variant="contained" color="primary" onClick={() => handleView(tip)}>View</Button>
                   <Button variant="contained" color="secondary" style={{ marginLeft: '10px' }} onClick={() => handleEdit(tip)}>Edit</Button>

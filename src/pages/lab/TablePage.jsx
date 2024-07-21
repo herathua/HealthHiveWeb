@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { Typography, IconButton, TextField } from '@mui/material';
+import { Typography, IconButton, TextField, colors } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,7 +18,9 @@ import FileOpenIcon from '@mui/icons-material/FileOpen';
 import Tooltip from '@mui/material/Tooltip';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import { fetchLabRequestsByLabId, fetchUserUrl, fetchUserName, fetchUserDataByUserId, UplodeFileToIPFS, handleLabDataUploadinAPI, handleFileMetadatainAPI, checkUploadStatusInAPI } from '.././../services/apiService';
+import { fetchLabRequestsByLabId, fetchUserUrl, fetchUserName, fetchUserDataByUserId, UplodeFileToIPFS, handleLabDataUploadinAPI, handleFileMetadatainAPI, checkUploadStatusInAPI, handleFileDeleteinAPI } from '.././../services/apiService';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { red } from '@mui/material/colors';
 
 const LabRequestTable = () => {
   const [labRequests, setLabRequests] = useState([]);
@@ -32,7 +34,7 @@ const LabRequestTable = () => {
 
   useEffect(() => {
     fetchLabRequests();
-    const interval = setInterval(fetchLabRequests, 90000); // Fetch every 30 seconds
+    const interval = setInterval(fetchLabRequests, 45000); // Fetch every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -114,7 +116,7 @@ const LabRequestTable = () => {
         console.error('Error during file selection process:', error);
       }
     } else {
-      console.log("Select a correct file");
+      //console.log("Select a correct file");
     }
   };
 
@@ -133,7 +135,7 @@ const LabRequestTable = () => {
       const formData = new FormData();
       formData.append('file', file);
       const response = await UplodeFileToIPFS(file);
-      console.log('File uploaded successfully:', response);
+      //console.log('File uploaded successfully:', response);
       return response;
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -163,7 +165,7 @@ const LabRequestTable = () => {
   const checkUploadStatus = async (labRequestId) => {
     try {
       const response = await checkUploadStatusInAPI(labRequestId);
-      console.log('Upload status:', response);
+      //console.log('Upload status:', response);
       return response;
     } catch (error) {
       console.error('Error checking upload status:', error);
@@ -184,9 +186,20 @@ const LabRequestTable = () => {
     request.userName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // const handleFileDelete = async (labRequestId) => {
+  //   //console.log('Delete file:', labRequestId);
+  //   try {
+  //     await handleFileDeleteinAPI(labRequestId);
+  //     //console.log('File deleted successfully:', response);
+  //     fetchLabRequests(); // Refresh lab requests after delete
+  //   } catch (error) {
+  //     console.error('Error deleting file:', error);
+  //   }
+  // }
+
   return (
 
-    <div class="p-16 ">
+    <div className="p-16 ">
       <Box>
         <Typography variant="h4"
           component="h2"
@@ -223,7 +236,7 @@ const LabRequestTable = () => {
               <TableCell className="font-semibold">Description</TableCell>
               <TableCell className="font-semibold">Status</TableCell>
               <TableCell className="font-semibold">Upload</TableCell>
-
+              {/* <TableCell className="font-semibold">Delete</TableCell> */}
             </TableRow>
           </TableHead>
 
@@ -243,7 +256,7 @@ const LabRequestTable = () => {
       >
         <img
           src={request.userAvatar}
-          alt="request"
+          alt={request.customerName}
           style={{
             width: '50px',
             height: '50px',
@@ -276,6 +289,13 @@ const LabRequestTable = () => {
           </Button>
         </Tooltip>
       </TableCell>
+      {/* <TableCell sx={{ padding: '4px' }}>
+        <Tooltip title="Delete request">
+          <Button onClick={() => handleFileDelete(request.id)}>
+          <DeleteIcon sx={{ color: red[500] }} />
+          </Button>
+        </Tooltip>
+      </TableCell> */}
     </TableRow>
   ))}
 </TableBody>

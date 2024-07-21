@@ -23,9 +23,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate, Link } from 'react-router-dom';
 import { logoutUser } from '../../services/apiService';
 import logo from '../../assets/logo.png';
-import Footer from '../../LabComponent/FooterComponent/Footer';
+import Footer from '../../components/Footer';
 import Avatar from '@mui/material/Avatar';
 import AvatarWithEditIcon from './avatar';
+import HistoryIcon from '@mui/icons-material/History';
+import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const drawerWidth = 240;
 
@@ -128,9 +131,7 @@ const MyAppBar = ({ open, handleDrawerOpen }) => {
           </Typography>
         </Link>
         <Box sx={{ flexGrow: 2 }} />
-        <IconButton sx={{ p: 0 }}>
         <AvatarWithEditIcon />
-      </IconButton>
       
       </Toolbar>
 
@@ -154,7 +155,7 @@ export default function MiniDrawer({ children }) {
   const handleNavigation = (path, action) => {
     if (action === 'logout') {
       logoutUser();
-      console.log('User logged out');
+      //console.log('User logged out');
     } else {
       navigate(path);
     }
@@ -174,9 +175,10 @@ export default function MiniDrawer({ children }) {
           <Divider />
           <List>
             {[
-              { text: 'QR code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
-              { text: 'Reports', icon: <TableChartIcon style={{ color: 'black' }} />, path: '/lab/table' },
-              { text: 'Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
+              { text: 'Laboratory QR Code', icon: <QrCodeIcon style={{ color: 'black' }} />, path: '/lab/qrcode' },
+              { text: 'Laboratory Request ', icon: <MoveToInboxIcon style={{ color: 'black' }} />, path: '/lab/requests' },
+              { text: 'Laboratory Reports', icon: <UploadFileIcon style={{ color: 'black' }} />, path: '/lab/reports' },
+              { text: 'Laboratory Settings', icon: <SettingsIcon style={{ color: 'black' }} />, path: '/lab/settings' },
               { text: 'Logout', icon: <LogoutIcon style={{ color: 'red' }} />, action: 'logout' },
             ].map((item) => (
               <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>

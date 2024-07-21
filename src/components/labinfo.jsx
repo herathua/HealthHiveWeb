@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Grid } from '@mui/material';
-import { PutLabdata, fetchLabInfo } from './services/apiService';
+import { PutLabdata, fetchLabInfo } from '../services/apiService';
 
 const LabData = () => {
   const [lab, setLab] = useState({
@@ -34,10 +34,10 @@ const LabData = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting lab data:', lab); // Debug log
+    //console.log('Submitting lab data:', lab); // Debug log
     PutLabdata(lab)
       .then(response => {
-        console.log('Lab data updated successfully:', response);
+        //console.log('Lab data updated successfully:', response);
         setResponseMessage('Lab data updated successfully!');
       })
       .catch(error => {
@@ -47,7 +47,7 @@ const LabData = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ maxWidth: '500px', mt: 4 }}>
       <h2 className="text-2xl font-semibold mb-4">Lab data</h2>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
@@ -75,6 +75,17 @@ const LabData = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              label="Email"
+              name="email"
+              value={lab.email}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
               label="Lab Name"
               name="labName"
               value={lab.labName}
@@ -88,16 +99,6 @@ const LabData = () => {
               label="Address"
               name="address"
               value={lab.address}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Email"
-              name="email"
-              value={lab.email}
               onChange={handleChange}
               fullWidth
               margin="normal"
